@@ -17,6 +17,12 @@ const strokeClassNames: Record<string, string> = {
   "bg-green-500": "stroke-green-500",
   "bg-purple-500": "stroke-purple-500",
   "bg-red-500": "stroke-red-500",
+  "bg-cyan-500": "stroke-cyan-500",
+  "bg-yellow-500": "stroke-yellow-500",
+  "bg-teal-500": "stroke-teal-500",
+  "bg-indigo-600": "stroke-indigo-600",
+  "bg-lime-500": "stroke-lime-500",
+  "bg-amber-500": "stroke-amber-500",
 };
 
 export default function AnimatedCard({

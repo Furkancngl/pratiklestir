@@ -1,5 +1,13 @@
 import AnimatedCard from "./components/animated-card";
-import { tools } from "./lib/tools";
+import { tools, type Tool } from "./lib/tools";
+
+const ungroupedTools = tools.filter((tool) => !tool.group);
+const groupedTools = tools.reduce<Record<string, Tool[]>>((acc, tool) => {
+  if (tool.group) {
+    acc[tool.group] = [...(acc[tool.group] ?? []), tool];
+  }
+  return acc;
+}, {});
 
 export default function Home() {
   return (
@@ -15,7 +23,7 @@ export default function Home() {
       </div>
 
       <div className="mt-12 grid w-full max-w-3xl grid-cols-1 gap-4 sm:grid-cols-2">
-        {tools.map((tool) => (
+        {ungroupedTools.map((tool) => (
           <AnimatedCard
             key={tool.name}
             title={tool.name}
@@ -27,6 +35,27 @@ export default function Home() {
           />
         ))}
       </div>
+
+      {Object.entries(groupedTools).map(([groupName, groupTools]) => (
+        <div key={groupName} className="mt-12 w-full max-w-3xl">
+          <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-600">
+            {groupName} Araçları
+          </h2>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {groupTools.map((tool) => (
+              <AnimatedCard
+                key={tool.name}
+                title={tool.name}
+                description={tool.description}
+                accentClassName={tool.accentClassName}
+                href={tool.available ? tool.href : undefined}
+                badge={tool.available ? undefined : "yakında"}
+                beta={tool.beta}
+              />
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

@@ -3,7 +3,6 @@
 import { useRef, useState } from "react";
 import { removeBackground } from "@imgly/background-removal";
 import { tools } from "../lib/tools";
-import { useDebugToast } from "../components/debug-toast";
 
 const accentClassName =
   tools.find((tool) => tool.href === "/arka-plan-sil")?.accentClassName ??
@@ -17,7 +16,6 @@ export default function ArkaPlanSilPage() {
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
-  const { show: showDebugToast, toast: debugToast } = useDebugToast();
 
   const handleFile = (selected: File | undefined | null) => {
     if (!selected) return;
@@ -63,7 +61,6 @@ export default function ArkaPlanSilPage() {
 
   return (
     <div className="flex flex-1 flex-col items-center bg-zinc-50 px-6 py-16 dark:bg-zinc-900">
-      {debugToast}
       <div className="w-full max-w-2xl">
         <div className={`h-1 w-full rounded-full ${accentClassName}`} />
 
@@ -78,10 +75,7 @@ export default function ArkaPlanSilPage() {
         </div>
 
         <div
-          onClick={() => {
-            showDebugToast("Dosya alanı tıklandı (Arka Plan Silici)");
-            inputRef.current?.click();
-          }}
+          onClick={() => inputRef.current?.click()}
           onDragOver={(e) => {
             e.preventDefault();
             setIsDragging(true);
