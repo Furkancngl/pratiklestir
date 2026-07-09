@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, type ComponentType } from "react";
 import { tools } from "../lib/tools";
+import { useDebugToast } from "./debug-toast";
 import {
   DocumentIcon,
   HomeIcon,
@@ -25,18 +26,23 @@ const icons: Record<string, ComponentType<{ className?: string }>> = {
 export default function Sidebar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const { show: showDebugToast, toast: debugToast } = useDebugToast();
 
   return (
     <>
+      {debugToast}
       <div className="flex items-center justify-between border-b border-black/[.08] bg-white px-4 py-3 dark:border-zinc-800 dark:bg-zinc-950 md:hidden">
         <span className="text-lg font-semibold tracking-tight text-black dark:text-zinc-50">
           Pratikleştir
         </span>
         <button
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={() => {
+            showDebugToast("Sidebar tıklandı");
+            setIsOpen(!isOpen);
+          }}
           aria-label="Menüyü aç/kapat"
           aria-expanded={isOpen}
-          className="flex h-11 w-11 items-center justify-center rounded-md border border-black/[.08] text-black dark:border-zinc-800 dark:text-zinc-50"
+          className="touch-manipulation flex h-11 w-11 items-center justify-center rounded-md border border-black/[.08] text-black dark:border-zinc-800 dark:text-zinc-50"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { PDFDocument } from "pdf-lib";
 import { tools } from "../lib/tools";
+import { useDebugToast } from "../components/debug-toast";
 
 const accentClassName =
   tools.find((tool) => tool.href === "/pdf-birlestir")?.accentClassName ??
@@ -21,6 +22,7 @@ export default function PdfBirlestirPage() {
   const [resultUrl, setResultUrl] = useState<string | null>(null);
   const [error, setError] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const { show: showDebugToast, toast: debugToast } = useDebugToast();
 
   const handleFiles = async (fileList: FileList | null) => {
     if (!fileList || fileList.length === 0) return;
@@ -125,6 +127,7 @@ export default function PdfBirlestirPage() {
 
   return (
     <div className="flex flex-1 flex-col items-center bg-zinc-50 px-6 py-16 dark:bg-zinc-900">
+      {debugToast}
       <div className="w-full max-w-2xl">
         <div className={`h-1 w-full rounded-full ${accentClassName}`} />
 
@@ -139,7 +142,10 @@ export default function PdfBirlestirPage() {
         </div>
 
         <div
-          onClick={() => inputRef.current?.click()}
+          onClick={() => {
+            showDebugToast("Dosya alanı tıklandı (PDF)");
+            inputRef.current?.click();
+          }}
           onDragOver={(e) => {
             e.preventDefault();
             setIsDragging(true);
@@ -150,7 +156,7 @@ export default function PdfBirlestirPage() {
             setIsDragging(false);
             handleFiles(e.dataTransfer.files);
           }}
-          className={`mt-8 flex cursor-pointer flex-col items-center gap-2 rounded-2xl border-2 border-dashed p-10 text-center transition-colors ${
+          className={`mt-8 flex touch-manipulation cursor-pointer flex-col items-center gap-2 rounded-2xl border-2 border-dashed p-10 text-center transition-colors ${
             isDragging
               ? "border-black/40 bg-black/[.04] dark:border-zinc-500 dark:bg-zinc-800"
               : "border-black/15 dark:border-zinc-700"
