@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, type ComponentType } from "react";
+import { useEffect, useState, type ComponentType } from "react";
 import { tools, type Tool } from "../lib/tools";
 import {
   CompressIcon,
@@ -94,9 +94,18 @@ export default function Sidebar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isOpen]);
+
   return (
     <>
-      <div className="flex items-center justify-between border-b border-black/[.08] bg-white px-4 py-3 dark:border-zinc-800 dark:bg-zinc-950 md:hidden">
+      <div className="relative z-50 flex items-center justify-between border-b border-black/[.08] bg-white px-4 py-3 dark:border-zinc-800 dark:bg-zinc-950 md:hidden">
         <span className="text-lg font-semibold tracking-tight text-black dark:text-zinc-50">
           Pratikleştir
         </span>
@@ -142,7 +151,7 @@ export default function Sidebar() {
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-[250px] shrink-0 flex-col border-r border-black/[.08] bg-white transition-[transform]! duration-200! dark:border-zinc-800 dark:bg-zinc-950 md:static md:[transform:translateX(0)] ${
+        className={`fixed inset-y-0 left-0 z-50 flex w-[250px] shrink-0 flex-col overflow-y-auto border-r border-black/[.08] bg-white transition-[transform]! duration-200! dark:border-zinc-800 dark:bg-zinc-950 md:static md:[transform:translateX(0)] ${
           isOpen ? "[transform:translateX(0)]" : "[transform:translateX(-100%)]"
         }`}
       >
