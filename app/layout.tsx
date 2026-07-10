@@ -54,7 +54,15 @@ export default async function RootLayout({
       >
         <ThemeProvider>
           {!isAdminSection &&
-            (session ? <Sidebar isAdmin={isAdmin} /> : <TopNav />)}
+            (session ? (
+              <Sidebar
+                isAdmin={isAdmin}
+                userEmail={session.user?.email}
+                userPlan={session.user?.plan}
+              />
+            ) : (
+              <TopNav />
+            ))}
           <main className="flex flex-1 flex-col">{children}</main>
           <ThemeToggle />
         </ThemeProvider>

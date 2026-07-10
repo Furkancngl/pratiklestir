@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, type ComponentType } from "react";
-import { logout } from "../actions/auth";
 import { tools, type Tool } from "../lib/tools";
+import UserMenu from "./user-menu";
 import {
   CompressIcon,
   DocumentIcon,
@@ -91,7 +91,15 @@ const groupedTools = tools.reduce<Record<string, Tool[]>>((acc, tool) => {
   return acc;
 }, {});
 
-export default function Sidebar({ isAdmin = false }: { isAdmin?: boolean }) {
+export default function Sidebar({
+  isAdmin = false,
+  userEmail,
+  userPlan,
+}: {
+  isAdmin?: boolean;
+  userEmail?: string | null;
+  userPlan?: string | null;
+}) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -152,7 +160,7 @@ export default function Sidebar({ isAdmin = false }: { isAdmin?: boolean }) {
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-[250px] shrink-0 flex-col overflow-y-auto border-r border-black/[.08] bg-white transition-[transform]! duration-200! dark:border-zinc-800 dark:bg-zinc-950 md:static md:[transform:translateX(0)] ${
+        className={`fixed inset-y-0 left-0 z-50 flex w-[250px] shrink-0 flex-col border-r border-black/[.08] bg-white transition-[transform]! duration-200! dark:border-zinc-800 dark:bg-zinc-950 md:sticky md:top-0 md:h-screen md:[transform:translateX(0)] ${
           isOpen ? "[transform:translateX(0)]" : "[transform:translateX(-100%)]"
         }`}
       >
@@ -166,76 +174,68 @@ export default function Sidebar({ isAdmin = false }: { isAdmin?: boolean }) {
           </Link>
         </div>
 
-        <nav className="flex flex-1 flex-col gap-2 px-3 pb-4 md:py-2">
-          <Link
-            href="/"
-            onClick={() => setIsOpen(false)}
-            className={`flex items-center gap-3 rounded-md px-3 py-3 text-sm font-medium transition-colors ${
-              pathname === "/"
-                ? "bg-black text-white dark:bg-white dark:text-black"
-                : "text-zinc-700 hover:bg-black/[.04] dark:text-zinc-300 dark:hover:bg-zinc-800"
-            }`}
-          >
-            <HomeIcon className="h-4.5 w-4.5 shrink-0" />
-            Ana Sayfa
-          </Link>
-
-          {ungroupedTools.map((tool) => (
-            <ToolNavItem
-              key={tool.name}
-              tool={tool}
-              isActive={pathname === tool.href}
-              onNavigate={() => setIsOpen(false)}
-            />
-          ))}
-
-          {Object.entries(groupedTools).map(([groupName, groupTools]) => (
-            <div
-              key={groupName}
-              className="mt-2 border-t border-black/[.08] pt-2 dark:border-zinc-800"
-            >
-              <p className="px-3 pb-1 pt-1 text-[11px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-600">
-                {groupName}
-              </p>
-              <div className="flex flex-col gap-2">
-                {groupTools.map((tool) => (
-                  <ToolNavItem
-                    key={tool.name}
-                    tool={tool}
-                    isActive={pathname === tool.href}
-                    onNavigate={() => setIsOpen(false)}
-                  />
-                ))}
-              </div>
-            </div>
-          ))}
-        </nav>
-
-        {isAdmin && (
-          <div className="border-t border-black/[.08] px-3 pt-2 dark:border-zinc-800">
+        {/* Bu bölge bağımsız kayar; alttaki kullanıcı menüsü içerik ne
+            kadar uzun olursa olsun her zaman görünür kalır. */}
+        <div className="flex-1 overflow-y-auto">
+          <nav className="flex flex-col gap-2 px-3 pb-4 md:py-2">
             <Link
-              href="/admin"
+              href="/"
               onClick={() => setIsOpen(false)}
-              className="flex items-center gap-2 rounded-md px-3 py-2.5 text-sm font-medium text-indigo-600 transition-colors hover:bg-indigo-50 dark:text-indigo-400 dark:hover:bg-indigo-950/40"
+              className={`flex items-center gap-3 rounded-md px-3 py-3 text-sm font-medium transition-colors ${
+                pathname === "/"
+                  ? "bg-black text-white dark:bg-white dark:text-black"
+                  : "text-zinc-700 hover:bg-black/[.04] dark:text-zinc-300 dark:hover:bg-zinc-800"
+              }`}
             >
-              🔧 Panele Git
+              <HomeIcon className="h-4.5 w-4.5 shrink-0" />
+              Ana Sayfa
             </Link>
-          </div>
-        )}
 
-        <div className="flex items-center justify-between border-t border-black/[.08] px-6 py-4 dark:border-zinc-800">
-          <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-500 dark:bg-zinc-900 dark:text-zinc-500">
-            Beta &middot; v0.1
-          </span>
-          <form action={logout}>
-            <button
-              type="submit"
-              className="text-xs font-medium text-zinc-500 hover:text-black hover:underline dark:text-zinc-400 dark:hover:text-zinc-50"
-            >
-              Çıkış Yap
-            </button>
-          </form>
+            {ungroupedTools.map((tool) => (
+              <ToolNavItem
+                key={tool.name}
+                tool={tool}
+                isActive={pathname === tool.href}
+                onNavigate={() => setIsOpen(false)}
+              />
+            ))}
+
+            {Object.entries(groupedTools).map(([groupName, groupTools]) => (
+              <div
+                key={groupName}
+                className="mt-2 border-t border-black/[.08] pt-2 dark:border-zinc-800"
+              >
+                <p className="px-3 pb-1 pt-1 text-[11px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-600">
+                  {groupName}
+                </p>
+                <div className="flex flex-col gap-2">
+                  {groupTools.map((tool) => (
+                    <ToolNavItem
+                      key={tool.name}
+                      tool={tool}
+                      isActive={pathname === tool.href}
+                      onNavigate={() => setIsOpen(false)}
+                    />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </nav>
+
+          {isAdmin && (
+            <div className="border-t border-black/[.08] px-3 pt-2 dark:border-zinc-800">
+              <Link
+                href="/admin"
+                onClick={() => setIsOpen(false)}
+                className="flex items-center gap-2 rounded-md px-3 py-2.5 text-sm font-medium text-indigo-600 transition-colors hover:bg-indigo-50 dark:text-indigo-400 dark:hover:bg-indigo-950/40"
+              >
+                🔧 Panele Git
+              </Link>
+            </div>
+          )}
         </div>
+
+        <UserMenu email={userEmail} plan={userPlan} />
       </aside>
     </>
   );
