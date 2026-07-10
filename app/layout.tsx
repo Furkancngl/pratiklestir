@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { Geist_Mono, Inter } from "next/font/google";
 import { auth } from "@/auth";
 import Sidebar from "./components/sidebar";
 import ThemeToggle from "./components/theme-toggle";
 import TopNav from "./components/top-nav";
 import { ThemeProvider } from "./context/theme-context";
+import { isAdminEmail } from "./lib/admin";
 import "./globals.css";
 
 const inter = Inter({
@@ -34,6 +36,9 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await auth();
+  const headersList = await headers();
+  const isAdminSection = headersList.get("x-app-section") === "admin";
+  const isAdmin = isAdminEmail(session?.user?.email);
 
   return (
     <html
@@ -48,7 +53,8 @@ export default async function RootLayout({
         className={`flex min-h-full flex-col ${session ? "md:flex-row" : ""}`}
       >
         <ThemeProvider>
-          {session ? <Sidebar /> : <TopNav />}
+          {!isAdminSection &&
+            (session ? <Sidebar isAdmin={isAdmin} /> : <TopNav />)}
           <main className="flex flex-1 flex-col">{children}</main>
           <ThemeToggle />
         </ThemeProvider>

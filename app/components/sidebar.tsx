@@ -91,7 +91,7 @@ const groupedTools = tools.reduce<Record<string, Tool[]>>((acc, tool) => {
   return acc;
 }, {});
 
-export default function Sidebar() {
+export default function Sidebar({ isAdmin = false }: { isAdmin?: boolean }) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -210,6 +210,18 @@ export default function Sidebar() {
             </div>
           ))}
         </nav>
+
+        {isAdmin && (
+          <div className="border-t border-black/[.08] px-3 pt-2 dark:border-zinc-800">
+            <Link
+              href="/admin"
+              onClick={() => setIsOpen(false)}
+              className="flex items-center gap-2 rounded-md px-3 py-2.5 text-sm font-medium text-indigo-600 transition-colors hover:bg-indigo-50 dark:text-indigo-400 dark:hover:bg-indigo-950/40"
+            >
+              🔧 Panele Git
+            </Link>
+          </div>
+        )}
 
         <div className="flex items-center justify-between border-t border-black/[.08] px-6 py-4 dark:border-zinc-800">
           <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-500 dark:bg-zinc-900 dark:text-zinc-500">
