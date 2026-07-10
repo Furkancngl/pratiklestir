@@ -20,9 +20,15 @@ export default auth((request) => {
     return NextResponse.redirect(new URL("/admin", request.url));
   }
 
+  if (pathname === "/giris" || pathname === "/kayit") {
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-app-section", "auth");
+    return NextResponse.next({ request: { headers: requestHeaders } });
+  }
+
   return NextResponse.next();
 });
 
 export const config = {
-  matcher: ["/", "/admin", "/admin/:path*"],
+  matcher: ["/", "/admin", "/admin/:path*", "/giris", "/kayit"],
 };

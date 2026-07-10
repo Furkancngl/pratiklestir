@@ -37,7 +37,9 @@ export default async function RootLayout({
 }>) {
   const session = await auth();
   const headersList = await headers();
-  const isAdminSection = headersList.get("x-app-section") === "admin";
+  const appSection = headersList.get("x-app-section");
+  const isAdminSection = appSection === "admin";
+  const isAuthSection = appSection === "auth";
   const isAdmin = isAdminEmail(session?.user?.email);
 
   return (
@@ -54,6 +56,7 @@ export default async function RootLayout({
       >
         <ThemeProvider>
           {!isAdminSection &&
+            !isAuthSection &&
             (session ? (
               <Sidebar
                 isAdmin={isAdmin}

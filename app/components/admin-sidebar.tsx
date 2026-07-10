@@ -32,7 +32,7 @@ export default function AdminSidebar({
         </span>
       </div>
 
-      <div className="flex-1 overflow-y-auto">
+      <div className="sidebar-scroll flex-1 overflow-y-auto">
         <nav className="flex flex-col gap-1 px-3 pb-4">
           {NAV_ITEMS.map((item) => {
             const isActive = pathname === item.href;

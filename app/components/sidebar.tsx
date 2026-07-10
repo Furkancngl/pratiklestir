@@ -176,7 +176,7 @@ export default function Sidebar({
 
         {/* Bu bölge bağımsız kayar; alttaki kullanıcı menüsü içerik ne
             kadar uzun olursa olsun her zaman görünür kalır. */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="sidebar-scroll flex-1 overflow-y-auto">
           <nav className="flex flex-col gap-2 px-3 pb-4 md:py-2">
             <Link
               href="/"

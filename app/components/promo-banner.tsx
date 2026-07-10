@@ -27,7 +27,7 @@ export default function PromoBanner() {
           <span
             className={`${cycleWordClassName} [animation:cycle-words_8s_cubic-bezier(.65,0,.35,1)_4s_infinite]`}
           >
-            kayıt gerektirmeyen
+            kullanımı kolay
           </span>
           <span
             className={`${cycleWordClassName} [animation:cycle-words_8s_cubic-bezier(.65,0,.35,1)_6s_infinite]`}
@@ -43,13 +43,9 @@ export default function PromoBanner() {
         Aradığınız tüm özellikler, tek çatı altında
       </p>
 
-      <p className="relative mx-auto mt-6 max-w-xl text-sm leading-7 text-zinc-600 dark:text-zinc-400">
-        QR kod oluşturmadan PDF birleştirmeye, arka plan silmeden görsel
-        sıkıştırmaya kadar ihtiyacın olan tüm küçük araçlar tek bir yerde.
-        Hiçbir aracımız için kayıt olman gerekmez, dosyaların tamamen
-        tarayıcında işlenir ve sunucularımıza hiç yüklenmez — ister öğrenci
-        ister serbest çalışan olun, günlük işlerinizi saniyeler içinde
-        halletmeniz için tasarlandı.
+      <p className="relative mx-auto mt-6 max-w-lg text-base leading-relaxed text-zinc-700 sm:text-lg dark:text-zinc-200">
+        QR kod, PDF ve görsel araçları tek çatı altında — hızlı, güvenli ve
+        tamamen ücretsiz. Dosyaların tarayıcından hiç çıkmaz.
       </p>
 
       <button
