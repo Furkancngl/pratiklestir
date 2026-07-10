@@ -1,6 +1,5 @@
-"use client";
-
 import Link from "next/link";
+import type { ComponentType } from "react";
 
 type AnimatedCardProps = {
   title: string;
@@ -9,6 +8,7 @@ type AnimatedCardProps = {
   href?: string;
   badge?: string;
   beta?: boolean;
+  icon: ComponentType<{ className?: string }>;
 };
 
 const strokeClassNames: Record<string, string> = {
@@ -25,6 +25,20 @@ const strokeClassNames: Record<string, string> = {
   "bg-amber-500": "stroke-amber-500",
 };
 
+const iconStyleClassNames: Record<string, { bg: string; icon: string }> = {
+  "bg-blue-500": { bg: "bg-blue-500/15 dark:bg-blue-500/20", icon: "text-blue-600 dark:text-blue-300" },
+  "bg-orange-500": { bg: "bg-orange-500/15 dark:bg-orange-500/20", icon: "text-orange-600 dark:text-orange-300" },
+  "bg-green-500": { bg: "bg-green-500/15 dark:bg-green-500/20", icon: "text-green-600 dark:text-green-300" },
+  "bg-purple-500": { bg: "bg-purple-500/15 dark:bg-purple-500/20", icon: "text-purple-600 dark:text-purple-300" },
+  "bg-red-500": { bg: "bg-red-500/15 dark:bg-red-500/20", icon: "text-red-600 dark:text-red-300" },
+  "bg-cyan-500": { bg: "bg-cyan-500/15 dark:bg-cyan-500/20", icon: "text-cyan-600 dark:text-cyan-300" },
+  "bg-yellow-500": { bg: "bg-yellow-500/15 dark:bg-yellow-500/20", icon: "text-yellow-600 dark:text-yellow-300" },
+  "bg-teal-500": { bg: "bg-teal-500/15 dark:bg-teal-500/20", icon: "text-teal-600 dark:text-teal-300" },
+  "bg-indigo-600": { bg: "bg-indigo-500/15 dark:bg-indigo-500/20", icon: "text-indigo-600 dark:text-indigo-300" },
+  "bg-lime-500": { bg: "bg-lime-500/15 dark:bg-lime-500/20", icon: "text-lime-600 dark:text-lime-300" },
+  "bg-amber-500": { bg: "bg-amber-500/15 dark:bg-amber-500/20", icon: "text-amber-600 dark:text-amber-300" },
+};
+
 export default function AnimatedCard({
   title,
   description,
@@ -32,11 +46,15 @@ export default function AnimatedCard({
   href,
   badge,
   beta,
+  icon: Icon,
 }: AnimatedCardProps) {
   const disabled = !href;
 
   const strokeClassName =
     strokeClassNames[accentClassName] ?? "stroke-black/50 dark:stroke-white/80";
+  const iconStyle =
+    iconStyleClassNames[accentClassName] ??
+    ({ bg: "bg-zinc-500/15 dark:bg-zinc-500/20", icon: "text-zinc-600 dark:text-zinc-300" } as const);
 
   const titleColor = disabled
     ? "text-zinc-400 dark:text-zinc-600"
@@ -44,10 +62,16 @@ export default function AnimatedCard({
   const descriptionColor = disabled
     ? "text-zinc-400 dark:text-zinc-600"
     : "text-zinc-600 dark:text-zinc-400";
+  const iconWrapClassName = disabled
+    ? "bg-zinc-100 dark:bg-zinc-800/60"
+    : iconStyle.bg;
+  const iconColorClassName = disabled
+    ? "text-zinc-400 dark:text-zinc-600"
+    : iconStyle.icon;
 
   const content = (
     <>
-      {/* Mevcut renkli üst çizgi */}
+      {/* Renkli üst çizgi */}
       <span
         aria-hidden="true"
         className={`absolute inset-x-0 top-0 h-1 ${accentClassName}`}
@@ -70,8 +94,14 @@ export default function AnimatedCard({
         />
       </svg>
 
-      <div className="relative flex flex-col gap-2">
-        <div className="flex items-center justify-between">
+      <div className="relative flex flex-col items-center gap-3 text-center">
+        <div
+          className={`flex h-14 w-14 items-center justify-center rounded-full ${iconWrapClassName}`}
+        >
+          <Icon className={`h-6 w-6 ${iconColorClassName}`} />
+        </div>
+
+        <div className="flex flex-wrap items-center justify-center gap-2">
           <span className={`font-semibold ${titleColor}`}>
             {title}
             {!disabled && " →"}
@@ -87,13 +117,14 @@ export default function AnimatedCard({
             </span>
           )}
         </div>
+
         <p className={`text-sm ${descriptionColor}`}>{description}</p>
       </div>
     </>
   );
 
   const baseClassName =
-    "group relative flex flex-col gap-2 overflow-hidden rounded-2xl border border-black/[.08] bg-white p-6 transition-all duration-300 ease-out dark:border-zinc-800 dark:bg-zinc-950";
+    "group relative flex flex-col items-center gap-2 overflow-hidden rounded-2xl border border-black/[.08] bg-white p-6 shadow-lg shadow-black/5 transition-all duration-300 ease-out dark:border-white/10 dark:bg-[#1c1c1f] dark:shadow-black/40";
 
   if (disabled) {
     return (
@@ -106,7 +137,7 @@ export default function AnimatedCard({
   return (
     <Link
       href={href}
-      className={`${baseClassName} hover:-translate-y-1 hover:shadow-md`}
+      className={`${baseClassName} hover:-translate-y-1 hover:shadow-xl hover:shadow-black/10 dark:hover:shadow-black/60`}
     >
       {content}
     </Link>

@@ -1,3 +1,5 @@
+"use client";
+
 const cycleWordClassName =
   "col-start-1 row-start-1 h-[1.4em] leading-[1.4em] whitespace-nowrap bg-linear-to-r from-purple-400 via-indigo-400 to-pink-400 bg-clip-text font-extrabold text-transparent opacity-0";
 
@@ -40,6 +42,28 @@ export default function PromoBanner() {
         <span className="text-amber-500">✨</span>
         Aradığınız tüm özellikler, tek çatı altında
       </p>
+
+      <p className="relative mx-auto mt-6 max-w-xl text-sm leading-7 text-zinc-600 dark:text-zinc-400">
+        QR kod oluşturmadan PDF birleştirmeye, arka plan silmeden görsel
+        sıkıştırmaya kadar ihtiyacın olan tüm küçük araçlar tek bir yerde.
+        Hiçbir aracımız için kayıt olman gerekmez, dosyaların tamamen
+        tarayıcında işlenir ve sunucularımıza hiç yüklenmez — ister öğrenci
+        ister serbest çalışan olun, günlük işlerinizi saniyeler içinde
+        halletmeniz için tasarlandı.
+      </p>
+
+      <button
+        type="button"
+        onClick={() =>
+          document
+            .getElementById("araclar")
+            ?.scrollIntoView({ behavior: "smooth" })
+        }
+        className="relative mx-auto mt-6 flex items-center gap-2 rounded-full bg-linear-to-r from-purple-500 to-indigo-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-purple-500/30 transition-transform! duration-200! hover:-translate-y-0.5 hover:shadow-xl hover:shadow-purple-500/40"
+      >
+        Araçları Dene
+        <span aria-hidden="true">↓</span>
+      </button>
     </div>
   );
 }

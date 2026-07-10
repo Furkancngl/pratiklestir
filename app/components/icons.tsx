@@ -1,3 +1,5 @@
+import type { ComponentType } from "react";
+
 type IconProps = {
   className?: string;
 };
@@ -184,3 +186,18 @@ export function ImageIcon({ className }: IconProps) {
     </svg>
   );
 }
+
+// Araç kartlarında ve sidebar'da ortak kullanılan, href'e göre ikon eşlemesi.
+export const toolIcons: Record<string, ComponentType<IconProps>> = {
+  "/": HomeIcon,
+  "/qr-kod": QrCodeIcon,
+  "/pdf-birlestir": DocumentIcon,
+  "/arka-plan-sil": ImageIcon,
+  "/makale-hazirla": PenIcon,
+  "/gorsel-sikistir": CompressIcon,
+  "/pdf-sikistir": DocumentIcon,
+  "/video-sikistir": VideoIcon,
+  "/gorsel-genislet": ExpandIcon,
+  "/kalite-arttir": SparkleIcon,
+  "/gorsel-netlestir": FocusIcon,
+};

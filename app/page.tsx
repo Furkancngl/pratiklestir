@@ -1,5 +1,7 @@
 import AnimatedCard from "./components/animated-card";
+import { toolIcons } from "./components/icons";
 import PromoBanner from "./components/promo-banner";
+import Reveal from "./components/reveal";
 import { tools, type Tool } from "./lib/tools";
 
 const ungroupedTools = tools.filter((tool) => !tool.group);
@@ -25,36 +27,44 @@ export default function Home() {
 
       <PromoBanner />
 
-      <div className="mt-12 grid w-full max-w-3xl grid-cols-1 gap-4 sm:grid-cols-2">
-        {ungroupedTools.map((tool) => (
-          <AnimatedCard
-            key={tool.name}
-            title={tool.name}
-            description={tool.description}
-            accentClassName={tool.accentClassName}
-            href={tool.available ? tool.href : undefined}
-            badge={tool.available ? undefined : "yakında"}
-            beta={tool.beta}
-          />
-        ))}
-      </div>
-
-      {Object.entries(groupedTools).map(([groupName, groupTools]) => (
-        <div key={groupName} className="mt-12 w-full max-w-3xl">
-          <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-600">
-            {groupName} Araçları
-          </h2>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {groupTools.map((tool) => (
+      <div id="araclar" className="w-full max-w-3xl pt-16">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {ungroupedTools.map((tool, index) => (
+            <Reveal key={tool.name} delayMs={(index % 6) * 90}>
               <AnimatedCard
-                key={tool.name}
                 title={tool.name}
                 description={tool.description}
                 accentClassName={tool.accentClassName}
                 href={tool.available ? tool.href : undefined}
                 badge={tool.available ? undefined : "yakında"}
                 beta={tool.beta}
+                icon={toolIcons[tool.href]}
               />
+            </Reveal>
+          ))}
+        </div>
+      </div>
+
+      {Object.entries(groupedTools).map(([groupName, groupTools]) => (
+        <div key={groupName} className="mt-12 w-full max-w-3xl">
+          <Reveal>
+            <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-600">
+              {groupName} Araçları
+            </h2>
+          </Reveal>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {groupTools.map((tool, index) => (
+              <Reveal key={tool.name} delayMs={(index % 6) * 90}>
+                <AnimatedCard
+                  title={tool.name}
+                  description={tool.description}
+                  accentClassName={tool.accentClassName}
+                  href={tool.available ? tool.href : undefined}
+                  badge={tool.available ? undefined : "yakında"}
+                  beta={tool.beta}
+                  icon={toolIcons[tool.href]}
+                />
+              </Reveal>
             ))}
           </div>
         </div>
