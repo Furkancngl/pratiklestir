@@ -1,4 +1,5 @@
 import AnimatedCard from "./components/animated-card";
+import PromoBanner from "./components/promo-banner";
 import { tools, type Tool } from "./lib/tools";
 
 const ungroupedTools = tools.filter((tool) => !tool.group);
@@ -21,6 +22,8 @@ export default function Home() {
           araçlar sunuyoruz. Başlamak için aşağıdan bir araç seç.
         </p>
       </div>
+
+      <PromoBanner />
 
       <div className="mt-12 grid w-full max-w-3xl grid-cols-1 gap-4 sm:grid-cols-2">
         {ungroupedTools.map((tool) => (

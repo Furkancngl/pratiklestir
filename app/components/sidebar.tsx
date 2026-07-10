@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, type ComponentType } from "react";
+import { logout } from "../actions/auth";
 import { tools, type Tool } from "../lib/tools";
 import {
   CompressIcon,
@@ -210,10 +211,18 @@ export default function Sidebar() {
           ))}
         </nav>
 
-        <div className="border-t border-black/[.08] px-6 py-4 dark:border-zinc-800">
+        <div className="flex items-center justify-between border-t border-black/[.08] px-6 py-4 dark:border-zinc-800">
           <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-500 dark:bg-zinc-900 dark:text-zinc-500">
             Beta &middot; v0.1
           </span>
+          <form action={logout}>
+            <button
+              type="submit"
+              className="text-xs font-medium text-zinc-500 hover:text-black hover:underline dark:text-zinc-400 dark:hover:text-zinc-50"
+            >
+              Çıkış Yap
+            </button>
+          </form>
         </div>
       </aside>
     </>

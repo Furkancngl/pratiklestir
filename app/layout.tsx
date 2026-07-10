@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Geist_Mono, Inter } from "next/font/google";
+import { auth } from "@/auth";
 import Sidebar from "./components/sidebar";
 import ThemeToggle from "./components/theme-toggle";
+import TopNav from "./components/top-nav";
 import { ThemeProvider } from "./context/theme-context";
 import "./globals.css";
 
@@ -26,11 +28,13 @@ export const metadata: Metadata = {
 // (bkz. context/theme-context.tsx), böylece hydration'da flaş olmaz.
 const themeInitScript = `(function(){try{var t=localStorage.getItem("theme");var isDark=t==="light"||t==="dark"?t==="dark":window.matchMedia("(prefers-color-scheme: dark)").matches;document.documentElement.classList.toggle("dark",isDark)}catch(e){}})()`;
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
+
   return (
     <html
       lang="tr"
@@ -40,9 +44,11 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
-      <body className="flex min-h-full flex-col md:flex-row">
+      <body
+        className={`flex min-h-full flex-col ${session ? "md:flex-row" : ""}`}
+      >
         <ThemeProvider>
-          <Sidebar />
+          {session ? <Sidebar /> : <TopNav />}
           <main className="flex flex-1 flex-col">{children}</main>
           <ThemeToggle />
         </ThemeProvider>
