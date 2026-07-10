@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { logout } from "../actions/auth";
+import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
 import { HelpIcon, LogoutIcon, SettingsIcon, TrendingUpIcon } from "./icons";
 
 type UserMenuProps = {
@@ -16,8 +17,15 @@ const PLAN_LABELS: Record<string, string> = {
 };
 
 export default function UserMenu({ name, email, plan }: UserMenuProps) {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleLogout = async () => {
+    await signOut({ redirect: false });
+    router.push("/");
+    router.refresh();
+  };
 
   useEffect(() => {
     if (!open) return;
@@ -77,15 +85,14 @@ export default function UserMenu({ name, email, plan }: UserMenuProps) {
 
           <div className="my-1.5 border-t border-black/[.08] dark:border-zinc-800" />
 
-          <form action={logout}>
-            <button
-              type="submit"
-              className="flex w-full items-center gap-2.5 px-3.5 py-2.5 text-left text-sm font-medium text-zinc-700 transition-colors hover:bg-black/[.04] dark:text-zinc-300 dark:hover:bg-zinc-800"
-            >
-              <LogoutIcon className="h-4 w-4 shrink-0" />
-              Çıkış Yap
-            </button>
-          </form>
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="flex w-full items-center gap-2.5 px-3.5 py-2.5 text-left text-sm font-medium text-zinc-700 transition-colors hover:bg-black/[.04] dark:text-zinc-300 dark:hover:bg-zinc-800"
+          >
+            <LogoutIcon className="h-4 w-4 shrink-0" />
+            Çıkış Yap
+          </button>
         </div>
       )}
 

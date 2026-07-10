@@ -1,14 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { signup } from "@/app/actions/auth";
 import AuthBrandPanel from "../components/auth-brand-panel";
 import { GoogleIcon } from "../components/icons";
 
 export default function KayitPage() {
+  const router = useRouter();
   const [state, formAction, pending] = useActionState(signup, undefined);
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    if (state?.success) {
+      router.push("/");
+      router.refresh();
+    }
+  }, [state, router]);
 
   return (
     <div className="grid min-h-screen bg-white dark:bg-[#0a0a0f] md:grid-cols-[1.05fr_1fr]">

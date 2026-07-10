@@ -3,13 +3,15 @@
 import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import { AuthError } from "next-auth";
-import { signIn, signOut } from "@/auth";
+import { revalidatePath } from "next/cache";
+import { signIn } from "@/auth";
 import { db } from "@/app/lib/db";
 import { users } from "@/app/lib/db/schema";
 
 export type SignupState =
   | {
       error?: string;
+      success?: boolean;
     }
   | undefined;
 
@@ -51,19 +53,20 @@ export async function signup(
   await db.insert(users).values({ email, passwordHash, name });
 
   try {
-    await signIn("credentials", {
-      email,
-      password,
-      redirectTo: "/",
-    });
+    // redirect:false kullanıyoruz ki NextAuth burada kendi redirect'ini
+    // fırlatmasın - RootLayout session'ı sadece ilk yüklemede okuduğu için
+    // (Partial Rendering, layout'ları navigasyonda otomatik yenilemiyor)
+    // Sidebar/TopNav güncellenmeden kullanıcı eski sayfada kalırdı. Bunun
+    // yerine kontrolü client'a (kayit/page.tsx) bırakıp orada
+    // router.push + router.refresh ile garantiliyoruz.
+    await signIn("credentials", { email, password, redirect: false });
   } catch (error) {
     if (error instanceof AuthError) {
       return { error: "Hesap oluşturuldu ama giriş yapılamadı. Lütfen giriş yapın." };
     }
     throw error;
   }
-}
 
-export async function logout() {
-  await signOut({ redirectTo: "/" });
+  revalidatePath("/", "layout");
+  return { success: true };
 }
