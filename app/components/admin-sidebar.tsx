@@ -10,9 +10,11 @@ const NAV_ITEMS = [
 ];
 
 export default function AdminSidebar({
+  userName,
   userEmail,
   userPlan,
 }: {
+  userName?: string | null;
   userEmail?: string | null;
   userPlan?: string | null;
 }) {
@@ -63,7 +65,7 @@ export default function AdminSidebar({
         </div>
       </div>
 
-      <UserMenu email={userEmail} plan={userPlan} />
+      <UserMenu name={userName} email={userEmail} plan={userPlan} />
     </aside>
   );
 }

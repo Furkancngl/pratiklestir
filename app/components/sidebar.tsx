@@ -93,10 +93,12 @@ const groupedTools = tools.reduce<Record<string, Tool[]>>((acc, tool) => {
 
 export default function Sidebar({
   isAdmin = false,
+  userName,
   userEmail,
   userPlan,
 }: {
   isAdmin?: boolean;
+  userName?: string | null;
   userEmail?: string | null;
   userPlan?: string | null;
 }) {
@@ -235,7 +237,7 @@ export default function Sidebar({
           )}
         </div>
 
-        <UserMenu email={userEmail} plan={userPlan} />
+        <UserMenu name={userName} email={userEmail} plan={userPlan} />
       </aside>
     </>
   );

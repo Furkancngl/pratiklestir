@@ -17,6 +17,7 @@ export default async function AdminLayout({
   return (
     <div className="flex flex-1 flex-col md:flex-row">
       <AdminSidebar
+        userName={session?.user?.name}
         userEmail={session?.user?.email}
         userPlan={session?.user?.plan}
       />

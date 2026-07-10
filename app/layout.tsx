@@ -60,6 +60,7 @@ export default async function RootLayout({
             (session ? (
               <Sidebar
                 isAdmin={isAdmin}
+                userName={session.user?.name}
                 userEmail={session.user?.email}
                 userPlan={session.user?.plan}
               />

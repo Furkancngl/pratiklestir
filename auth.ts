@@ -37,7 +37,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         );
         if (!passwordsMatch) return null;
 
-        return { id: user.id, email: user.email, plan: user.plan };
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          plan: user.plan,
+        };
       },
     }),
   ],
@@ -45,12 +50,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         token.plan = user.plan;
+        token.name = user.name;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
         session.user.plan = token.plan as string;
+        session.user.name = token.name as string | null | undefined;
       }
       return session;
     },

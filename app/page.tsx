@@ -1,4 +1,7 @@
+import { auth } from "@/auth";
 import AnimatedCard from "./components/animated-card";
+import HowItWorks from "./components/how-it-works";
+import HowItWorksButton from "./components/how-it-works-button";
 import { toolIcons } from "./components/icons";
 import PromoBanner from "./components/promo-banner";
 import Reveal from "./components/reveal";
@@ -12,7 +15,9 @@ const groupedTools = tools.reduce<Record<string, Tool[]>>((acc, tool) => {
   return acc;
 }, {});
 
-export default function Home() {
+export default async function Home() {
+  const session = await auth();
+
   return (
     <div className="flex flex-1 flex-col items-center bg-zinc-50 px-6 py-16 dark:bg-zinc-900">
       <div className="flex max-w-xl flex-col items-center text-center">
@@ -23,6 +28,7 @@ export default function Home() {
           Günlük işlerini hızlandıran, ücretsiz ve kullanımı kolay küçük
           araçlar sunuyoruz. Başlamak için aşağıdan bir araç seç.
         </p>
+        {!session && <HowItWorksButton />}
       </div>
 
       <PromoBanner />
@@ -69,6 +75,8 @@ export default function Home() {
           </div>
         </div>
       ))}
+
+      {!session && <HowItWorks />}
     </div>
   );
 }

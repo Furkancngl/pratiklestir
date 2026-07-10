@@ -5,6 +5,7 @@ import { logout } from "../actions/auth";
 import { HelpIcon, LogoutIcon, SettingsIcon, TrendingUpIcon } from "./icons";
 
 type UserMenuProps = {
+  name?: string | null;
   email?: string | null;
   plan?: string | null;
 };
@@ -14,7 +15,7 @@ const PLAN_LABELS: Record<string, string> = {
   pro: "Pro Plan",
 };
 
-export default function UserMenu({ email, plan }: UserMenuProps) {
+export default function UserMenu({ name, email, plan }: UserMenuProps) {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -38,8 +39,9 @@ export default function UserMenu({ email, plan }: UserMenuProps) {
     };
   }, [open]);
 
-  const initial = email ? email.charAt(0).toUpperCase() : "?";
-  const planLabel = plan ? (PLAN_LABELS[plan] ?? plan) : null;
+  const primaryLabel = name || email || "Kullanıcı";
+  const secondaryLabel = name ? email : plan ? (PLAN_LABELS[plan] ?? plan) : null;
+  const initial = primaryLabel.charAt(0).toUpperCase();
 
   return (
     <div
@@ -99,11 +101,11 @@ export default function UserMenu({ email, plan }: UserMenuProps) {
         </span>
         <span className="min-w-0 flex-1">
           <span className="block truncate text-sm font-medium text-black dark:text-zinc-50">
-            {email ?? "Kullanıcı"}
+            {primaryLabel}
           </span>
-          {planLabel && (
+          {secondaryLabel && (
             <span className="block truncate text-xs text-zinc-500 dark:text-zinc-400">
-              {planLabel}
+              {secondaryLabel}
             </span>
           )}
         </span>

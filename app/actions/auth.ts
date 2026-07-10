@@ -24,6 +24,7 @@ export async function signup(
     .toLowerCase();
   const password = String(formData.get("password") ?? "");
   const passwordConfirm = String(formData.get("passwordConfirm") ?? "");
+  const name = String(formData.get("fullName") ?? "").trim() || null;
 
   if (!EMAIL_REGEX.test(email)) {
     return { error: "Lütfen geçerli bir e-posta adresi girin." };
@@ -47,7 +48,7 @@ export async function signup(
 
   const passwordHash = await bcrypt.hash(password, 10);
 
-  await db.insert(users).values({ email, passwordHash });
+  await db.insert(users).values({ email, passwordHash, name });
 
   try {
     await signIn("credentials", {
