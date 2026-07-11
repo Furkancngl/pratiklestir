@@ -1,5 +1,7 @@
 "use client";
 
+import ToolSearch from "./tool-search";
+
 const cycleWordClassName =
   "col-start-1 row-start-1 h-[1.4em] leading-[1.4em] whitespace-nowrap bg-linear-to-r from-purple-400 via-indigo-400 to-pink-400 bg-clip-text font-extrabold text-transparent opacity-0";
 
@@ -47,6 +49,8 @@ export default function PromoBanner() {
         QR kod, PDF ve görsel araçları tek çatı altında — hızlı, güvenli ve
         tamamen ücretsiz. Dosyaların tarayıcından hiç çıkmaz.
       </p>
+
+      <ToolSearch />
 
       <button
         type="button"

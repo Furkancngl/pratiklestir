@@ -7,12 +7,13 @@ import { useEffect, useState, type ComponentType } from "react";
 import { tools } from "../lib/tools";
 import UserMenu from "./user-menu";
 import {
+  CalculatorIcon,
   ChevronRightIcon,
   DocumentIcon,
   HomeIcon,
   ImageIcon,
   PenIcon,
-  QrCodeIcon,
+  SunIcon,
   VideoIcon,
 } from "./icons";
 
@@ -50,11 +51,16 @@ function leaf(href: string, label: string): SidebarLeaf {
 const navEntries: SidebarEntry[] = [
   { type: "link", name: "Ana Sayfa", href: "/", icon: HomeIcon, available: true },
   {
-    type: "link",
-    name: "QR Kod Oluşturucu",
-    href: "/qr-kod",
-    icon: QrCodeIcon,
-    available: true,
+    type: "category",
+    name: "Günlük",
+    icon: SunIcon,
+    items: [
+      leaf("/qr-kod", "QR Kod Oluştur"),
+      leaf("/qr-kod-oku", "QR Kod Oku"),
+      leaf("/sifre-olusturucu", "Şifre Oluşturucu"),
+      leaf("/kelime-sayaci", "Kelime Sayacı"),
+      leaf("/karakter-sayaci", "Karakter Sayacı"),
+    ],
   },
   {
     type: "category",
@@ -84,6 +90,19 @@ const navEntries: SidebarEntry[] = [
     name: "Video",
     icon: VideoIcon,
     items: [leaf("/video-sikistir", "Sıkıştır")],
+  },
+  {
+    type: "category",
+    name: "Hesapla",
+    icon: CalculatorIcon,
+    items: [
+      leaf("/kdv-hesapla", "KDV Hesapla"),
+      leaf("/yuzde-hesapla", "Yüzde Hesapla"),
+      leaf("/doviz-hesapla", "Döviz Hesapla"),
+      leaf("/kredi-hesapla", "Kredi Hesapla"),
+      leaf("/ortalama-hesapla", "Ortalama Hesapla"),
+      leaf("/indirim-hesapla", "İndirim Hesapla"),
+    ],
   },
   {
     type: "link",
@@ -221,17 +240,15 @@ export default function Sidebar({
     const initial = activeCategoryName(pathname);
     return initial ? new Set([initial]) : new Set();
   });
+  const [syncedPathname, setSyncedPathname] = useState(pathname);
 
-  useEffect(() => {
+  if (pathname !== syncedPathname) {
+    setSyncedPathname(pathname);
     const current = activeCategoryName(pathname);
-    if (!current) return;
-    setOpenCategories((prev) => {
-      if (prev.has(current)) return prev;
-      const next = new Set(prev);
-      next.add(current);
-      return next;
-    });
-  }, [pathname]);
+    if (current && !openCategories.has(current)) {
+      setOpenCategories((prev) => new Set(prev).add(current));
+    }
+  }
 
   useEffect(() => {
     if (!isOpen) return;

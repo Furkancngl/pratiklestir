@@ -23,6 +23,12 @@ const strokeClassNames: Record<string, string> = {
   "bg-indigo-600": "stroke-indigo-600",
   "bg-lime-500": "stroke-lime-500",
   "bg-amber-500": "stroke-amber-500",
+  "bg-rose-500": "stroke-rose-500",
+  "bg-sky-500": "stroke-sky-500",
+  "bg-fuchsia-500": "stroke-fuchsia-500",
+  "bg-emerald-500": "stroke-emerald-500",
+  "bg-violet-500": "stroke-violet-500",
+  "bg-pink-500": "stroke-pink-500",
 };
 
 const iconStyleClassNames: Record<string, { bg: string; icon: string }> = {
@@ -37,6 +43,12 @@ const iconStyleClassNames: Record<string, { bg: string; icon: string }> = {
   "bg-indigo-600": { bg: "bg-indigo-500/15 dark:bg-indigo-500/20", icon: "text-indigo-600 dark:text-indigo-300" },
   "bg-lime-500": { bg: "bg-lime-500/15 dark:bg-lime-500/20", icon: "text-lime-600 dark:text-lime-300" },
   "bg-amber-500": { bg: "bg-amber-500/15 dark:bg-amber-500/20", icon: "text-amber-600 dark:text-amber-300" },
+  "bg-rose-500": { bg: "bg-rose-500/15 dark:bg-rose-500/20", icon: "text-rose-600 dark:text-rose-300" },
+  "bg-sky-500": { bg: "bg-sky-500/15 dark:bg-sky-500/20", icon: "text-sky-600 dark:text-sky-300" },
+  "bg-fuchsia-500": { bg: "bg-fuchsia-500/15 dark:bg-fuchsia-500/20", icon: "text-fuchsia-600 dark:text-fuchsia-300" },
+  "bg-emerald-500": { bg: "bg-emerald-500/15 dark:bg-emerald-500/20", icon: "text-emerald-600 dark:text-emerald-300" },
+  "bg-violet-500": { bg: "bg-violet-500/15 dark:bg-violet-500/20", icon: "text-violet-600 dark:text-violet-300" },
+  "bg-pink-500": { bg: "bg-pink-500/15 dark:bg-pink-500/20", icon: "text-pink-600 dark:text-pink-300" },
 };
 
 export default function AnimatedCard({
