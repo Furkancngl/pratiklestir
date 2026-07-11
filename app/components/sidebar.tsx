@@ -3,57 +3,121 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, type ComponentType } from "react";
-import { tools, type Tool } from "../lib/tools";
+import { tools } from "../lib/tools";
 import UserMenu from "./user-menu";
 import {
-  CompressIcon,
+  ChevronRightIcon,
   DocumentIcon,
-  ExpandIcon,
-  FocusIcon,
   HomeIcon,
   ImageIcon,
   PenIcon,
   QrCodeIcon,
-  SparkleIcon,
   VideoIcon,
 } from "./icons";
 
-const icons: Record<string, ComponentType<{ className?: string }>> = {
-  "/": HomeIcon,
-  "/qr-kod": QrCodeIcon,
-  "/pdf-birlestir": DocumentIcon,
-  "/arka-plan-sil": ImageIcon,
-  "/makale-hazirla": PenIcon,
-  "/gorsel-sikistir": CompressIcon,
-  "/pdf-sikistir": DocumentIcon,
-  "/video-sikistir": VideoIcon,
-  "/gorsel-genislet": ExpandIcon,
-  "/kalite-arttir": SparkleIcon,
-  "/gorsel-netlestir": FocusIcon,
+type IconType = ComponentType<{ className?: string }>;
+
+type SidebarLeaf = {
+  label: string;
+  href: string;
+  available: boolean;
+  beta?: boolean;
 };
 
-function ToolNavItem({
-  tool,
+type SidebarLink = {
+  type: "link";
+  name: string;
+  href: string;
+  icon: IconType;
+  available: boolean;
+};
+
+type SidebarCategory = {
+  type: "category";
+  name: string;
+  icon: IconType;
+  items: SidebarLeaf[];
+};
+
+type SidebarEntry = SidebarLink | SidebarCategory;
+
+function leaf(href: string, label: string): SidebarLeaf {
+  const tool = tools.find((t) => t.href === href);
+  return { label, href, available: tool?.available ?? false, beta: tool?.beta };
+}
+
+const navEntries: SidebarEntry[] = [
+  { type: "link", name: "Ana Sayfa", href: "/", icon: HomeIcon, available: true },
+  {
+    type: "link",
+    name: "QR Kod Oluşturucu",
+    href: "/qr-kod",
+    icon: QrCodeIcon,
+    available: true,
+  },
+  {
+    type: "category",
+    name: "PDF",
+    icon: DocumentIcon,
+    items: [
+      leaf("/pdf-birlestir", "Birleştir"),
+      leaf("/pdf-sikistir", "Sıkıştır"),
+      leaf("/pdf-donustur", "Dönüştür"),
+    ],
+  },
+  {
+    type: "category",
+    name: "Görsel",
+    icon: ImageIcon,
+    items: [
+      leaf("/gorsel-sikistir", "Sıkıştır"),
+      leaf("/arka-plan-sil", "Arka Plan Sil"),
+      leaf("/gorsel-donustur", "Dönüştür"),
+      leaf("/gorsel-genislet", "Genişlet"),
+      leaf("/kalite-arttir", "Kalite Arttır"),
+      leaf("/gorsel-netlestir", "Netleştir"),
+    ],
+  },
+  {
+    type: "category",
+    name: "Video",
+    icon: VideoIcon,
+    items: [leaf("/video-sikistir", "Sıkıştır")],
+  },
+  {
+    type: "link",
+    name: "Makale Hazırla",
+    href: "/makale-hazirla",
+    icon: PenIcon,
+    available: false,
+  },
+];
+
+function activeCategoryName(pathname: string): string | null {
+  const match = navEntries.find(
+    (entry): entry is SidebarCategory =>
+      entry.type === "category" && entry.items.some((item) => item.href === pathname),
+  );
+  return match?.name ?? null;
+}
+
+function SidebarLeafLink({
+  item,
   isActive,
   onNavigate,
 }: {
-  tool: Tool;
+  item: SidebarLeaf;
   isActive: boolean;
   onNavigate: () => void;
 }) {
-  const Icon = icons[tool.href];
-
-  if (!tool.available) {
+  if (!item.available) {
     return (
       <span
         aria-disabled="true"
-        className="flex cursor-not-allowed items-center justify-between rounded-md px-3 py-3 text-sm text-zinc-400 dark:text-zinc-600"
+        className="flex cursor-not-allowed items-center justify-between gap-2 rounded-md py-2 pl-3 pr-2 text-[13px] text-zinc-400 dark:text-zinc-600"
       >
-        <span className="flex items-center gap-3">
-          <Icon className="h-4.5 w-4.5 shrink-0" />
-          {tool.name}
-        </span>
-        <span className="rounded-full bg-zinc-200 px-2 py-0.5 text-xs font-medium text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
+        {item.label}
+        <span className="rounded-full bg-zinc-200 px-2 py-0.5 text-[10px] font-medium text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
           yakında
         </span>
       </span>
@@ -62,20 +126,17 @@ function ToolNavItem({
 
   return (
     <Link
-      href={tool.href}
+      href={item.href}
       onClick={onNavigate}
-      className={`flex items-center justify-between gap-3 rounded-md px-3 py-3 text-sm font-medium transition-colors ${
+      className={`flex items-center justify-between gap-2 rounded-md py-2 pl-3 pr-2 text-[13px] font-medium transition-colors ${
         isActive
           ? "bg-black text-white dark:bg-white dark:text-black"
-          : "text-zinc-700 hover:bg-black/[.04] dark:text-zinc-300 dark:hover:bg-zinc-800"
+          : "text-zinc-600 hover:bg-black/[.04] dark:text-zinc-400 dark:hover:bg-zinc-800"
       }`}
     >
-      <span className="flex items-center gap-3">
-        <Icon className="h-4.5 w-4.5 shrink-0" />
-        {tool.name}
-      </span>
-      {tool.beta && (
-        <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700 dark:bg-blue-900 dark:text-blue-300">
+      {item.label}
+      {item.beta && (
+        <span className="rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-medium text-blue-700 dark:bg-blue-900 dark:text-blue-300">
           Beta
         </span>
       )}
@@ -83,13 +144,59 @@ function ToolNavItem({
   );
 }
 
-const ungroupedTools = tools.filter((tool) => !tool.group);
-const groupedTools = tools.reduce<Record<string, Tool[]>>((acc, tool) => {
-  if (tool.group) {
-    acc[tool.group] = [...(acc[tool.group] ?? []), tool];
-  }
-  return acc;
-}, {});
+function SidebarCategoryBlock({
+  category,
+  pathname,
+  isOpen,
+  onToggle,
+  onNavigate,
+}: {
+  category: SidebarCategory;
+  pathname: string;
+  isOpen: boolean;
+  onToggle: () => void;
+  onNavigate: () => void;
+}) {
+  const Icon = category.icon;
+
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={isOpen}
+        className="flex w-full items-center justify-between gap-3 rounded-md px-3 py-3 text-sm font-medium text-zinc-700 transition-colors hover:bg-black/[.04] dark:text-zinc-300 dark:hover:bg-zinc-800"
+      >
+        <span className="flex items-center gap-3">
+          <Icon className="h-4.5 w-4.5 shrink-0" />
+          {category.name}
+        </span>
+        <ChevronRightIcon
+          className={`h-4 w-4 shrink-0 text-zinc-400 transition-transform duration-200 dark:text-zinc-600 ${
+            isOpen ? "rotate-90" : ""
+          }`}
+        />
+      </button>
+      <div
+        className="grid transition-[grid-template-rows] duration-300 ease-in-out"
+        style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
+      >
+        <div className="overflow-hidden">
+          <div className="ml-[27px] flex flex-col gap-0.5 border-l border-black/[.08] py-1 pl-3 dark:border-zinc-800">
+            {category.items.map((item) => (
+              <SidebarLeafLink
+                key={item.href}
+                item={item}
+                isActive={pathname === item.href}
+                onNavigate={onNavigate}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Sidebar({
   isAdmin = false,
@@ -104,6 +211,21 @@ export default function Sidebar({
 }) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [openCategories, setOpenCategories] = useState<Set<string>>(() => {
+    const initial = activeCategoryName(pathname);
+    return initial ? new Set([initial]) : new Set();
+  });
+
+  useEffect(() => {
+    const current = activeCategoryName(pathname);
+    if (!current) return;
+    setOpenCategories((prev) => {
+      if (prev.has(current)) return prev;
+      const next = new Set(prev);
+      next.add(current);
+      return next;
+    });
+  }, [pathname]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -113,6 +235,20 @@ export default function Sidebar({
       document.body.style.overflow = previousOverflow;
     };
   }, [isOpen]);
+
+  const toggleCategory = (name: string) => {
+    setOpenCategories((prev) => {
+      const next = new Set(prev);
+      if (next.has(name)) {
+        next.delete(name);
+      } else {
+        next.add(name);
+      }
+      return next;
+    });
+  };
+
+  const closeMobileMenu = () => setIsOpen(false);
 
   return (
     <>
@@ -156,7 +292,7 @@ export default function Sidebar({
 
       {isOpen && (
         <div
-          onClick={() => setIsOpen(false)}
+          onClick={closeMobileMenu}
           className="fixed inset-0 z-40 bg-black/30 md:hidden"
         />
       )}
@@ -169,7 +305,7 @@ export default function Sidebar({
         <div className="px-6 py-6">
           <Link
             href="/"
-            onClick={() => setIsOpen(false)}
+            onClick={closeMobileMenu}
             className="inline-block py-2.5 text-xl font-semibold tracking-tight text-black transition-opacity! hover:opacity-70 dark:text-zinc-50"
           >
             Pratikleştir
@@ -179,56 +315,63 @@ export default function Sidebar({
         {/* Bu bölge bağımsız kayar; alttaki kullanıcı menüsü içerik ne
             kadar uzun olursa olsun her zaman görünür kalır. */}
         <div className="sidebar-scroll flex-1 overflow-y-auto">
-          <nav className="flex flex-col gap-2 px-3 pb-4 md:py-2">
-            <Link
-              href="/"
-              onClick={() => setIsOpen(false)}
-              className={`flex items-center gap-3 rounded-md px-3 py-3 text-sm font-medium transition-colors ${
-                pathname === "/"
-                  ? "bg-black text-white dark:bg-white dark:text-black"
-                  : "text-zinc-700 hover:bg-black/[.04] dark:text-zinc-300 dark:hover:bg-zinc-800"
-              }`}
-            >
-              <HomeIcon className="h-4.5 w-4.5 shrink-0" />
-              Ana Sayfa
-            </Link>
+          <nav className="flex flex-col gap-1 px-3 pb-4 md:py-2">
+            {navEntries.map((entry) => {
+              if (entry.type === "link") {
+                const Icon = entry.icon;
+                if (!entry.available) {
+                  return (
+                    <span
+                      key={entry.name}
+                      aria-disabled="true"
+                      className="flex cursor-not-allowed items-center justify-between rounded-md px-3 py-3 text-sm text-zinc-400 dark:text-zinc-600"
+                    >
+                      <span className="flex items-center gap-3">
+                        <Icon className="h-4.5 w-4.5 shrink-0" />
+                        {entry.name}
+                      </span>
+                      <span className="rounded-full bg-zinc-200 px-2 py-0.5 text-xs font-medium text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
+                        yakında
+                      </span>
+                    </span>
+                  );
+                }
+                const isActive = pathname === entry.href;
+                return (
+                  <Link
+                    key={entry.name}
+                    href={entry.href}
+                    onClick={closeMobileMenu}
+                    className={`flex items-center gap-3 rounded-md px-3 py-3 text-sm font-medium transition-colors ${
+                      isActive
+                        ? "bg-black text-white dark:bg-white dark:text-black"
+                        : "text-zinc-700 hover:bg-black/[.04] dark:text-zinc-300 dark:hover:bg-zinc-800"
+                    }`}
+                  >
+                    <Icon className="h-4.5 w-4.5 shrink-0" />
+                    {entry.name}
+                  </Link>
+                );
+              }
 
-            {ungroupedTools.map((tool) => (
-              <ToolNavItem
-                key={tool.name}
-                tool={tool}
-                isActive={pathname === tool.href}
-                onNavigate={() => setIsOpen(false)}
-              />
-            ))}
-
-            {Object.entries(groupedTools).map(([groupName, groupTools]) => (
-              <div
-                key={groupName}
-                className="mt-2 border-t border-black/[.08] pt-2 dark:border-zinc-800"
-              >
-                <p className="px-3 pb-1 pt-1 text-[11px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-600">
-                  {groupName}
-                </p>
-                <div className="flex flex-col gap-2">
-                  {groupTools.map((tool) => (
-                    <ToolNavItem
-                      key={tool.name}
-                      tool={tool}
-                      isActive={pathname === tool.href}
-                      onNavigate={() => setIsOpen(false)}
-                    />
-                  ))}
-                </div>
-              </div>
-            ))}
+              return (
+                <SidebarCategoryBlock
+                  key={entry.name}
+                  category={entry}
+                  pathname={pathname}
+                  isOpen={openCategories.has(entry.name)}
+                  onToggle={() => toggleCategory(entry.name)}
+                  onNavigate={closeMobileMenu}
+                />
+              );
+            })}
           </nav>
 
           {isAdmin && (
             <div className="border-t border-black/[.08] px-3 pt-2 dark:border-zinc-800">
               <Link
                 href="/admin"
-                onClick={() => setIsOpen(false)}
+                onClick={closeMobileMenu}
                 className="flex items-center gap-2 rounded-md px-3 py-2.5 text-sm font-medium text-indigo-600 transition-colors hover:bg-indigo-50 dark:text-indigo-400 dark:hover:bg-indigo-950/40"
               >
                 🔧 Panele Git
