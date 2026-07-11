@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, type ComponentType } from "react";
@@ -177,23 +178,28 @@ function SidebarCategoryBlock({
           }`}
         />
       </button>
-      <div
-        className="grid transition-[grid-template-rows] duration-300 ease-in-out"
-        style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
-      >
-        <div className="overflow-hidden">
-          <div className="ml-[27px] flex flex-col gap-0.5 border-l border-black/[.08] py-1 pl-3 dark:border-zinc-800">
-            {category.items.map((item) => (
-              <SidebarLeafLink
-                key={item.href}
-                item={item}
-                isActive={pathname === item.href}
-                onNavigate={onNavigate}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25, ease: "easeInOut" }}
+            style={{ overflow: "hidden" }}
+          >
+            <div className="ml-[27px] flex flex-col gap-0.5 border-l border-black/[.08] py-1 pl-3 dark:border-zinc-800">
+              {category.items.map((item) => (
+                <SidebarLeafLink
+                  key={item.href}
+                  item={item}
+                  isActive={pathname === item.href}
+                  onNavigate={onNavigate}
+                />
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
