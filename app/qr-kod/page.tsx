@@ -2,12 +2,15 @@
 
 import { useRef, useState } from "react";
 import QRCode from "qrcode";
+import CreditErrorNotice from "../components/credit-error-notice";
+import { useCreditGate } from "../hooks/use-credit-gate";
 
 export default function QrKodPage() {
   const [text, setText] = useState("");
   const [error, setError] = useState("");
   const [hasQr, setHasQr] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { checkAndConsume, creditError } = useCreditGate("/qr-kod");
 
   const handleGenerate = async () => {
     const value = text.trim();
@@ -19,6 +22,9 @@ export default function QrKodPage() {
 
     const canvas = canvasRef.current;
     if (!canvas) return;
+
+    const allowed = await checkAndConsume();
+    if (!allowed) return;
 
     try {
       await QRCode.toCanvas(canvas, value, {
@@ -157,6 +163,7 @@ export default function QrKodPage() {
           {error && (
             <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
           )}
+          <CreditErrorNotice error={creditError} />
         </div>
 
         <div className="flex flex-col items-center gap-4">

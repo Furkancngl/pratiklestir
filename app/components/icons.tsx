@@ -554,6 +554,76 @@ export function GoogleIcon({ className }: IconProps) {
   );
 }
 
+export function UserIcon({ className }: IconProps) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <circle cx="12" cy="8" r="4" />
+      <path d="M4 21v-1a8 8 0 0 1 16 0v1" />
+    </svg>
+  );
+}
+
+export function StarIcon({ className }: IconProps) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="M12 2l2.6 6.6L22 9.3l-5 4.9 1.2 7L12 17.8 5.8 21.2 7 14.2 2 9.3l7.4-.7z" />
+    </svg>
+  );
+}
+
+export function BellIcon({ className }: IconProps) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
+      <path d="M13.7 21a2 2 0 0 1-3.4 0" />
+    </svg>
+  );
+}
+
+export function PaletteIcon({ className }: IconProps) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <circle cx="13.5" cy="6.5" r="0.5" fill="currentColor" />
+      <circle cx="17.5" cy="10.5" r="0.5" fill="currentColor" />
+      <circle cx="8.5" cy="7.5" r="0.5" fill="currentColor" />
+      <circle cx="6.5" cy="12.5" r="0.5" fill="currentColor" />
+      <path d="M12 2a10 10 0 1 0 10 10c0-1-1-2-2-2h-2a3 3 0 0 1-3-3V6c0-2-1-4-3-4z" />
+    </svg>
+  );
+}
+
 // Araç kartlarında ve sidebar'da ortak kullanılan, href'e göre ikon eşlemesi.
 export const toolIcons: Record<string, ComponentType<IconProps>> = {
   "/": HomeIcon,
@@ -561,7 +631,6 @@ export const toolIcons: Record<string, ComponentType<IconProps>> = {
   "/qr-kod-oku": ScanIcon,
   "/sifre-olusturucu": LockIcon,
   "/kelime-sayaci": TextIcon,
-  "/karakter-sayaci": HashIcon,
   "/kdv-hesapla": ReceiptIcon,
   "/yuzde-hesapla": PercentIcon,
   "/doviz-hesapla": CurrencyExchangeIcon,

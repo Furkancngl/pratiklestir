@@ -3,9 +3,13 @@ import AnimatedCard from "./animated-card";
 import HowItWorks from "./how-it-works";
 import HowItWorksButton from "./how-it-works-button";
 import { toolIcons } from "./icons";
+import MoreToolsCta from "./more-tools-cta";
 import PromoBanner from "./promo-banner";
 import Reveal from "./reveal";
+import Testimonials from "./testimonials";
 import { tools, type Tool } from "../lib/tools";
+
+const PREVIEW_COUNT = 2;
 
 const ungroupedTools = tools.filter((tool) => !tool.group);
 const groupedTools = tools.reduce<Record<string, Tool[]>>((acc, tool) => {
@@ -32,8 +36,13 @@ export default function MarketingHome() {
       <PromoBanner />
 
       <div id="araclar" className="w-full max-w-3xl pt-16">
+        <Reveal>
+          <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-600">
+            Araçlarımız
+          </h2>
+        </Reveal>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {ungroupedTools.map((tool, index) => (
+          {ungroupedTools.slice(0, PREVIEW_COUNT).map((tool, index) => (
             <Reveal key={tool.name} delayMs={(index % 6) * 90}>
               <AnimatedCard
                 title={tool.name}
@@ -47,6 +56,9 @@ export default function MarketingHome() {
             </Reveal>
           ))}
         </div>
+        {ungroupedTools.length > PREVIEW_COUNT && (
+          <MoreToolsCta count={ungroupedTools.length - PREVIEW_COUNT} />
+        )}
       </div>
 
       {Object.entries(groupedTools).map(([groupName, groupTools]) => (
@@ -57,7 +69,7 @@ export default function MarketingHome() {
             </h2>
           </Reveal>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {groupTools.map((tool, index) => (
+            {groupTools.slice(0, PREVIEW_COUNT).map((tool, index) => (
               <Reveal key={tool.name} delayMs={(index % 6) * 90}>
                 <AnimatedCard
                   title={tool.name}
@@ -71,6 +83,9 @@ export default function MarketingHome() {
               </Reveal>
             ))}
           </div>
+          {groupTools.length > PREVIEW_COUNT && (
+            <MoreToolsCta count={groupTools.length - PREVIEW_COUNT} />
+          )}
         </div>
       ))}
 
@@ -86,6 +101,8 @@ export default function MarketingHome() {
       </Reveal>
 
       <HowItWorks />
+
+      <Testimonials />
     </div>
   );
 }

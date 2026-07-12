@@ -1,12 +1,17 @@
+import { eq } from "drizzle-orm";
 import type { Metadata } from "next";
-import { headers } from "next/headers";
 import { Geist_Mono, Inter } from "next/font/google";
 import { auth } from "@/auth";
+import AppChrome from "./components/app-chrome";
+import AuthSessionProvider from "./components/session-provider";
 import Sidebar from "./components/sidebar";
 import ThemeToggle from "./components/theme-toggle";
 import TopNav from "./components/top-nav";
 import { ThemeProvider } from "./context/theme-context";
 import { isAdminEmail } from "./lib/admin";
+import { db } from "./lib/db";
+import { users } from "./lib/db/schema";
+import { getFreshCredits } from "./lib/credits";
 import "./globals.css";
 
 const inter = Inter({
@@ -36,11 +41,19 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await auth();
-  const headersList = await headers();
-  const appSection = headersList.get("x-app-section");
-  const isAdminSection = appSection === "admin";
-  const isAuthSection = appSection === "auth";
   const isAdmin = isAdminEmail(session?.user?.email);
+
+  let credits: { credits: number; limit: number } | null = null;
+  if (session?.user?.email) {
+    const [dbUser] = await db
+      .select()
+      .from(users)
+      .where(eq(users.email, session.user.email))
+      .limit(1);
+    if (dbUser) {
+      credits = await getFreshCredits(dbUser);
+    }
+  }
 
   return (
     <html
@@ -51,25 +64,31 @@ export default async function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
-      <body
-        className={`flex min-h-full flex-col ${session ? "md:flex-row" : ""}`}
-      >
-        <ThemeProvider>
-          {!isAdminSection &&
-            !isAuthSection &&
-            (session ? (
-              <Sidebar
-                isAdmin={isAdmin}
-                userName={session.user?.name}
-                userEmail={session.user?.email}
-                userPlan={session.user?.plan}
-              />
-            ) : (
-              <TopNav />
-            ))}
-          <main className="flex flex-1 flex-col">{children}</main>
-          <ThemeToggle />
-        </ThemeProvider>
+      <body className="flex min-h-full flex-col">
+        <AuthSessionProvider session={session}>
+          <ThemeProvider>
+            <AppChrome
+              session={!!session}
+              nav={
+                session ? (
+                  <Sidebar
+                    isAdmin={isAdmin}
+                    userName={session.user?.name}
+                    userEmail={session.user?.email}
+                    userPlan={session.user?.plan}
+                    userCredits={credits?.credits}
+                    userCreditLimit={credits?.limit}
+                  />
+                ) : (
+                  <TopNav />
+                )
+              }
+            >
+              {children}
+            </AppChrome>
+            <ThemeToggle />
+          </ThemeProvider>
+        </AuthSessionProvider>
       </body>
     </html>
   );

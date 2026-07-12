@@ -3,6 +3,8 @@
 import { useRef, useState } from "react";
 import imageCompression from "browser-image-compression";
 import JSZip from "jszip";
+import CreditErrorNotice from "../components/credit-error-notice";
+import { useCreditGate } from "../hooks/use-credit-gate";
 import { tools } from "../lib/tools";
 
 const accentClassName =
@@ -60,6 +62,7 @@ export default function GorselSikistirPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const { checkAndConsume, creditError } = useCreditGate("/gorsel-sikistir");
 
   const hasResults = entries.some((entry) => entry.compressedFile);
 
@@ -95,6 +98,9 @@ export default function GorselSikistirPage() {
       setError("Lütfen en az bir görsel seçin.");
       return;
     }
+
+    const allowed = await checkAndConsume();
+    if (!allowed) return;
 
     setIsProcessing(true);
     setError("");
@@ -208,6 +214,7 @@ export default function GorselSikistirPage() {
             {error}
           </p>
         )}
+        <CreditErrorNotice error={creditError} />
 
         <div className="mt-6 grid grid-cols-1 gap-2 sm:grid-cols-3">
           {(Object.keys(qualityPresets) as Quality[]).map((key) => (

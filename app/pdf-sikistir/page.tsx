@@ -2,6 +2,8 @@
 
 import { useRef, useState } from "react";
 import { PDFDocument } from "pdf-lib";
+import CreditErrorNotice from "../components/credit-error-notice";
+import { useCreditGate } from "../hooks/use-credit-gate";
 import { tools } from "../lib/tools";
 
 const accentClassName =
@@ -27,6 +29,7 @@ export default function PdfSikistirPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const { checkAndConsume, creditError } = useCreditGate("/pdf-sikistir");
 
   const handleFiles = (fileList: FileList | null) => {
     if (!fileList || fileList.length === 0) return;
@@ -66,6 +69,9 @@ export default function PdfSikistirPage() {
       setError("Lütfen en az bir PDF dosyası seçin.");
       return;
     }
+
+    const allowed = await checkAndConsume();
+    if (!allowed) return;
 
     setIsProcessing(true);
     setError("");
@@ -163,6 +169,7 @@ export default function PdfSikistirPage() {
             {error}
           </p>
         )}
+        <CreditErrorNotice error={creditError} />
 
         {entries.length > 0 && (
           <ul className="mt-6 flex flex-col gap-2">

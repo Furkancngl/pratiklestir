@@ -135,23 +135,32 @@ export default function AnimatedCard({
     </>
   );
 
-  const baseClassName =
-    "group relative flex flex-col items-center gap-2 overflow-hidden rounded-2xl border border-black/[.08] bg-white p-6 shadow-lg shadow-black/5 transition-all duration-300 ease-out dark:border-white/10 dark:bg-[#1c1c1f] dark:shadow-black/40";
+  // Dış kapsayıcı: hover algılama sınırı burada, ASLA taşınmıyor/ölçeklenmiyor.
+  // Bu sayede kart kenarında fare durunca hover sınırı da kendisiyle birlikte
+  // kaymıyor - eskiden hover'ı algılayan element aynı zamanda -translate-y-1
+  // ile taşındığı için kenarda titreme oluyordu.
+  const outerClassName = "group relative block w-full";
+
+  // İç kapsayıcı: gerçek görsel kart (arka plan, kenarlık, gölge, kalkma
+  // efekti) burada - hover durumunu dıştaki .group'tan group-hover: ile alır.
+  const innerClassName =
+    "relative flex flex-col items-center gap-2 overflow-hidden rounded-2xl border border-black/[.08] bg-white p-6 shadow-lg shadow-black/5 transition-all! duration-300! ease-out! dark:border-white/10 dark:bg-[#1c1c1f] dark:shadow-black/40";
 
   if (disabled) {
     return (
-      <div aria-disabled="true" className={`${baseClassName} cursor-not-allowed`}>
-        {content}
+      <div aria-disabled="true" className={`${outerClassName} cursor-not-allowed`}>
+        <div className={innerClassName}>{content}</div>
       </div>
     );
   }
 
   return (
-    <Link
-      href={href}
-      className={`${baseClassName} hover:-translate-y-1 hover:shadow-xl hover:shadow-black/10 dark:hover:shadow-black/60`}
-    >
-      {content}
+    <Link href={href} className={outerClassName}>
+      <div
+        className={`${innerClassName} group-hover:-translate-y-1 group-hover:shadow-xl group-hover:shadow-black/10 dark:group-hover:shadow-black/60`}
+      >
+        {content}
+      </div>
     </Link>
   );
 }

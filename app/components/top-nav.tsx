@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function TopNav() {
   return (
-    <header className="flex items-center justify-between bg-zinc-50 px-6 py-4 dark:bg-zinc-900">
+    <header className="sticky top-0 z-50 flex items-center justify-between bg-zinc-50 px-6 py-4 dark:bg-zinc-900">
       <Link
         href="/"
         className="text-lg font-semibold tracking-tight text-black transition-opacity hover:opacity-70 dark:text-zinc-50"

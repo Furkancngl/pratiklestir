@@ -5,7 +5,7 @@ import Credentials from "next-auth/providers/credentials";
 import { db } from "@/app/lib/db";
 import { users } from "@/app/lib/db/schema";
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
+export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
   session: { strategy: "jwt" },
   pages: {
     signIn: "/giris",
@@ -42,15 +42,26 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           email: user.email,
           name: user.name,
           plan: user.plan,
+          planSelected: user.planSelectedAt !== null,
         };
       },
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.plan = user.plan;
         token.name = user.name;
+        token.planSelected = user.planSelected;
+      }
+      if (trigger === "update" && session?.name !== undefined) {
+        token.name = session.name;
+      }
+      if (trigger === "update" && session?.plan !== undefined) {
+        token.plan = session.plan;
+      }
+      if (trigger === "update" && session?.planSelected !== undefined) {
+        token.planSelected = session.planSelected;
       }
       return token;
     },
@@ -58,6 +69,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (session.user) {
         session.user.plan = token.plan as string;
         session.user.name = token.name as string | null | undefined;
+        session.user.planSelected = (token.planSelected as boolean) ?? false;
       }
       return session;
     },

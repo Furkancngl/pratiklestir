@@ -14,7 +14,7 @@ export default function KayitPage() {
 
   useEffect(() => {
     if (state?.success) {
-      router.push("/");
+      router.push("/planlar");
       router.refresh();
     }
   }, [state, router]);

@@ -2,6 +2,8 @@
 
 import { useRef, useState } from "react";
 import { removeBackground } from "@imgly/background-removal";
+import CreditErrorNotice from "../components/credit-error-notice";
+import { useCreditGate } from "../hooks/use-credit-gate";
 import { tools } from "../lib/tools";
 
 const accentClassName =
@@ -16,6 +18,7 @@ export default function ArkaPlanSilPage() {
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const { checkAndConsume, creditError } = useCreditGate("/arka-plan-sil");
 
   const handleFile = (selected: File | undefined | null) => {
     if (!selected) return;
@@ -35,6 +38,9 @@ export default function ArkaPlanSilPage() {
 
   const handleRemoveBackground = async () => {
     if (!file) return;
+
+    const allowed = await checkAndConsume();
+    if (!allowed) return;
 
     setIsProcessing(true);
     setError("");
@@ -112,6 +118,7 @@ export default function ArkaPlanSilPage() {
             {error}
           </p>
         )}
+        <CreditErrorNotice error={creditError} />
 
         {previewUrl && (
           <button

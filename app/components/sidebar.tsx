@@ -59,7 +59,6 @@ const navEntries: SidebarEntry[] = [
       leaf("/qr-kod-oku", "QR Kod Oku"),
       leaf("/sifre-olusturucu", "Şifre Oluşturucu"),
       leaf("/kelime-sayaci", "Kelime Sayacı"),
-      leaf("/karakter-sayaci", "Karakter Sayacı"),
     ],
   },
   {
@@ -137,7 +136,7 @@ function SidebarLeafLink({
         className="flex cursor-not-allowed items-center justify-between gap-2 rounded-md py-2 pl-3 pr-2 text-[13px] text-zinc-400 dark:text-zinc-600"
       >
         {item.label}
-        <span className="rounded-full bg-zinc-200 px-2 py-0.5 text-[10px] font-medium text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
+        <span className="rounded-full bg-purple-500/10 px-2 py-0.5 text-[10px] font-medium text-purple-600/80 dark:bg-purple-400/10 dark:text-violet-300/70">
           yakında
         </span>
       </span>
@@ -150,8 +149,8 @@ function SidebarLeafLink({
       onClick={onNavigate}
       className={`flex items-center justify-between gap-2 rounded-md py-2 pl-3 pr-2 text-[13px] font-medium transition-colors ${
         isActive
-          ? "bg-black text-white dark:bg-white dark:text-black"
-          : "text-zinc-600 hover:bg-black/[.04] dark:text-zinc-400 dark:hover:bg-zinc-800"
+          ? "bg-purple-500/10 font-semibold text-purple-700 dark:bg-purple-400/10 dark:text-violet-200"
+          : "text-zinc-600 hover:bg-purple-500/[0.05] hover:text-purple-700 dark:text-zinc-400 dark:hover:bg-purple-400/[0.06] dark:hover:text-violet-200"
       }`}
     >
       {item.label}
@@ -185,14 +184,14 @@ function SidebarCategoryBlock({
         type="button"
         onClick={onToggle}
         aria-expanded={isOpen}
-        className="flex w-full items-center justify-between gap-3 rounded-md px-3 py-3 text-sm font-medium text-zinc-700 transition-colors hover:bg-black/[.04] dark:text-zinc-300 dark:hover:bg-zinc-800"
+        className="flex w-full items-center justify-between gap-3 rounded-md px-3 py-3 text-sm font-medium text-zinc-700 transition-colors hover:bg-purple-500/[0.06] dark:text-zinc-300 dark:hover:bg-purple-400/[0.08]"
       >
         <span className="flex items-center gap-3">
-          <Icon className="h-4.5 w-4.5 shrink-0" />
+          <Icon className="h-4.5 w-4.5 shrink-0 text-purple-500/70 dark:text-violet-300" />
           {category.name}
         </span>
         <ChevronRightIcon
-          className={`h-4 w-4 shrink-0 text-zinc-400 transition-transform duration-200 dark:text-zinc-600 ${
+          className={`h-4 w-4 shrink-0 text-purple-400/70 transition-transform duration-200 dark:text-[#8b73d6] ${
             isOpen ? "rotate-90" : ""
           }`}
         />
@@ -206,7 +205,7 @@ function SidebarCategoryBlock({
             transition={{ duration: 0.25, ease: "easeInOut" }}
             style={{ overflow: "hidden" }}
           >
-            <div className="ml-[27px] flex flex-col gap-0.5 border-l border-black/[.08] py-1 pl-3 dark:border-zinc-800">
+            <div className="ml-[27px] flex flex-col gap-0.5 border-l border-purple-300/30 py-1 pl-3 dark:border-[rgba(167,139,250,0.25)]">
               {category.items.map((item) => (
                 <SidebarLeafLink
                   key={item.href}
@@ -228,11 +227,15 @@ export default function Sidebar({
   userName,
   userEmail,
   userPlan,
+  userCredits,
+  userCreditLimit,
 }: {
   isAdmin?: boolean;
   userName?: string | null;
   userEmail?: string | null;
   userPlan?: string | null;
+  userCredits?: number | null;
+  userCreditLimit?: number | null;
 }) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
@@ -258,6 +261,12 @@ export default function Sidebar({
       document.body.style.overflow = previousOverflow;
     };
   }, [isOpen]);
+
+  useEffect(() => {
+    const openSidebar = () => setIsOpen(true);
+    window.addEventListener("open-sidebar", openSidebar);
+    return () => window.removeEventListener("open-sidebar", openSidebar);
+  }, []);
 
   const toggleCategory = (name: string) => {
     setOpenCategories((prev) => {
@@ -321,7 +330,7 @@ export default function Sidebar({
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-[250px] shrink-0 flex-col border-r border-black/[.08] bg-white transition-[transform]! duration-200! dark:border-zinc-800 dark:bg-zinc-950 md:sticky md:top-0 md:h-screen md:[transform:translateX(0)] ${
+        className={`fixed inset-y-0 left-0 z-50 flex w-[250px] shrink-0 flex-col border-r border-purple-300/30 bg-white bg-[radial-gradient(circle_at_15%_0%,rgba(168,85,247,0.05),transparent_55%),radial-gradient(circle_at_100%_40%,rgba(99,102,241,0.04),transparent_55%)] transition-[transform]! duration-200! dark:border-[rgba(167,139,250,0.08)] dark:bg-[#0d0a16] dark:bg-[radial-gradient(circle_at_15%_0%,rgba(139,92,246,0.08),transparent_55%),radial-gradient(circle_at_100%_40%,rgba(99,102,241,0.05),transparent_55%)] md:sticky md:top-0 md:h-screen md:[transform:translateX(0)] ${
           isOpen ? "[transform:translateX(0)]" : "[transform:translateX(-100%)]"
         }`}
       >
@@ -353,7 +362,7 @@ export default function Sidebar({
                         <Icon className="h-4.5 w-4.5 shrink-0" />
                         {entry.name}
                       </span>
-                      <span className="rounded-full bg-zinc-200 px-2 py-0.5 text-xs font-medium text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
+                      <span className="rounded-full bg-purple-500/10 px-2 py-0.5 text-xs font-medium text-purple-600/80 dark:bg-purple-400/10 dark:text-violet-300/70">
                         yakında
                       </span>
                     </span>
@@ -367,8 +376,8 @@ export default function Sidebar({
                     onClick={closeMobileMenu}
                     className={`flex items-center gap-3 rounded-md px-3 py-3 text-sm font-medium transition-colors ${
                       isActive
-                        ? "bg-black text-white dark:bg-white dark:text-black"
-                        : "text-zinc-700 hover:bg-black/[.04] dark:text-zinc-300 dark:hover:bg-zinc-800"
+                        ? "bg-gradient-to-br from-purple-500 to-indigo-500 text-white shadow-md shadow-purple-500/20"
+                        : "text-zinc-700 hover:bg-purple-500/[0.06] dark:text-zinc-300 dark:hover:bg-purple-400/[0.08]"
                     }`}
                   >
                     <Icon className="h-4.5 w-4.5 shrink-0" />
@@ -402,6 +411,29 @@ export default function Sidebar({
             </div>
           )}
         </div>
+
+        {userCreditLimit != null && userCredits != null && (
+          <Link
+            href="/planlar"
+            onClick={closeMobileMenu}
+            className="mx-3 mb-3 block shrink-0 rounded-xl border border-purple-500/10 bg-purple-500/[0.02] px-3 py-2.5 transition-colors hover:bg-purple-500/[0.05] dark:border-purple-400/10 dark:bg-purple-400/[0.03] dark:hover:bg-purple-400/[0.06]"
+          >
+            <div className="flex items-center justify-between text-xs font-medium text-zinc-500 dark:text-zinc-400">
+              <span>Kredi</span>
+              <span className="text-black dark:text-zinc-50">
+                {userCredits}/{userCreditLimit} kredi kaldı
+              </span>
+            </div>
+            <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800">
+              <div
+                className="h-full rounded-full bg-linear-to-r from-purple-500 to-indigo-500"
+                style={{
+                  width: `${Math.min(100, Math.round((userCredits / Math.max(userCreditLimit, 1)) * 100))}%`,
+                }}
+              />
+            </div>
+          </Link>
+        )}
 
         <UserMenu name={userName} email={userEmail} plan={userPlan} />
       </aside>

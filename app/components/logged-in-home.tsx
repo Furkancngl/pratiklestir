@@ -2,11 +2,15 @@ import AnimatedCard from "./animated-card";
 import DashboardCard from "./dashboard-card";
 import { toolIcons } from "./icons";
 import PlanBadge from "./plan-badge";
+import QuickAccessMore from "./quick-access-more";
 import RecentActivityCard from "./recent-activity-card";
 import Reveal from "./reveal";
 import { tools } from "../lib/tools";
 
-const quickAccessTools = tools.filter((tool) => tool.available);
+const featuredHrefs = ["/qr-kod", "/pdf-birlestir"];
+const quickAccessTools = featuredHrefs
+  .map((href) => tools.find((tool) => tool.href === href))
+  .filter((tool): tool is (typeof tools)[number] => tool != null);
 
 export default function LoggedInHome({
   name,
@@ -55,11 +59,12 @@ export default function LoggedInHome({
               </Reveal>
             ))}
           </div>
+          <QuickAccessMore />
         </div>
 
         <div className="flex flex-col gap-6">
-          <DashboardCard />
           <RecentActivityCard />
+          <DashboardCard />
         </div>
       </div>
     </div>

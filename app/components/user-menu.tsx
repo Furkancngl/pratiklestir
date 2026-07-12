@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { HelpIcon, LogoutIcon, SettingsIcon, TrendingUpIcon } from "./icons";
@@ -54,18 +55,18 @@ export default function UserMenu({ name, email, plan }: UserMenuProps) {
   return (
     <div
       ref={containerRef}
-      className="relative shrink-0 border-t border-black/[.08] p-3 dark:border-zinc-800"
+      className="relative shrink-0 border-t border-purple-500/10 p-3 dark:border-purple-400/10"
     >
       {open && (
         <div className="absolute inset-x-3 bottom-full z-10 mb-2 overflow-hidden rounded-xl border border-black/[.08] bg-white py-1.5 shadow-lg dark:border-zinc-800 dark:bg-zinc-900">
-          <button
-            type="button"
+          <Link
+            href="/ayarlar"
             onClick={() => setOpen(false)}
             className="flex w-full items-center gap-2.5 px-3.5 py-2.5 text-left text-sm font-medium text-zinc-700 transition-colors hover:bg-black/[.04] dark:text-zinc-300 dark:hover:bg-zinc-800"
           >
             <SettingsIcon className="h-4 w-4 shrink-0" />
             Ayarlar
-          </button>
+          </Link>
           <button
             type="button"
             onClick={() => setOpen(false)}
@@ -101,7 +102,7 @@ export default function UserMenu({ name, email, plan }: UserMenuProps) {
         onClick={() => setOpen((current) => !current)}
         aria-haspopup="true"
         aria-expanded={open}
-        className="flex w-full touch-manipulation items-center gap-2.5 rounded-lg px-1.5 py-1.5 text-left transition-colors hover:bg-black/[.04] dark:hover:bg-zinc-800"
+        className="flex w-full touch-manipulation items-center gap-2.5 rounded-xl border border-purple-500/10 bg-purple-500/[0.02] px-2 py-2 text-left transition-colors hover:bg-purple-500/[0.05] dark:border-purple-400/10 dark:bg-purple-400/[0.03] dark:hover:bg-purple-400/[0.06]"
       >
         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-purple-500 to-indigo-500 text-sm font-semibold text-white">
           {initial}
