@@ -2,6 +2,7 @@ import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import NextAuth, { CredentialsSignin } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import Google from "next-auth/providers/google";
 import { db } from "@/app/lib/db";
 import { users } from "@/app/lib/db/schema";
 import { checkRateLimit, getClientIp, loginRateLimit } from "@/app/lib/rate-limit";
@@ -16,6 +17,10 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
     signIn: "/giris",
   },
   providers: [
+    Google({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
     Credentials({
       credentials: {
         email: {},
@@ -40,7 +45,7 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
           .where(eq(users.email, email.toLowerCase()))
           .limit(1);
 
-        if (!user) return null;
+        if (!user || !user.passwordHash) return null;
 
         const passwordsMatch = await bcrypt.compare(
           password,
@@ -59,7 +64,28 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, user, trigger, session }) {
+    async jwt({ token, user, account, trigger, session }) {
+      if (account?.provider === "google" && user?.email) {
+        const email = user.email.toLowerCase();
+        let [dbUser] = await db
+          .select()
+          .from(users)
+          .where(eq(users.email, email))
+          .limit(1);
+
+        if (!dbUser) {
+          [dbUser] = await db
+            .insert(users)
+            .values({ email, name: user.name ?? null })
+            .returning();
+        }
+
+        token.plan = dbUser.plan;
+        token.name = dbUser.name;
+        token.planSelected = dbUser.planSelectedAt !== null;
+        return token;
+      }
+
       if (user) {
         token.plan = user.plan;
         token.name = user.name;

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useActionState, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import { signup } from "@/app/actions/auth";
 import AuthBrandPanel from "../components/auth-brand-panel";
 import { GoogleIcon } from "../components/icons";
@@ -40,6 +41,7 @@ export default function KayitPage() {
 
           <button
             type="button"
+            onClick={() => signIn("google", { callbackUrl: "/" })}
             className="mb-5 flex w-full touch-manipulation items-center justify-center gap-2.5 rounded-xl border border-black/[.12] bg-black/[.03] p-3 text-sm font-semibold text-black transition-all! duration-200! hover:-translate-y-0.5 hover:border-black/[.22] hover:bg-black/[.06] dark:border-white/[.12] dark:bg-white/[.04] dark:text-white dark:hover:border-white/[.22] dark:hover:bg-white/[.08]"
           >
             <GoogleIcon className="h-4.5 w-4.5" />
