@@ -1,5 +1,13 @@
+import type { Metadata } from "next";
 import { requireCurrentUser } from "@/app/lib/current-user";
 import SettingsSidebar from "./settings-sidebar";
+
+// Oturumsuz erişim zaten sunucu tarafında /giris'e yönlendiriliyor
+// (requireCurrentUser); bu noindex, hesap ayarı sayfalarının arama
+// sonuçlarında görünmemesi için ek güvenlik katmanı.
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 export default async function AyarlarLayout({
   children,

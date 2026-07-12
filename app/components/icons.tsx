@@ -1,5 +1,3 @@
-import type { ComponentType } from "react";
-
 type IconProps = {
   className?: string;
 };
@@ -624,26 +622,6 @@ export function PaletteIcon({ className }: IconProps) {
   );
 }
 
-// Araç kartlarında ve sidebar'da ortak kullanılan, href'e göre ikon eşlemesi.
-export const toolIcons: Record<string, ComponentType<IconProps>> = {
-  "/": HomeIcon,
-  "/qr-kod": QrCodeIcon,
-  "/qr-kod-oku": ScanIcon,
-  "/sifre-olusturucu": LockIcon,
-  "/kelime-sayaci": TextIcon,
-  "/kdv-hesapla": ReceiptIcon,
-  "/yuzde-hesapla": PercentIcon,
-  "/doviz-hesapla": CurrencyExchangeIcon,
-  "/kredi-hesapla": CreditCardIcon,
-  "/ortalama-hesapla": AverageIcon,
-  "/indirim-hesapla": TagIcon,
-  "/pdf-birlestir": DocumentIcon,
-  "/arka-plan-sil": ImageIcon,
-  "/makale-hazirla": PenIcon,
-  "/gorsel-sikistir": CompressIcon,
-  "/pdf-sikistir": DocumentIcon,
-  "/video-sikistir": VideoIcon,
-  "/gorsel-genislet": ExpandIcon,
-  "/kalite-arttir": SparkleIcon,
-  "/gorsel-netlestir": FocusIcon,
-};
+// Araç bazlı ikon eşlemesi artık burada değil: her aracın ikonu
+// app/lib/tools.ts içindeki kendi kaydında (`icon` alanı) tanımlanır - tek
+// kaynak orası. Bu dosya yalnızca ikon bileşenlerini tanımlar/export eder.

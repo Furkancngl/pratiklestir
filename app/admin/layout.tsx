@@ -1,7 +1,15 @@
 import { redirect } from "next/navigation";
+import type { Metadata } from "next";
 import { auth } from "@/auth";
 import { isAdminEmail } from "@/app/lib/admin";
 import AdminSidebar from "@/app/components/admin-sidebar";
+
+// Yetkisiz erişim zaten sunucu tarafında "/" e yönlendiriliyor (aşağıda);
+// bu noindex, o yönlendirme mantığı ileride değişse bile arama motorlarının
+// admin sayfalarını indekslememesi için ek güvenlik katmanı.
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 export default async function AdminLayout({
   children,

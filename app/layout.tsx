@@ -12,6 +12,8 @@ import { isAdminEmail } from "./lib/admin";
 import { db } from "./lib/db";
 import { users } from "./lib/db/schema";
 import { getFreshCredits } from "./lib/credits";
+import { SITE_NAME, SITE_URL } from "./lib/site";
+import { getSiteJsonLd } from "./lib/site-schema";
 import "./globals.css";
 
 const inter = Inter({
@@ -25,9 +27,23 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Pratikleştir - Hızlı ve Ücretsiz Online Araçlar",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Pratikleştir - Hızlı ve Ücretsiz Online Araçlar",
+    template: `%s | ${SITE_NAME}`,
+  },
   description:
     "QR kod oluşturma, arka plan silme ve daha fazlası için hızlı, ücretsiz ve tamamen tarayıcıda çalışan online araçlar. Kayıt gerektirmez, dosyalarınız cihazınızdan çıkmaz.",
+  // Dikkat: buraya sabit bir `alternates.canonical` KONULMAZ. Next.js'te bir
+  // segment kendi canonical'ını tanımlamazsa üst segmentinkini miras alır;
+  // burada sabit bir URL tanımlarsak (örn. SITE_URL) kendi canonical'ını
+  // ayarlamayan HER sayfa (giriş, kayıt, admin, vb.) yanlışlıkla anasayfayı
+  // canonical gösterir. Her genel sayfa kendi canonical'ını kendi
+  // metadata'sında tanımlar (bkz. app/page.tsx, app/lib/tool-metadata.ts).
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 // Sayfa boyanmadan önce senkron çalışır: kayıtlı tema varsa onu, yoksa
@@ -63,6 +79,12 @@ export default async function RootLayout({
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(getSiteJsonLd()).replace(/</g, "\\u003c"),
+          }}
+        />
       </head>
       <body className="flex min-h-full flex-col">
         <AuthSessionProvider session={session}>

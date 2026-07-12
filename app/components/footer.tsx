@@ -1,14 +1,14 @@
 import Link from "next/link";
 
 const COMPANY_LINKS = [
-  { label: "İletişim", href: "#" },
-  { label: "SSS", href: "#" },
+  { label: "İletişim", href: "/iletisim" },
+  { label: "SSS", href: "/sss" },
 ];
 
 const LEGAL_LINKS = [
-  { label: "Gizlilik Politikası", href: "#" },
-  { label: "Kullanım Şartları", href: "#" },
-  { label: "Çerez Politikası", href: "#" },
+  { label: "Gizlilik Politikası", href: "/gizlilik-politikasi" },
+  { label: "Kullanım Şartları", href: "/kullanim-sartlari" },
+  { label: "Çerez Politikası", href: "/cerez-politikasi" },
 ];
 
 export default function Footer() {

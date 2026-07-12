@@ -1,6 +1,5 @@
 import AnimatedCard from "./animated-card";
 import DashboardCard from "./dashboard-card";
-import { toolIcons } from "./icons";
 import PlanBadge from "./plan-badge";
 import QuickAccessMore from "./quick-access-more";
 import RecentActivityCard from "./recent-activity-card";
@@ -54,7 +53,7 @@ export default function LoggedInHome({
                   accentClassName={tool.accentClassName}
                   href={tool.href}
                   beta={tool.beta}
-                  icon={toolIcons[tool.href]}
+                  icon={tool.icon}
                 />
               </Reveal>
             ))}

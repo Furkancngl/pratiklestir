@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, type ComponentType } from "react";
 import { tools } from "../lib/tools";
+import { categories } from "../lib/categories";
 import UserMenu from "./user-menu";
 import {
   CalculatorIcon,
@@ -12,7 +13,6 @@ import {
   DocumentIcon,
   HomeIcon,
   ImageIcon,
-  PenIcon,
   SunIcon,
   VideoIcon,
 } from "./icons";
@@ -37,85 +37,68 @@ type SidebarLink = {
 type SidebarCategory = {
   type: "category";
   name: string;
+  slug: string;
   icon: IconType;
   items: SidebarLeaf[];
 };
 
 type SidebarEntry = SidebarLink | SidebarCategory;
 
-function leaf(href: string, label: string): SidebarLeaf {
-  const tool = tools.find((t) => t.href === href);
-  return { label, href, available: tool?.available ?? false, beta: tool?.beta };
-}
+// Kategori ikonları - tek tek araçların ikonlarının aksine (bkz. tools.ts),
+// kategoriler tools.ts'de birinci sınıf bir varlık olmadığı için bu küçük
+// eşleme burada tutuluyor. Yeni bir kategori (yeni bir `group` değeri)
+// eklendiğinde otomatik olarak sidebar'da belirir; ikon eşleşmezse
+// DocumentIcon'a düşer.
+const categoryIcons: Record<string, IconType> = {
+  Günlük: SunIcon,
+  PDF: DocumentIcon,
+  Görsel: ImageIcon,
+  Video: VideoIcon,
+  Hesapla: CalculatorIcon,
+};
+
+// navEntries tamamen tools.ts + categories.ts'den türetilir - burada hiçbir
+// araç hard-code edilmez. Yeni bir araç `tools.ts`ye eklendiğinde (bir
+// `group` ile ya da gruplanmamış tekil bir link olarak) sidebar otomatik
+// güncellenir.
+const groupedTools = new Set(
+  categories.flatMap((category) => category.tools.map((tool) => tool.href))
+);
+const ungroupedTools = tools.filter((tool) => !groupedTools.has(tool.href));
 
 const navEntries: SidebarEntry[] = [
   { type: "link", name: "Ana Sayfa", href: "/", icon: HomeIcon, available: true },
-  {
-    type: "category",
-    name: "Günlük",
-    icon: SunIcon,
-    items: [
-      leaf("/qr-kod", "QR Kod Oluştur"),
-      leaf("/qr-kod-oku", "QR Kod Oku"),
-      leaf("/sifre-olusturucu", "Şifre Oluşturucu"),
-      leaf("/kelime-sayaci", "Kelime Sayacı"),
-    ],
-  },
-  {
-    type: "category",
-    name: "PDF",
-    icon: DocumentIcon,
-    items: [
-      leaf("/pdf-birlestir", "Birleştir"),
-      leaf("/pdf-sikistir", "Sıkıştır"),
-      leaf("/pdf-donustur", "Dönüştür"),
-    ],
-  },
-  {
-    type: "category",
-    name: "Görsel",
-    icon: ImageIcon,
-    items: [
-      leaf("/gorsel-sikistir", "Sıkıştır"),
-      leaf("/arka-plan-sil", "Arka Plan Sil"),
-      leaf("/gorsel-donustur", "Dönüştür"),
-      leaf("/gorsel-genislet", "Genişlet"),
-      leaf("/kalite-arttir", "Kalite Arttır"),
-      leaf("/gorsel-netlestir", "Netleştir"),
-    ],
-  },
-  {
-    type: "category",
-    name: "Video",
-    icon: VideoIcon,
-    items: [leaf("/video-sikistir", "Sıkıştır")],
-  },
-  {
-    type: "category",
-    name: "Hesapla",
-    icon: CalculatorIcon,
-    items: [
-      leaf("/kdv-hesapla", "KDV Hesapla"),
-      leaf("/yuzde-hesapla", "Yüzde Hesapla"),
-      leaf("/doviz-hesapla", "Döviz Hesapla"),
-      leaf("/kredi-hesapla", "Kredi Hesapla"),
-      leaf("/ortalama-hesapla", "Ortalama Hesapla"),
-      leaf("/indirim-hesapla", "İndirim Hesapla"),
-    ],
-  },
-  {
-    type: "link",
-    name: "Makale Hazırla",
-    href: "/makale-hazirla",
-    icon: PenIcon,
-    available: false,
-  },
+  ...categories.map(
+    (category): SidebarCategory => ({
+      type: "category",
+      name: category.name,
+      slug: category.slug,
+      icon: categoryIcons[category.name] ?? DocumentIcon,
+      items: category.tools.map((tool) => ({
+        label: tool.shortLabel ?? tool.name,
+        href: tool.href,
+        available: tool.available,
+        beta: tool.beta,
+      })),
+    })
+  ),
+  ...ungroupedTools.map(
+    (tool): SidebarLink => ({
+      type: "link",
+      name: tool.name,
+      href: tool.href,
+      icon: tool.icon,
+      available: tool.available,
+    })
+  ),
 ];
 
 function activeCategoryName(pathname: string): string | null {
   const match = navEntries.find(
     (entry): entry is SidebarCategory =>
-      entry.type === "category" && entry.items.some((item) => item.href === pathname),
+      entry.type === "category" &&
+      (pathname === `/${entry.slug}` ||
+        entry.items.some((item) => item.href === pathname)),
   );
   return match?.name ?? null;
 }
@@ -177,25 +160,47 @@ function SidebarCategoryBlock({
   onNavigate: () => void;
 }) {
   const Icon = category.icon;
+  const href = `/${category.slug}`;
+  const isActive = pathname === href;
 
   return (
     <div>
-      <button
-        type="button"
-        onClick={onToggle}
-        aria-expanded={isOpen}
-        className="flex w-full items-center justify-between gap-3 rounded-md px-3 py-3 text-sm font-medium text-zinc-700 transition-colors hover:bg-purple-500/[0.06] dark:text-zinc-300 dark:hover:bg-purple-400/[0.08]"
+      {/* Başlık ve ok/chevron ayrı tıklama alanlarıdır: başlığa tıklamak
+          kategori sayfasına götürür, chevron'a tıklamak yalnızca listeyi
+          açıp kapatır - ikisi birbirini tetiklemez. */}
+      <div
+        className={`flex items-center gap-1 rounded-md pr-2 transition-colors ${
+          isActive
+            ? "bg-purple-500/10 dark:bg-purple-400/10"
+            : "hover:bg-purple-500/[0.06] dark:hover:bg-purple-400/[0.08]"
+        }`}
       >
-        <span className="flex items-center gap-3">
+        <Link
+          href={href}
+          onClick={onNavigate}
+          className={`flex flex-1 items-center gap-3 rounded-md px-3 py-3 text-sm font-medium ${
+            isActive
+              ? "text-purple-700 dark:text-violet-200"
+              : "text-zinc-700 dark:text-zinc-300"
+          }`}
+        >
           <Icon className="h-4.5 w-4.5 shrink-0 text-purple-500/70 dark:text-violet-300" />
           {category.name}
-        </span>
-        <ChevronRightIcon
-          className={`h-4 w-4 shrink-0 text-purple-400/70 transition-transform duration-200 dark:text-[#8b73d6] ${
-            isOpen ? "rotate-90" : ""
-          }`}
-        />
-      </button>
+        </Link>
+        <button
+          type="button"
+          onClick={onToggle}
+          aria-expanded={isOpen}
+          aria-label={`${category.name} kategorisini ${isOpen ? "kapat" : "aç"}`}
+          className="flex h-10 w-10 shrink-0 touch-manipulation items-center justify-center rounded-md transition-colors hover:bg-purple-500/10 dark:hover:bg-purple-400/10"
+        >
+          <ChevronRightIcon
+            className={`h-4 w-4 shrink-0 text-purple-400/70 transition-transform duration-200 dark:text-[#8b73d6] ${
+              isOpen ? "rotate-90" : ""
+            }`}
+          />
+        </button>
+      </div>
       <AnimatePresence initial={false}>
         {isOpen && (
           <motion.div

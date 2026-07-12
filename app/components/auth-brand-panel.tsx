@@ -49,13 +49,17 @@ export default function AuthBrandPanel() {
       </div>
 
       <div className="relative max-w-[420px] opacity-0 [animation:auth-fade-up_.7s_ease_forwards_.6s]">
-        <h1 className="mb-4 text-[34px] font-extrabold leading-[1.2] tracking-tight text-black dark:text-white">
+        {/* Bu panel /giris ve /kayit'ta aynı metni gösteriyor ve
+            `md:` altında gizli - bu yüzden burada h1 kullanılmıyor.
+            Sayfaya özgü ve mobilde de görünen gerçek başlık (h1) yan
+            paneldeki form bölümünde (bkz. page-client.tsx). */}
+        <p className="mb-4 text-[34px] font-extrabold leading-[1.2] tracking-tight text-black dark:text-white">
           Günlük işlerini{" "}
           <span className="bg-linear-to-r from-violet-400 via-indigo-400 to-pink-400 bg-clip-text text-transparent">
             saniyeler içinde
           </span>{" "}
           hallet.
-        </h1>
+        </p>
         <p className="mb-7.5 text-[15px] leading-[1.7] text-zinc-600 dark:text-zinc-400">
           QR kod, PDF, görsel araçları ve daha fazlası — tek hesapla, tüm
           cihazlarında senkron.

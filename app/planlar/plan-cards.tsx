@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
 import { selectPlan } from "@/app/actions/plan";
 
 type RowIcon = "bolt" | "clock" | "grid" | "batch" | "support";
@@ -140,7 +139,6 @@ function PlanRows({ rows, proAccent }: { rows: Row[]; proAccent: boolean }) {
 }
 
 export default function PlanCards() {
-  const router = useRouter();
   const [pendingPlan, setPendingPlan] = useState<"free" | "pro" | null>(null);
   const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
@@ -149,14 +147,13 @@ export default function PlanCards() {
     setError("");
     setPendingPlan(plan);
     startTransition(async () => {
+      // Başarılıysa selectPlan içindeki redirect() zaten yönlendiriyor;
+      // buraya sadece hata durumunda dönüyoruz.
       const result = await selectPlan(plan);
       if (result?.error) {
         setError(result.error);
         setPendingPlan(null);
-        return;
       }
-      router.push("/");
-      router.refresh();
     });
   };
 

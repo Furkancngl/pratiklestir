@@ -1,6 +1,7 @@
 "use server";
 
 import { eq } from "drizzle-orm";
+import { redirect } from "next/navigation";
 import { auth, unstable_update } from "@/auth";
 import { db } from "@/app/lib/db";
 import { users } from "@/app/lib/db/schema";
@@ -25,5 +26,10 @@ export async function selectPlan(plan: "free" | "pro"): Promise<SelectPlanResult
     })
     .where(eq(users.email, email));
 
-  await unstable_update({ user: { plan, planSelected: true } });
+  // jwt() callback'i trigger==="update" verisini session.plan /
+  // session.planSelected olarak (user altında değil, düz) okuyor - tip
+  // tanımı user altını bekliyor ama çalışma zamanı davranışı bu değil.
+  await unstable_update({ plan, planSelected: true } as Parameters<typeof unstable_update>[0]);
+
+  redirect("/");
 }
