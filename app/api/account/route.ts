@@ -3,8 +3,22 @@ import { eq } from "drizzle-orm";
 import { auth } from "@/auth";
 import { db } from "@/app/lib/db";
 import { users } from "@/app/lib/db/schema";
+import { isSameOriginRequest } from "@/app/lib/csrf";
+import { apiMutationRateLimit, checkRateLimit, getClientIp } from "@/app/lib/rate-limit";
 
 export async function PATCH(request: Request) {
+  if (!isSameOriginRequest(request)) {
+    return NextResponse.json({ error: "Geçersiz istek kaynağı." }, { status: 403 });
+  }
+
+  const { allowed } = await checkRateLimit(
+    apiMutationRateLimit,
+    `api:${getClientIp(request.headers)}`
+  );
+  if (!allowed) {
+    return NextResponse.json({ error: "Çok fazla istek." }, { status: 429 });
+  }
+
   const session = await auth();
   const email = session?.user?.email;
   if (!email) {
@@ -27,7 +41,19 @@ export async function PATCH(request: Request) {
   return NextResponse.json({ ok: true, name: trimmed });
 }
 
-export async function DELETE() {
+export async function DELETE(request: Request) {
+  if (!isSameOriginRequest(request)) {
+    return NextResponse.json({ error: "Geçersiz istek kaynağı." }, { status: 403 });
+  }
+
+  const { allowed } = await checkRateLimit(
+    apiMutationRateLimit,
+    `api:${getClientIp(request.headers)}`
+  );
+  if (!allowed) {
+    return NextResponse.json({ error: "Çok fazla istek." }, { status: 429 });
+  }
+
   const session = await auth();
   const email = session?.user?.email;
   if (!email) {

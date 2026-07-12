@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import CreditErrorNotice from "../components/credit-error-notice";
 import { useCreditGate } from "../hooks/use-credit-gate";
+import { MAX_PDF_FILE_SIZE_BYTES, formatFileSizeMB } from "../lib/file-limits";
 import { tools } from "../lib/tools";
 
 const accentClassName =
@@ -34,10 +35,13 @@ export default function PdfSikistirPage() {
     if (!fileList || fileList.length === 0) return;
 
     const incoming = Array.from(fileList);
+    const isPdf = (file: File) =>
+      file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
+    const oversized = incoming.filter(
+      (file) => isPdf(file) && file.size > MAX_PDF_FILE_SIZE_BYTES
+    );
     const pdfs = incoming.filter(
-      (file) =>
-        file.type === "application/pdf" ||
-        file.name.toLowerCase().endsWith(".pdf")
+      (file) => isPdf(file) && file.size <= MAX_PDF_FILE_SIZE_BYTES
     );
 
     if (pdfs.length > 0) {
@@ -52,11 +56,17 @@ export default function PdfSikistirPage() {
       ]);
     }
 
-    setError(
-      pdfs.length !== incoming.length
-        ? "Bazı dosyalar eklenemedi: yalnızca PDF dosyaları kabul edilir."
-        : ""
-    );
+    if (oversized.length > 0) {
+      setError(
+        `Bazı dosyalar eklenemedi: PDF başına maksimum ${formatFileSizeMB(MAX_PDF_FILE_SIZE_BYTES)} boyut sınırı var.`
+      );
+    } else {
+      setError(
+        pdfs.length !== incoming.length
+          ? "Bazı dosyalar eklenemedi: yalnızca PDF dosyaları kabul edilir."
+          : ""
+      );
+    }
   };
 
   const removeEntry = (id: string) => {

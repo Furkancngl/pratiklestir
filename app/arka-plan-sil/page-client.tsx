@@ -1,8 +1,10 @@
 "use client";
 
 import { useRef, useState } from "react";
+import type { Config } from "@imgly/background-removal";
 import CreditErrorNotice from "../components/credit-error-notice";
 import { useCreditGate } from "../hooks/use-credit-gate";
+import { MAX_IMAGE_FILE_SIZE_BYTES, formatFileSizeMB } from "../lib/file-limits";
 import { tools } from "../lib/tools";
 
 const accentClassName =
@@ -16,13 +18,23 @@ export default function ArkaPlanSilPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState("");
+  const [progressPhase, setProgressPhase] = useState<"downloading" | "processing" | null>(null);
+  const [progressPercent, setProgressPercent] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const downloadTotalsRef = useRef<Map<string, { loaded: number; total: number }>>(new Map());
   const { checkAndConsume, creditError } = useCreditGate("/arka-plan-sil");
 
   const handleFile = (selected: File | undefined | null) => {
     if (!selected) return;
     if (!selected.type.startsWith("image/")) {
       setError("Lütfen bir görsel dosyası seçin.");
+      return;
+    }
+
+    if (selected.size > MAX_IMAGE_FILE_SIZE_BYTES) {
+      setError(
+        `Dosya çok büyük: maksimum ${formatFileSizeMB(MAX_IMAGE_FILE_SIZE_BYTES)} boyutunda görsel yükleyebilirsiniz.`
+      );
       return;
     }
 
@@ -43,10 +55,33 @@ export default function ArkaPlanSilPage() {
 
     setIsProcessing(true);
     setError("");
+    setProgressPhase("downloading");
+    setProgressPercent(0);
+    downloadTotalsRef.current = new Map();
+
+    // Kütüphane model dosyalarını ilk kullanımda indirirken "fetch:<key>"
+    // ile gerçek byte cinsinden, görseli işlerken de "compute:<adım>" ile
+    // 4 aşamalı ilerleme bildiriyor - ikisini de tek bir yüzdeye çeviriyoruz.
+    const onProgress: NonNullable<Config["progress"]> = (key, current, total) => {
+      if (key.startsWith("fetch:")) {
+        downloadTotalsRef.current.set(key, { loaded: current, total });
+        let loaded = 0;
+        let sum = 0;
+        for (const entry of downloadTotalsRef.current.values()) {
+          loaded += entry.loaded;
+          sum += entry.total;
+        }
+        setProgressPhase("downloading");
+        setProgressPercent(sum > 0 ? Math.round((loaded / sum) * 100) : 0);
+      } else if (key.startsWith("compute:")) {
+        setProgressPhase("processing");
+        setProgressPercent(total > 0 ? Math.round((current / total) * 100) : 0);
+      }
+    };
 
     try {
       const { removeBackground } = await import("@imgly/background-removal");
-      const blob = await removeBackground(file);
+      const blob = await removeBackground(file, { progress: onProgress });
       setResultUrl(URL.createObjectURL(blob));
     } catch {
       setError(
@@ -54,6 +89,7 @@ export default function ArkaPlanSilPage() {
       );
     } finally {
       setIsProcessing(false);
+      setProgressPhase(null);
     }
   };
 
@@ -137,7 +173,28 @@ export default function ArkaPlanSilPage() {
           </button>
         )}
 
-        {previewUrl && (
+        {previewUrl && isProcessing && (
+          <div className="mt-4 w-full">
+            <div className="mb-1.5 flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400">
+              <span>
+                {progressPhase === "downloading"
+                  ? "Model indiriliyor, ilk kullanımda biraz sürebilir..."
+                  : "Görsel işleniyor..."}
+              </span>
+              <span className="font-medium text-zinc-700 dark:text-zinc-300">
+                %{progressPercent}
+              </span>
+            </div>
+            <div className="h-2 w-full overflow-hidden rounded-full bg-black/[.06] dark:bg-white/[.08]">
+              <div
+                className="h-full rounded-full bg-linear-to-r from-purple-500 to-indigo-500 transition-[width]! duration-300! ease-out!"
+                style={{ width: `${progressPercent}%` }}
+              />
+            </div>
+          </div>
+        )}
+
+        {previewUrl && !isProcessing && (
           <p className="mt-3 text-center text-xs text-zinc-500 dark:text-zinc-400">
             İşlem tamamen tarayıcınızda yapılır, fotoğraflarınız cihazınızdan
             çıkmaz. İlk çalıştırmada model dosyaları indirileceği için işlem

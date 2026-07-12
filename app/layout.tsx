@@ -1,10 +1,11 @@
 import { eq } from "drizzle-orm";
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import { Geist_Mono, Inter } from "next/font/google";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { auth } from "@/auth";
 import AppChrome from "./components/app-chrome";
 import AuthSessionProvider from "./components/session-provider";
-import Sidebar from "./components/sidebar";
 import ThemeToggle from "./components/theme-toggle";
 import TopNav from "./components/top-nav";
 import { ThemeProvider } from "./context/theme-context";
@@ -15,6 +16,11 @@ import { getFreshCredits } from "./lib/credits";
 import { SITE_NAME, SITE_URL } from "./lib/site";
 import { getSiteJsonLd } from "./lib/site-schema";
 import "./globals.css";
+
+// Sidebar (framer-motion + tools/categories verisi içerir) yalnızca oturum
+// açmış kullanıcılara render edilir; dynamic import ile bu kod çıkarımsız
+// (marketing/anonim) sayfaların JS paketinden ayrı tutulur.
+const Sidebar = dynamic(() => import("./components/sidebar"));
 
 const inter = Inter({
   variable: "--font-inter",
@@ -111,6 +117,7 @@ export default async function RootLayout({
             <ThemeToggle />
           </ThemeProvider>
         </AuthSessionProvider>
+        <SpeedInsights />
       </body>
     </html>
   );

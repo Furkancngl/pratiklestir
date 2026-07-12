@@ -1,9 +1,14 @@
 import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
-import NextAuth from "next-auth";
+import NextAuth, { CredentialsSignin } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { db } from "@/app/lib/db";
 import { users } from "@/app/lib/db/schema";
+import { checkRateLimit, getClientIp, loginRateLimit } from "@/app/lib/rate-limit";
+
+class RateLimitedSignin extends CredentialsSignin {
+  code = "rate_limited";
+}
 
 export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
   session: { strategy: "jwt" },
@@ -16,11 +21,17 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
         email: {},
         password: {},
       },
-      async authorize(credentials) {
+      async authorize(credentials, request) {
         const email = credentials?.email;
         const password = credentials?.password;
         if (typeof email !== "string" || typeof password !== "string") {
           return null;
+        }
+
+        const ip = getClientIp(request.headers);
+        const { allowed } = await checkRateLimit(loginRateLimit, `login:${ip}`);
+        if (!allowed) {
+          throw new RateLimitedSignin();
         }
 
         const [user] = await db

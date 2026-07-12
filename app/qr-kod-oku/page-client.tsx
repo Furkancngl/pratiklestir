@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import CreditErrorNotice from "../components/credit-error-notice";
 import { useCreditGate } from "../hooks/use-credit-gate";
+import { MAX_IMAGE_FILE_SIZE_BYTES, formatFileSizeMB } from "../lib/file-limits";
 import { tools } from "../lib/tools";
 
 const accentClassName =
@@ -23,6 +24,13 @@ export default function QrKodOkuPage() {
     if (!file) return;
     if (!file.type.startsWith("image/")) {
       setError("Lütfen bir görsel dosyası seçin.");
+      return;
+    }
+
+    if (file.size > MAX_IMAGE_FILE_SIZE_BYTES) {
+      setError(
+        `Dosya çok büyük: maksimum ${formatFileSizeMB(MAX_IMAGE_FILE_SIZE_BYTES)} boyutunda görsel yükleyebilirsiniz.`
+      );
       return;
     }
 

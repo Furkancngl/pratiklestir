@@ -4,9 +4,11 @@ import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import { AuthError } from "next-auth";
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import { signIn } from "@/auth";
 import { db } from "@/app/lib/db";
 import { users } from "@/app/lib/db/schema";
+import { checkRateLimit, getClientIp, signupRateLimit } from "@/app/lib/rate-limit";
 
 export type SignupState =
   | {
@@ -27,6 +29,12 @@ export async function signup(
   const password = String(formData.get("password") ?? "");
   const passwordConfirm = String(formData.get("passwordConfirm") ?? "");
   const name = String(formData.get("fullName") ?? "").trim() || null;
+
+  const ip = getClientIp(await headers());
+  const { allowed } = await checkRateLimit(signupRateLimit, `signup:${ip}`);
+  if (!allowed) {
+    return { error: "Çok fazla kayıt denemesi yapıldı. Lütfen daha sonra tekrar deneyin." };
+  }
 
   if (!EMAIL_REGEX.test(email)) {
     return { error: "Lütfen geçerli bir e-posta adresi girin." };

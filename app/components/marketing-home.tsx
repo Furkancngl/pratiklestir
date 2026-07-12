@@ -1,13 +1,18 @@
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import AnimatedCard from "./animated-card";
 import HowItWorks from "./how-it-works";
 import HowItWorksButton from "./how-it-works-button";
 import MoreToolsCta from "./more-tools-cta";
 import PromoBanner from "./promo-banner";
 import Reveal from "./reveal";
-import Testimonials from "./testimonials";
+import TrustBadges from "./trust-badges";
 import { tools, type Tool } from "../lib/tools";
 import { categories } from "../lib/categories";
+
+// framer-motion kullanan alt-katlanmış (below-the-fold) bölüm; ayrı chunk'a
+// alınarak ana marketing sayfası JS paketinden çıkarılır.
+const Testimonials = dynamic(() => import("./testimonials"));
 
 const PREVIEW_COUNT = 2;
 
@@ -26,14 +31,17 @@ export default function MarketingHome() {
     <div className="flex flex-1 flex-col items-center bg-zinc-50 px-6 py-16 dark:bg-zinc-900">
       <div className="flex max-w-xl flex-col items-center text-center">
         <h1 className="text-4xl font-semibold tracking-tight text-black dark:text-zinc-50">
-          Pratikleştir&apos;e Hoş Geldiniz
+          Dosyaların Sunucuya Asla Yüklenmez
         </h1>
         <p className="mt-4 text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-          Günlük işlerini hızlandıran, ücretsiz ve kullanımı kolay küçük
-          araçlar sunuyoruz. Başlamak için aşağıdan bir araç seç.
+          Tüm işlemler cihazında gerçekleşir, hiçbir dosya bize ulaşmaz.
+          Hızlı, güvenli ve tamamen ücretsiz araçlarla başlamak için
+          aşağıdan seç.
         </p>
         <HowItWorksButton />
       </div>
+
+      <TrustBadges />
 
       <PromoBanner />
 

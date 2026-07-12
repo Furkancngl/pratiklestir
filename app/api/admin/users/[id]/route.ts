@@ -4,6 +4,8 @@ import { auth } from "@/auth";
 import { db } from "@/app/lib/db";
 import { users } from "@/app/lib/db/schema";
 import { isAdminEmail } from "@/app/lib/admin";
+import { isSameOriginRequest } from "@/app/lib/csrf";
+import { apiMutationRateLimit, checkRateLimit, getClientIp } from "@/app/lib/rate-limit";
 
 const VALID_PLANS = ["free", "pro", "ultra"];
 
@@ -16,6 +18,18 @@ export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  if (!isSameOriginRequest(request)) {
+    return NextResponse.json({ error: "Geçersiz istek kaynağı." }, { status: 403 });
+  }
+
+  const { allowed } = await checkRateLimit(
+    apiMutationRateLimit,
+    `api:${getClientIp(request.headers)}`
+  );
+  if (!allowed) {
+    return NextResponse.json({ error: "Çok fazla istek." }, { status: 429 });
+  }
+
   if (!(await requireAdmin())) {
     return NextResponse.json({ error: "Yetkisiz." }, { status: 403 });
   }
@@ -48,9 +62,21 @@ export async function PATCH(
 }
 
 export async function DELETE(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  if (!isSameOriginRequest(request)) {
+    return NextResponse.json({ error: "Geçersiz istek kaynağı." }, { status: 403 });
+  }
+
+  const { allowed } = await checkRateLimit(
+    apiMutationRateLimit,
+    `api:${getClientIp(request.headers)}`
+  );
+  if (!allowed) {
+    return NextResponse.json({ error: "Çok fazla istek." }, { status: 429 });
+  }
+
   if (!(await requireAdmin())) {
     return NextResponse.json({ error: "Yetkisiz." }, { status: 403 });
   }

@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import CreditErrorNotice from "../components/credit-error-notice";
 import { useCreditGate } from "../hooks/use-credit-gate";
+import { MAX_IMAGE_FILE_SIZE_BYTES, formatFileSizeMB } from "../lib/file-limits";
 import { tools } from "../lib/tools";
 
 const accentClassName =
@@ -68,7 +69,12 @@ export default function GorselSikistirPage() {
     if (!fileList || fileList.length === 0) return;
 
     const incoming = Array.from(fileList);
-    const images = incoming.filter((file) => file.type.startsWith("image/"));
+    const oversized = incoming.filter(
+      (file) => file.type.startsWith("image/") && file.size > MAX_IMAGE_FILE_SIZE_BYTES
+    );
+    const images = incoming.filter(
+      (file) => file.type.startsWith("image/") && file.size <= MAX_IMAGE_FILE_SIZE_BYTES
+    );
 
     if (images.length > 0) {
       const newEntries: ImageEntry[] = images.map((file) => ({
@@ -80,11 +86,17 @@ export default function GorselSikistirPage() {
       setEntries((current) => [...current, ...newEntries]);
     }
 
-    setError(
-      images.length !== incoming.length
-        ? "Bazı dosyalar eklenemedi: yalnızca görsel dosyaları kabul edilir."
-        : ""
-    );
+    if (oversized.length > 0) {
+      setError(
+        `Bazı dosyalar eklenemedi: görsel başına maksimum ${formatFileSizeMB(MAX_IMAGE_FILE_SIZE_BYTES)} boyut sınırı var.`
+      );
+    } else {
+      setError(
+        images.length !== incoming.length
+          ? "Bazı dosyalar eklenemedi: yalnızca görsel dosyaları kabul edilir."
+          : ""
+      );
+    }
   };
 
   const removeEntry = (id: string) => {

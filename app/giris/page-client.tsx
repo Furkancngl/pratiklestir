@@ -29,7 +29,11 @@ export default function GirisPage() {
     setPending(false);
 
     if (result?.error) {
-      setError("E-posta veya şifre hatalı.");
+      setError(
+        result.code === "rate_limited"
+          ? "Çok fazla deneme yaptınız. Lütfen bir dakika sonra tekrar deneyin."
+          : "E-posta veya şifre hatalı."
+      );
       return;
     }
 
