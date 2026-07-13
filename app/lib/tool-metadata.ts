@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { tools, type Tool, type ToolFaqItem } from "./tools";
 import { SITE_NAME, SITE_URL } from "./site";
+import { buildOgImageUrl } from "./og-image";
 
 // Bir aracın seo alanı boş bırakılmışsa (yeni eklenen, henüz özel içerik
 // yazılmamış araç), buradaki türetilmiş varsayılanlarla dolduruluyor - böyle
@@ -68,6 +69,11 @@ export function getToolMetadata(href: string): Metadata {
 
   const seo = getToolSeoContent(tool);
   const url = `${SITE_URL}${href}`;
+  // Her araç kendi adı/açıklamasıyla /api/og'dan dinamik bir OG görseli
+  // alır (bkz. app/api/og/route.tsx) - tüm araçlar artık aynı statik
+  // görseli paylaşmıyor, yeni bir araç eklendiğinde otomatik kendi görseli
+  // oluşur.
+  const ogImage = buildOgImageUrl({ title: tool.name, description: seo.metaDescription });
 
   return {
     // absolute: kök layout'taki title.template ("%s | Pratikleştir") bu
@@ -84,11 +90,17 @@ export function getToolMetadata(href: string): Metadata {
       siteName: SITE_NAME,
       locale: "tr_TR",
       type: "website",
+      // Sayfa kendi openGraph nesnesini tanımladığı için kök layout'un
+      // opengraph-image.tsx dosya kuralı burada miras alınmıyor (Next.js
+      // aynı segment içindeki alanları birleştirmez, üzerine yazar) - bu
+      // yüzden görseli burada elle belirtmemiz gerekiyor.
+      images: [ogImage],
     },
     twitter: {
-      card: "summary",
+      card: "summary_large_image",
       title: seo.metaTitle,
       description: seo.metaDescription,
+      images: [ogImage],
     },
   };
 }

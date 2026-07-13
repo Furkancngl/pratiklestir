@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { type Category, getCategorySeo } from "./categories";
 import { buildBreadcrumbSchema, type BreadcrumbLink } from "./breadcrumb-schema";
 import { SITE_NAME, SITE_URL } from "./site";
+import { buildOgImageUrl } from "./og-image";
 
 // Her kategori sayfası (app/[category]/page.tsx) tek satırla bu fonksiyonu
 // çağırır; title, description, canonical, Open Graph ve Twitter kartı
@@ -10,6 +11,12 @@ import { SITE_NAME, SITE_URL } from "./site";
 export function getCategoryMetadata(category: Category): Metadata {
   const seo = getCategorySeo(category.name);
   const url = `${SITE_URL}/${category.slug}`;
+  // Araç sayfalarıyla aynı desen (bkz. tool-metadata.ts) - her kategori
+  // kendi adı/açıklamasıyla /api/og'dan dinamik bir OG görseli alır.
+  const ogImage = buildOgImageUrl({
+    title: `${category.name} Araçları`,
+    description: seo.metaDescription,
+  });
 
   return {
     title: { absolute: seo.metaTitle },
@@ -28,11 +35,17 @@ export function getCategoryMetadata(category: Category): Metadata {
       siteName: SITE_NAME,
       locale: "tr_TR",
       type: "website",
+      // Sayfa kendi openGraph nesnesini tanımladığı için kök layout'un
+      // opengraph-image.tsx dosya kuralı burada miras alınmıyor (Next.js
+      // aynı segment içindeki alanları birleştirmez, üzerine yazar) - bu
+      // yüzden görseli burada elle belirtmemiz gerekiyor.
+      images: [ogImage],
     },
     twitter: {
-      card: "summary",
+      card: "summary_large_image",
       title: seo.metaTitle,
       description: seo.metaDescription,
+      images: [ogImage],
     },
   };
 }
