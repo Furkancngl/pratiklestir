@@ -23,6 +23,7 @@ export default function GirisPage() {
     const result = await signIn("credentials", {
       email: formData.get("email"),
       password: formData.get("password"),
+      remember: formData.get("remember") ? "true" : "false",
       redirect: false,
     });
 

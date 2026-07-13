@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import NextAuth, { CredentialsSignin } from "next-auth";
+import { encode as defaultEncode } from "next-auth/jwt";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import { db } from "@/app/lib/db";
@@ -11,8 +12,27 @@ class RateLimitedSignin extends CredentialsSignin {
   code = "rate_limited";
 }
 
+// "Beni hatırla" işaretliyse oturum 30 gün, işaretli değilse 1 gün sonra
+// sona erer. NextAuth'ta session.maxAge/cookie ömrü tek bir statik değer
+// olduğundan (per-login değiştirilemiyor), gerçek süreyi JWT'nin kendi
+// `exp` claim'inde tutuyoruz: özel `encode`, token'a jwt() callback'inde
+// yazdığımız `rememberMe` bayrağına göre farklı bir maxAge kullanıyor.
+// Çerez süresi hep 30 gün (uzun tavan) olarak set edilir ama kısa oturumlu
+// token'ların şifresi 1 gün sonra geçersiz hale gelir (jose exp kontrolü),
+// bu da auth()'un o andan sonra oturumu geçersiz saymasını sağlar.
+const REMEMBER_ME_MAX_AGE = 60 * 60 * 24 * 30; // 30 gün
+const SHORT_SESSION_MAX_AGE = 60 * 60 * 24; // 1 gün
+
 export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
-  session: { strategy: "jwt" },
+  session: { strategy: "jwt", maxAge: REMEMBER_ME_MAX_AGE },
+  jwt: {
+    maxAge: REMEMBER_ME_MAX_AGE,
+    async encode(params) {
+      const rememberMe = params.token?.rememberMe;
+      const maxAge = rememberMe === false ? SHORT_SESSION_MAX_AGE : REMEMBER_ME_MAX_AGE;
+      return defaultEncode({ ...params, maxAge });
+    },
+  },
   pages: {
     signIn: "/giris",
   },
@@ -25,6 +45,7 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
       credentials: {
         email: {},
         password: {},
+        remember: {},
       },
       async authorize(credentials, request) {
         const email = credentials?.email;
@@ -32,6 +53,7 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
         if (typeof email !== "string" || typeof password !== "string") {
           return null;
         }
+        const rememberMe = credentials?.remember !== "false";
 
         const ip = getClientIp(request.headers);
         const { allowed } = await checkRateLimit(loginRateLimit, `login:${ip}`);
@@ -59,6 +81,7 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
           name: user.name,
           plan: user.plan,
           planSelected: user.planSelectedAt !== null,
+          rememberMe,
         };
       },
     }),
@@ -90,6 +113,9 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
         token.plan = dbUser.plan;
         token.name = dbUser.name;
         token.planSelected = dbUser.planSelectedAt !== null;
+        // Google girişinde "beni hatırla" seçeneği yok - varsayılan olarak
+        // uzun ömürlü (30 gün) oturum veriyoruz.
+        token.rememberMe = true;
         return token;
       }
 
@@ -97,6 +123,7 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
         token.plan = user.plan;
         token.name = user.name;
         token.planSelected = user.planSelected;
+        token.rememberMe = user.rememberMe;
       }
       if (trigger === "update" && session?.name !== undefined) {
         token.name = session.name;

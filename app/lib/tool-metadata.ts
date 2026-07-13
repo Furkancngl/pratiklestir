@@ -114,3 +114,43 @@ export function getToolJsonLd(tool: Tool) {
     },
   };
 }
+
+// HowTo schema.org yapılandırılmış verisi - seo.howTo adımlarından (bkz.
+// getToolSeoContent) otomatik türetilir. Google'da adım adım zengin sonuç
+// gösterme ihtimalini artırır. Kategori sayfalarındaki
+// getCategoryFaqJsonLd ile aynı mantık - ToolSeoSections tarafından her
+// araç sayfasına otomatik gömülür, araç page.tsx'lerinde elle kod yazılmaz.
+export function getToolHowToJsonLd(tool: Tool) {
+  const seo = getToolSeoContent(tool);
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: `${tool.name} Nasıl Kullanılır?`,
+    step: seo.howTo.map((step, index) => ({
+      "@type": "HowToStep",
+      position: index + 1,
+      text: step,
+    })),
+  };
+}
+
+// FAQPage schema.org yapılandırılmış verisi - seo.faq'tan (bkz.
+// getToolSeoContent) otomatik türetilir. app/lib/category-metadata.ts
+// içindeki getCategoryFaqJsonLd ile birebir aynı desen.
+export function getToolFaqJsonLd(tool: Tool) {
+  const seo = getToolSeoContent(tool);
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: seo.faq.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
+}

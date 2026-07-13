@@ -1,6 +1,11 @@
 import Link from "next/link";
 import { tools, type Tool } from "../lib/tools";
-import { getToolSeoContent, getToolJsonLd } from "../lib/tool-metadata";
+import {
+  getToolSeoContent,
+  getToolJsonLd,
+  getToolHowToJsonLd,
+  getToolFaqJsonLd,
+} from "../lib/tool-metadata";
 import { getCategoryForTool } from "../lib/categories";
 import AnimatedCard from "./animated-card";
 
@@ -22,6 +27,8 @@ export default function ToolSeoSections({ tool }: { tool: Tool }) {
   const related = getRelatedTools(tool);
   const category = getCategoryForTool(tool);
   const jsonLd = getToolJsonLd(tool);
+  const howToJsonLd = getToolHowToJsonLd(tool);
+  const faqJsonLd = getToolFaqJsonLd(tool);
 
   return (
     <section className="flex w-full flex-1 flex-col items-center bg-zinc-50 px-6 pb-20 dark:bg-zinc-900">
@@ -29,6 +36,18 @@ export default function ToolSeoSections({ tool }: { tool: Tool }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(howToJsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(faqJsonLd).replace(/</g, "\\u003c"),
         }}
       />
 
