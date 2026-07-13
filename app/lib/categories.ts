@@ -168,24 +168,24 @@ const categorySeo: Record<string, CategorySeoContent> = {
   Hesapla: {
     metaTitle: "Hesaplama Araçları | Ücretsiz Online Hesap Makineleri | Pratikleştir",
     metaDescription:
-      "KDV, yüzde, döviz ve kredi hesaplamalarınızı saniyeler içinde yapacak ücretsiz online hesaplama araçları yakında burada.",
+      "KDV, yüzde, döviz, kredi, ortalama ve indirim hesaplamalarınızı saniyeler içinde yapan ücretsiz online hesaplama araçları.",
     intro:
-      "Günlük finansal hesaplamalarınızı kolaylaştıracak araçlarımız üzerinde çalışıyoruz; KDV'den kredi taksitine kadar birçok hesaplamayı bu kategoride tek tıkla yapabileceksiniz.",
+      "Günlük finansal hesaplamalarınızı kolaylaştıran araçlar burada bir arada: KDV'den kredi taksitine, döviz çevirisinden not ortalamasına kadar birçok hesaplamayı bu kategoride tek tıkla yapabilirsiniz.",
     faq: [
       {
-        question: "Hesaplama araçları ne zaman yayınlanacak?",
+        question: "Hesaplama araçları ücretsiz mi?",
         answer:
-          "KDV, yüzde, döviz, kredi, ortalama ve indirim hesaplama araçlarımız geliştirme aşamasında; her biri hazır olduğunda bu kategoride ayrı ayrı kullanıma açılacak.",
+          "Evet, KDV, yüzde, döviz, kredi, ortalama ve indirim hesaplama araçlarımızın tamamı ücretsizdir ve kayıt olmadan kullanılabilir.",
       },
       {
-        question: "Hesaplama araçları da ücretsiz mi olacak?",
+        question: "Bu araçlar verilerimi bir sunucuya gönderiyor mu?",
         answer:
-          "Evet, sitemizdeki diğer araçlar gibi ücretsiz ve kayıt gerektirmeden kullanılabilecek.",
+          "Hayır. Hesaplamaların tamamı tarayıcınızda yapılır; Döviz Hesapla yalnızca güncel kur verisini harici bir servisten çeker, girdiğiniz tutarlar hiçbir sunucumuza gönderilmez.",
       },
       {
-        question: "Yeni bir hesaplama aracı eklendiğinde nasıl haberim olur?",
+        question: "Hangi araçlar bu kategoride yer alıyor?",
         answer:
-          "Bu kategori sayfasını tekrar ziyaret ettiğinizde yayına alınan araçlar \"yakında\" etiketi olmadan, doğrudan kullanılabilir şekilde görünür.",
+          "KDV Hesapla, Yüzde Hesapla, Döviz Hesapla, Kredi Hesapla, Ortalama Hesapla ve İndirim Hesapla - günlük finansal hesaplamalarınız için ihtiyacınız olan araçlar.",
       },
     ],
   },

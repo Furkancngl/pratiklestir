@@ -2,18 +2,23 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signOut } from "next-auth/react";
+import { signOut, signIn } from "next-auth/react";
 import { requestPasswordReset } from "@/app/actions/password-reset";
 
 const placeholderBtnClass =
   "shrink-0 touch-manipulation rounded-[9px] border border-black/[.12] bg-black/[.03] px-4 py-2 text-xs font-semibold text-zinc-500 disabled:cursor-not-allowed dark:border-white/[.12] dark:bg-white/[.04] dark:text-zinc-400";
 
+const actionBtnClass =
+  "shrink-0 touch-manipulation rounded-[9px] border border-black/[.12] bg-black/[.03] px-4 py-2 text-xs font-semibold text-black transition-colors hover:bg-black/[.06] disabled:cursor-not-allowed disabled:opacity-60 dark:border-white/[.12] dark:bg-white/[.04] dark:text-white dark:hover:bg-white/[.08]";
+
 export default function AccountSettings({
   email,
   hasPassword,
+  googleConnected,
 }: {
   email: string;
   hasPassword: boolean;
+  googleConnected: boolean;
 }) {
   const router = useRouter();
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -21,6 +26,19 @@ export default function AccountSettings({
   const [error, setError] = useState("");
   const [resetPending, setResetPending] = useState(false);
   const [resetSent, setResetSent] = useState(false);
+  const [connecting, setConnecting] = useState(false);
+
+  async function handleConnectGoogle() {
+    setConnecting(true);
+    // login_hint, kullanıcının Google hesap seçicisinde kendi e-postasını
+    // önden seçili getirir; eşleştirme auth.ts'teki jwt callback'inde
+    // e-posta üzerinden yapılıyor.
+    await signIn(
+      "google",
+      { callbackUrl: "/ayarlar/hesap" },
+      { login_hint: email }
+    );
+  }
 
   async function handlePasswordResetRequest() {
     setResetPending(true);
@@ -83,29 +101,27 @@ export default function AccountSettings({
       )}
 
       <div className="mt-10 max-w-[460px]">
-        <div className="flex items-center justify-between gap-4 border-b border-black/[.08] py-3.5 dark:border-zinc-800">
+        <div className="flex items-center justify-between gap-4 py-3.5">
           <div>
             <p className="text-[13.5px] font-semibold text-black dark:text-zinc-50">
               Google Hesabı
             </p>
-            <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">Bağlı değil</p>
-          </div>
-          <button type="button" disabled title="Yakında" className={placeholderBtnClass}>
-            Bağla
-          </button>
-        </div>
-        <div className="flex items-center justify-between gap-4 py-3.5">
-          <div>
-            <p className="text-[13.5px] font-semibold text-black dark:text-zinc-50">
-              Aktif Oturumlar
-            </p>
             <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
-              1 cihazda giriş yapılmış
+              {googleConnected ? "Bağlı" : "Bağlı değil"}
             </p>
           </div>
-          <button type="button" disabled title="Yakında" className={placeholderBtnClass}>
-            Görüntüle
-          </button>
+          {googleConnected ? (
+            <span className={placeholderBtnClass}>Bağlı</span>
+          ) : (
+            <button
+              type="button"
+              disabled={connecting}
+              onClick={handleConnectGoogle}
+              className={actionBtnClass}
+            >
+              {connecting ? "Yönlendiriliyor..." : "Bağla"}
+            </button>
+          )}
         </div>
       </div>
 

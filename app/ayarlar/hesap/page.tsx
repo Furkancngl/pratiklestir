@@ -4,5 +4,11 @@ import AccountSettings from "./account-settings";
 export default async function AyarlarHesapPage() {
   const user = await requireCurrentUser();
 
-  return <AccountSettings email={user.email} hasPassword={user.passwordHash !== null} />;
+  return (
+    <AccountSettings
+      email={user.email}
+      hasPassword={user.passwordHash !== null}
+      googleConnected={user.googleId !== null}
+    />
+  );
 }

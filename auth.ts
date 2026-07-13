@@ -67,6 +67,7 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
     async jwt({ token, user, account, trigger, session }) {
       if (account?.provider === "google" && user?.email) {
         const email = user.email.toLowerCase();
+        const googleId = account.providerAccountId;
         let [dbUser] = await db
           .select()
           .from(users)
@@ -76,7 +77,13 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
         if (!dbUser) {
           [dbUser] = await db
             .insert(users)
-            .values({ email, name: user.name ?? null })
+            .values({ email, name: user.name ?? null, googleId })
+            .returning();
+        } else if (!dbUser.googleId) {
+          [dbUser] = await db
+            .update(users)
+            .set({ googleId })
+            .where(eq(users.id, dbUser.id))
             .returning();
         }
 

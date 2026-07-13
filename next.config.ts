@@ -12,6 +12,11 @@ const IMGLY_CDN = "https://staticimgly.com";
 // zaten kapsıyor - bkz. node_modules/@vercel/speed-insights/dist/index.mjs).
 const VERCEL_SPEED_INSIGHTS = "https://va.vercel-scripts.com";
 
+// Döviz Hesapla aracı güncel kurları bu ücretsiz, anahtarsız uçtan
+// doğrudan tarayıcıda çekiyor (bkz. app/doviz-hesapla/page-client.tsx);
+// connect-src'ye eklenmezse istek CSP tarafından engellenir.
+const EXCHANGE_RATE_API = "https://open.er-api.com";
+
 // next dev (Turbopack/Fast Refresh) HMR client'ı modül değiştirmede
 // eval() kullanıyor; production build'de (next build/start, Vercel dahil)
 // bu dev-only çalışma zamanı hiç var olmuyor, dolayısıyla 'unsafe-eval'e
@@ -35,7 +40,7 @@ const contentSecurityPolicy = [
   "font-src 'self' data:",
   // blob:: arka plan silme aracının worker'ı, WASM/model verisini kendi
   // ürettiği blob: URL'lerinden fetch() ile okuyor.
-  `connect-src 'self' blob: ${IMGLY_CDN}`,
+  `connect-src 'self' blob: ${IMGLY_CDN} ${EXCHANGE_RATE_API}`,
   "worker-src 'self' blob:",
   "object-src 'none'",
   "base-uri 'self'",

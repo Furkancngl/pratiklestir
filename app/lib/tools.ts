@@ -569,54 +569,315 @@ export const tools: Tool[] = [
     name: "KDV Hesapla",
     href: "/kdv-hesapla",
     description: "Tutara KDV ekler veya tutardan KDV'yi ayrıştırır.",
-    available: false,
+    available: true,
     accentClassName: "bg-emerald-500",
     icon: ReceiptIcon,
     group: "Hesapla",
+    seo: {
+      metaTitle: "KDV Hesapla | Ücretsiz Online KDV Hesaplama Aracı | Pratikleştir",
+      metaDescription:
+        "Tutara KDV ekleyin veya tutardan KDV'yi ayrıştırın. %1, %10, %20 gibi yaygın oranlar veya özel oranla anında, ücretsiz hesaplayın.",
+      about: [
+        "Fatura keserken veya bir ürünün KDV dahil/hariç fiyatını karşılaştırırken elle yapılan yüzde hesapları kolayca hataya açık olabilir. Bu araç, girdiğiniz tutarı seçtiğiniz KDV oranına göre saniyeler içinde hesaplar.",
+        "Tutarınızın KDV hariç mi yoksa KDV dahil mi olduğunu seçip yaygın oranlardan (%1, %10, %20) birini kullanabilir veya kendi özel oranınızı girebilirsiniz.",
+      ],
+      howTo: [
+        "Tutarı TL cinsinden girin.",
+        "Girdiğiniz tutarın KDV hariç mi yoksa KDV dahil mi olduğunu seçin.",
+        "Yaygın KDV oranlarından birini seçin veya \"Özel\" alanına kendi oranınızı yazın.",
+        "KDV tutarını, KDV hariç ve KDV dahil değerleri anında görün.",
+      ],
+      advantages: [
+        "%1, %10, %20 gibi yaygın oranların yanında özel oran girişi de destekler.",
+        "KDV hariç veya KDV dahil tutardan başlayarak hesaplama yapabilirsiniz.",
+        "Sonuç, tutarı değiştirdikçe anında güncellenir.",
+        "Girdiğiniz tutar tarayıcınızdan çıkmaz, hiçbir sunucuya gönderilmez.",
+      ],
+      faq: [
+        {
+          question: "Türkiye'de yaygın KDV oranları nelerdir?",
+          answer:
+            "En sık kullanılan oranlar %1, %10 ve %20'dir; ürün ve hizmet türüne göre farklılık gösterebilir. Aracımızda bu üç oranın yanında özel oran girme seçeneği de bulunur.",
+        },
+        {
+          question: "KDV hariç ve KDV dahil tutar arasındaki fark nedir?",
+          answer:
+            "KDV hariç tutar, vergi eklenmeden önceki tutardır. KDV dahil tutar ise bu tutara ilgili oranda KDV eklendikten sonraki, müşterinin ödediği nihai tutardır.",
+        },
+        {
+          question: "Elimde olan tutar KDV dahil mi hariç mi bilmiyorum, nasıl anlarım?",
+          answer:
+            "Fatura veya fiyat etiketinde \"KDV dahildir\" ya da \"+ KDV\" gibi bir ifade genelde belirtilir. Emin değilseniz her iki modu da deneyip hangisinin beklediğiniz sonuca yakın olduğuna bakabilirsiniz.",
+        },
+        {
+          question: "Girdiğim tutarlar bir yere kaydediliyor mu?",
+          answer:
+            "Hayır. Hesaplama tamamen tarayıcınızda yapılır; girdiğiniz tutar ve oran hiçbir sunucuya gönderilmez veya saklanmaz.",
+        },
+      ],
+      applicationCategory: "FinanceApplication",
+    },
   },
   {
     name: "Yüzde Hesapla",
     href: "/yuzde-hesapla",
     description: "Bir sayının yüzdesini veya yüzdelik değişimini hesaplar.",
-    available: false,
+    available: true,
     accentClassName: "bg-violet-500",
     icon: PercentIcon,
     group: "Hesapla",
+    seo: {
+      metaTitle: "Yüzde Hesapla | Online Yüzde Hesaplama Aracı | Pratikleştir",
+      metaDescription:
+        "Bir sayının yüzdesini, bir sayının diğerinin yüzde kaçı olduğunu veya yüzdelik artış/azalışı saniyeler içinde, ücretsiz hesaplayın.",
+      about: [
+        "\"200'ün %15'i kaç\", \"30, 150'nin yüzde kaçı\" veya \"1000'e %20 zam gelirse ne olur\" gibi sorular günlük hayatta sık karşımıza çıkar. Bu araç, en yaygın üç yüzde hesaplama modunu tek ekranda toplar.",
+        "İhtiyacınıza uygun modu seçip iki sayıyı girmeniz yeterli; sonuç, sayılar değiştikçe anında güncellenir.",
+      ],
+      howTo: [
+        "Yapmak istediğiniz hesaplama moduna göre üstteki sekmelerden birini seçin.",
+        "İlgili alanlara sayıları girin.",
+        "Sonucu anında ekranda görün.",
+        "Farklı bir hesaplama için sekmeyi değiştirip sayıları güncelleyin.",
+      ],
+      advantages: [
+        "Üç yaygın yüzde hesaplama modunu tek araçta birleştirir.",
+        "Sekmeler arasında geçiş yaparak farklı hesaplamaları hızlıca deneyebilirsiniz.",
+        "Ondalıklı sayıları da destekler.",
+        "Girdiğiniz sayılar tarayıcınızdan çıkmaz, hiçbir sunucuya gönderilmez.",
+      ],
+      faq: [
+        {
+          question: "\"X'in %Y'si\" modu ne işe yarar?",
+          answer:
+            "Bir sayının belirli bir yüzdesinin karşılığını bulmanızı sağlar; örneğin \"200'ün %15'i kaç\" sorusunun cevabını anında verir.",
+        },
+        {
+          question: "\"X, Y'nin yüzde kaçı\" modu neyi hesaplar?",
+          answer:
+            "Bir sayının başka bir sayıya oranını yüzde olarak gösterir; örneğin \"30, 150'nin yüzde kaçı\" sorusuna cevap verir.",
+        },
+        {
+          question: "Yüzde artış/azalış modunda negatif değer girebilir miyim?",
+          answer:
+            "Evet. Pozitif bir değer girerseniz artış, negatif bir değer girerseniz (örneğin -10) azalış hesaplanır.",
+        },
+        {
+          question: "Girdiğim sayılar bir yere kaydediliyor mu?",
+          answer:
+            "Hayır. Hesaplama tamamen tarayıcınızda yapılır; girdiğiniz sayılar hiçbir sunucuya gönderilmez veya saklanmaz.",
+        },
+      ],
+      applicationCategory: "UtilitiesApplication",
+    },
   },
   {
     name: "Döviz Hesapla",
     href: "/doviz-hesapla",
     description: "Güncel kurlarla farklı para birimleri arasında çevirir.",
-    available: false,
+    available: true,
     accentClassName: "bg-pink-500",
     icon: CurrencyExchangeIcon,
     group: "Hesapla",
+    seo: {
+      metaTitle: "Döviz Hesapla | Güncel Kurla Online Döviz Çevirici | Pratikleştir",
+      metaDescription:
+        "TL, dolar, euro ve sterlin arasında güncel kurlarla anında çeviri yapın. Kayıt gerekmez, kur verisi güvenilir bir kaynaktan çekilir.",
+      about: [
+        "Alışveriş, seyahat veya yurt dışı ödemesi planlarken güncel döviz kurunu bilmek işinizi kolaylaştırır. Bu araç, güncel kurları harici bir kur servisinden çekip TL, dolar, euro ve sterlin arasında anında çeviri yapar.",
+        "Tutarı ve kaynak/hedef para birimini seçmeniz yeterli; kur bilgisi günde bir kez güncellenen güvenilir bir kaynaktan alınır ve son güncelleme zamanı ekranda gösterilir.",
+      ],
+      howTo: [
+        "Çevirmek istediğiniz tutarı girin.",
+        "Kaynak ve hedef para birimini seçin.",
+        "Gerekirse para birimlerini yer değiştirme butonuyla hızlıca ters çevirin.",
+        "Sonucu ve güncel birim kuru ekranda görün.",
+      ],
+      advantages: [
+        "TL, dolar, euro ve sterlin arasında hızlı çeviri yapar.",
+        "Kur verisi güncel ve güvenilir bir kaynaktan çekilir.",
+        "Tek tıkla kaynak ve hedef para birimini yer değiştirebilirsiniz.",
+        "Kayıt veya üyelik olmadan anında kullanılır.",
+      ],
+      faq: [
+        {
+          question: "Kur bilgisi nereden alınıyor?",
+          answer:
+            "Kurlar, exchangerate-api.com'un ücretsiz ve kayıt gerektirmeyen açık erişim servisinden çekilir; veriler günde bir kez güncellenir.",
+        },
+        {
+          question: "Kur bilgisi güncellenmezse ne olur?",
+          answer:
+            "Kur servisine ulaşılamazsa ekranda bir hata mesajı gösterilir ve \"Tekrar Dene\" butonuyla yeniden deneyebilirsiniz.",
+        },
+        {
+          question: "Hangi para birimleri arasında çeviri yapabilirim?",
+          answer: "Şu an TL, dolar, euro ve sterlin arasında çeviri yapabilirsiniz.",
+        },
+        {
+          question: "Girdiğim tutar bir yere kaydediliyor mu?",
+          answer:
+            "Hayır. Yalnızca güncel kur verisi harici servisten çekilir; girdiğiniz tutar tarayıcınızda kalır, hiçbir sunucumuza gönderilmez.",
+        },
+      ],
+      applicationCategory: "FinanceApplication",
+    },
   },
   {
     name: "Kredi Hesapla",
     href: "/kredi-hesapla",
     description: "Kredi tutarı, vade ve faize göre taksitleri hesaplar.",
-    available: false,
+    available: true,
     accentClassName: "bg-yellow-500",
     icon: CreditCardIcon,
     group: "Hesapla",
+    seo: {
+      metaTitle: "Kredi Hesapla | Online Kredi Taksit Hesaplama Aracı | Pratikleştir",
+      metaDescription:
+        "Kredi tutarı, vade ve aylık faiz oranını girin; aylık taksiti, toplam geri ödemeyi ve ödeme planını standart anüite formülüyle hesaplayın.",
+      about: [
+        "Bir krediye başvurmadan önce aylık taksitin ve toplam maliyetin ne olacağını bilmek, bütçenizi planlamanıza yardımcı olur. Bu araç, standart kredi/anüite formülünü kullanarak taksit tutarını hesaplar.",
+        "Kredi tutarı, vade (ay) ve aylık faiz oranını girmeniz yeterli; aylık taksit, toplam geri ödeme ve toplam faiz tutarının yanında isteğe bağlı olarak ay ay ödeme planını da görüntüleyebilirsiniz.",
+      ],
+      howTo: [
+        "Kredi tutarını TL cinsinden girin.",
+        "Vadeyi ay olarak girin.",
+        "Bankanızın belirttiği aylık faiz oranını yüzde olarak girin.",
+        "Aylık taksiti, toplam geri ödemeyi görün; isterseniz \"Ödeme planını göster\" ile ay ay dökümü inceleyin.",
+      ],
+      advantages: [
+        "Standart kredi/anüite formülüyle güvenilir bir tahmin sunar.",
+        "Toplam geri ödeme ve toplam faiz tutarını ayrı ayrı gösterir.",
+        "İsteğe bağlı ay ay ödeme planıyla anapara/faiz dağılımını görebilirsiniz.",
+        "Girdiğiniz bilgiler tarayıcınızdan çıkmaz, hiçbir sunucuya gönderilmez.",
+      ],
+      faq: [
+        {
+          question: "Hesaplanan tutar bankamın vereceği teklifle birebir aynı olur mu?",
+          answer:
+            "Hayır, bu araç standart anüite formülüyle bir tahmin sunar. Bankalar dosya masrafı, BSMV/KKDF gibi ek kalemler uygulayabilir; kesin tutar için bankanızın resmi teklifine bakmanız gerekir.",
+        },
+        {
+          question: "Aylık faiz oranını nereden öğrenebilirim?",
+          answer:
+            "Bankanızın kredi teklifinde veya kredi sözleşmesinde belirtilen aylık faiz oranını kullanabilirsiniz; yıllık oran verilmişse yaklaşık aylık karşılığına bölerek girebilirsiniz.",
+        },
+        {
+          question: "Ödeme planı nasıl hesaplanıyor?",
+          answer:
+            "Her ay için kalan bakiye üzerinden faiz payı ve anapara payı hesaplanır; taksit sabit kalırken ilerleyen aylarda anapara payı artar, faiz payı azalır.",
+        },
+        {
+          question: "Girdiğim bilgiler bir yere kaydediliyor mu?",
+          answer:
+            "Hayır. Hesaplama tamamen tarayıcınızda yapılır; kredi tutarı, vade ve faiz oranı hiçbir sunucuya gönderilmez veya saklanmaz.",
+        },
+      ],
+      applicationCategory: "FinanceApplication",
+    },
   },
   {
     name: "Ortalama Hesapla",
     href: "/ortalama-hesapla",
     description: "Bir sayı dizisinin ortalamasını anında hesaplar.",
-    available: false,
+    available: true,
     accentClassName: "bg-teal-500",
     icon: AverageIcon,
     group: "Hesapla",
+    seo: {
+      metaTitle: "Ortalama Hesapla | Basit ve Ağırlıklı Ortalama Hesaplama | Pratikleştir",
+      metaDescription:
+        "Birden fazla sayının basit ortalamasını veya not ortalaması gibi ağırlıklı ortalamasını saniyeler içinde, ücretsiz hesaplayın.",
+      about: [
+        "Not ortalaması, ürün puanları veya bir dizi ölçümün ortalamasını almak gerektiğinde elle toplayıp bölmek zaman alabilir ve hataya açıktır. Bu araç, istediğiniz kadar sayıyı ekleyip ortalamasını anında hesaplar.",
+        "Basit ortalamanın yanında, her değere farklı bir ağırlık (örneğin ders kredisi) verebileceğiniz ağırlıklı ortalama modu da bulunur.",
+      ],
+      howTo: [
+        "Basit veya Ağırlıklı Ortalama sekmesini seçin.",
+        "\"+ Sayı ekle\" veya \"+ Satır ekle\" ile istediğiniz kadar değer ekleyin.",
+        "Ağırlıklı modda her değerin yanına ilgili ağırlığı girin.",
+        "Ortalama sonucunu anında ekranda görün.",
+      ],
+      advantages: [
+        "Sınırsız sayıda değer ekleyip çıkarabilirsiniz.",
+        "Not ortalaması gibi hesaplamalar için ağırlıklı ortalama modu sunar.",
+        "Sonuç, her değişiklikte anında güncellenir.",
+        "Girdiğiniz sayılar tarayıcınızdan çıkmaz, hiçbir sunucuya gönderilmez.",
+      ],
+      faq: [
+        {
+          question: "Ağırlıklı ortalama ne zaman kullanılır?",
+          answer:
+            "Her değerin eşit öneme sahip olmadığı durumlarda kullanılır; örneğin ders notlarını kredi sayısına göre ağırlıklandırarak genel not ortalaması hesaplamak için idealdir.",
+        },
+        {
+          question: "Kaç değer ekleyebilirim?",
+          answer: "Belirli bir sınır yoktur; \"+ Sayı ekle\" veya \"+ Satır ekle\" ile istediğiniz kadar değer ekleyebilirsiniz.",
+        },
+        {
+          question: "Ondalıklı sayı girebilir miyim?",
+          answer: "Evet, virgül veya nokta ile ondalıklı değerler girebilirsiniz.",
+        },
+        {
+          question: "Girdiğim değerler bir yere kaydediliyor mu?",
+          answer:
+            "Hayır. Hesaplama tamamen tarayıcınızda yapılır; girdiğiniz değerler hiçbir sunucuya gönderilmez veya saklanmaz.",
+        },
+      ],
+      applicationCategory: "UtilitiesApplication",
+    },
   },
   {
     name: "İndirim Hesapla",
     href: "/indirim-hesapla",
     description: "İndirimli fiyatı ve ne kadar tasarruf ettiğini hesaplar.",
-    available: false,
+    available: true,
     accentClassName: "bg-indigo-600",
     icon: TagIcon,
     group: "Hesapla",
+    seo: {
+      metaTitle: "İndirim Hesapla | Online İndirimli Fiyat Hesaplama Aracı | Pratikleştir",
+      metaDescription:
+        "Orijinal fiyatı ve indirim yüzdesini girin; indirimli fiyatı ve ne kadar tasarruf ettiğinizi saniyeler içinde, ücretsiz hesaplayın.",
+      about: [
+        "İndirim kampanyalarında gerçek fiyat farkını görmek, alışverişte doğru karar vermenize yardımcı olur. Bu araç, orijinal fiyat ve indirim oranını girdiğinizde indirimli fiyatı ve tam olarak ne kadar tasarruf ettiğinizi anında hesaplar.",
+        "Mağaza etiketindeki veya online alışveriş sitesindeki \"%X indirim\" ibaresinin gerçekte ne kadar tasarrufa denk geldiğini görmek için tek yapmanız gereken iki değeri girmek.",
+      ],
+      howTo: [
+        "Ürünün orijinal fiyatını TL cinsinden girin.",
+        "Uygulanacak indirim oranını yüzde olarak girin.",
+        "İndirimli fiyatı ve kazancınızı anında görün.",
+        "Farklı bir ürün veya oran için değerleri güncelleyin.",
+      ],
+      advantages: [
+        "İndirimli fiyatı ve tasarruf tutarını ayrı ayrı gösterir.",
+        "Sonuç, değerleri değiştirdikçe anında güncellenir.",
+        "Ondalıklı fiyat ve oranları destekler.",
+        "Girdiğiniz tutar tarayıcınızdan çıkmaz, hiçbir sunucuya gönderilmez.",
+      ],
+      faq: [
+        {
+          question: "\"Kazancınız\" ne anlama geliyor?",
+          answer:
+            "Orijinal fiyat ile indirimli fiyat arasındaki farktır; yani indirim sayesinde ödemekten kurtulduğunuz tutardır.",
+        },
+        {
+          question: "%100'den büyük bir indirim oranı girebilir miyim?",
+          answer:
+            "Girebilirsiniz ancak gerçek hayatta böyle bir indirim bulunmadığından sonuç negatif bir \"indirimli fiyat\" olarak görünür; oranın doğru olduğundan emin olun.",
+        },
+        {
+          question: "Art arda uygulanan iki indirimi hesaplayabilir miyim?",
+          answer:
+            "Bu araç tek seferlik bir indirimi hesaplar. Art arda iki indirim için önce ilk indirimin sonucunu \"Orijinal Fiyat\" alanına girip ikinci oranı uygulayabilirsiniz.",
+        },
+        {
+          question: "Girdiğim tutar ve oran bir yere kaydediliyor mu?",
+          answer:
+            "Hayır. Hesaplama tamamen tarayıcınızda yapılır; girdiğiniz değerler hiçbir sunucuya gönderilmez veya saklanmaz.",
+        },
+      ],
+      applicationCategory: "UtilitiesApplication",
+    },
   },
 ];
