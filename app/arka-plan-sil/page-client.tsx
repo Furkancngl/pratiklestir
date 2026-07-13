@@ -5,6 +5,7 @@ import type { Config } from "@imgly/background-removal";
 import CreditErrorNotice from "../components/credit-error-notice";
 import { useCreditGate } from "../hooks/use-credit-gate";
 import { MAX_IMAGE_FILE_SIZE_BYTES, formatFileSizeMB } from "../lib/file-limits";
+import { hasDownloadedModelBefore, markModelDownloaded } from "../lib/model-cache-flag";
 import { tools } from "../lib/tools";
 
 const accentClassName =
@@ -23,6 +24,9 @@ export default function ArkaPlanSilPage() {
   const inputRef = useRef<HTMLInputElement>(null);
   const downloadTotalsRef = useRef<Map<string, { loaded: number; total: number }>>(new Map());
   const { checkAndConsume, creditError } = useCreditGate("/arka-plan-sil");
+  // Bu tarayıcıda daha önce başarılı bir indirme oldu mu - sadece gerçek ilk
+  // kullanımda "ilk kullanım" mesajı göstermek için (bkz. lib/model-cache-flag).
+  const [isFirstModelDownload] = useState(() => !hasDownloadedModelBefore());
 
   const handleFile = (selected: File | undefined | null) => {
     if (!selected) return;
@@ -83,6 +87,7 @@ export default function ArkaPlanSilPage() {
       const { removeBackground } = await import("@imgly/background-removal");
       const blob = await removeBackground(file, { progress: onProgress });
       setResultUrl(URL.createObjectURL(blob));
+      markModelDownloaded();
     } catch {
       setError(
         "Arka plan kaldırılırken bir sorun oluştu. Lütfen tekrar deneyin."
@@ -178,7 +183,9 @@ export default function ArkaPlanSilPage() {
             <div className="mb-1.5 flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400">
               <span>
                 {progressPhase === "downloading"
-                  ? "Model indiriliyor, ilk kullanımda biraz sürebilir..."
+                  ? isFirstModelDownload
+                    ? "İlk kullanım - model indiriliyor, birkaç saniye sürebilir..."
+                    : "Model hazırlanıyor..."
                   : "Görsel işleniyor..."}
               </span>
               <span className="font-medium text-zinc-700 dark:text-zinc-300">
@@ -197,8 +204,9 @@ export default function ArkaPlanSilPage() {
         {previewUrl && !isProcessing && (
           <p className="mt-3 text-center text-xs text-zinc-500 dark:text-zinc-400">
             İşlem tamamen tarayıcınızda yapılır, fotoğraflarınız cihazınızdan
-            çıkmaz. İlk çalıştırmada model dosyaları indirileceği için işlem
-            biraz zaman alabilir.
+            çıkmaz.
+            {isFirstModelDownload &&
+              " İlk çalıştırmada model dosyaları indirileceği için işlem biraz zaman alabilir."}
           </p>
         )}
 

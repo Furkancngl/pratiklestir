@@ -3,18 +3,33 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
-
-const inputClass =
-  "w-full max-w-[360px] rounded-[10px] border border-black/[.12] bg-black/[.02] px-3.5 py-2.5 text-sm text-black outline-none focus:border-violet-500 focus:shadow-[0_0_0_3px_rgba(139,92,246,0.15)] dark:border-white/[.12] dark:bg-white/[.04] dark:text-white";
+import { requestPasswordReset } from "@/app/actions/password-reset";
 
 const placeholderBtnClass =
   "shrink-0 touch-manipulation rounded-[9px] border border-black/[.12] bg-black/[.03] px-4 py-2 text-xs font-semibold text-zinc-500 disabled:cursor-not-allowed dark:border-white/[.12] dark:bg-white/[.04] dark:text-zinc-400";
 
-export default function AccountSettings() {
+export default function AccountSettings({
+  email,
+  hasPassword,
+}: {
+  email: string;
+  hasPassword: boolean;
+}) {
   const router = useRouter();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState("");
+  const [resetPending, setResetPending] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
+
+  async function handlePasswordResetRequest() {
+    setResetPending(true);
+    const formData = new FormData();
+    formData.set("email", email);
+    await requestPasswordReset(undefined, formData);
+    setResetPending(false);
+    setResetSent(true);
+  }
 
   async function handleDelete() {
     setDeleting(true);
@@ -42,31 +57,30 @@ export default function AccountSettings() {
         Şifre, bağlı hesaplar ve güvenlik ayarların.
       </p>
 
-      <div className="mb-3">
-        <label
-          htmlFor="currentPassword"
-          className="mb-2 block text-[12.5px] font-semibold text-zinc-500 dark:text-zinc-400"
-        >
-          Mevcut Şifre
-        </label>
-        <input
-          id="currentPassword"
-          type="password"
-          placeholder="••••••••"
-          className={inputClass}
-        />
-      </div>
-      <button
-        type="button"
-        disabled
-        title="Resend entegrasyonu tamamlandığında aktif olacak"
-        className="touch-manipulation rounded-[10px] bg-linear-to-r from-violet-500 to-indigo-500 px-5 py-2.5 text-[13.5px] font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
-      >
-        Şifreyi Değiştirmek İstiyorum
-      </button>
-      <p className="mt-2 text-xs text-zinc-400 dark:text-zinc-500">
-        E-posta ile şifre sıfırlama bağlantısı gönderilecek (yakında).
-      </p>
+      {!hasPassword ? (
+        <p className="max-w-[460px] rounded-[10px] border border-black/[.08] bg-black/[.02] px-4 py-3 text-[13px] text-zinc-600 dark:border-white/[.08] dark:bg-white/[.03] dark:text-zinc-400">
+          Google hesabınla giriş yapıyorsun, şifre sıfırlama gerekmez.
+        </p>
+      ) : resetSent ? (
+        <div className="max-w-[460px] rounded-[10px] border border-emerald-500/25 bg-emerald-500/10 px-4 py-3 text-[13px] text-emerald-700 dark:text-emerald-400">
+          Şifre sıfırlama bağlantısını {email} adresine gönderdik. Gelen
+          kutunu kontrol et.
+        </div>
+      ) : (
+        <>
+          <button
+            type="button"
+            disabled={resetPending}
+            onClick={handlePasswordResetRequest}
+            className="touch-manipulation rounded-[10px] bg-linear-to-r from-violet-500 to-indigo-500 px-5 py-2.5 text-[13.5px] font-bold text-white disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {resetPending ? "Gönderiliyor..." : "Şifreyi Değiştirmek İstiyorum"}
+          </button>
+          <p className="mt-2 text-xs text-zinc-400 dark:text-zinc-500">
+            {email} adresine şifre sıfırlama bağlantısı gönderilecek.
+          </p>
+        </>
+      )}
 
       <div className="mt-10 max-w-[460px]">
         <div className="flex items-center justify-between gap-4 border-b border-black/[.08] py-3.5 dark:border-zinc-800">

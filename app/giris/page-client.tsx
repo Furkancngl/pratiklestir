@@ -130,12 +130,12 @@ export default function GirisPage() {
                 <input type="checkbox" name="remember" className="accent-violet-500" />
                 Beni hatırla
               </label>
-              <button
-                type="button"
+              <Link
+                href="/sifremi-unuttum"
                 className="font-medium text-violet-600 hover:underline dark:text-violet-400"
               >
                 Şifremi unuttum
-              </button>
+              </Link>
             </div>
 
             {error && (

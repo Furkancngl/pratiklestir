@@ -34,6 +34,10 @@ export const signupRateLimit = createLimiter(5, "1 h");
 // gevşek).
 export const apiMutationRateLimit = createLimiter(30, "1 m");
 
+// Şifre sıfırlama isteği/onayı: aynı IP'den 15 dakikada 5 deneme (e-posta
+// bombalama ve token brute-force'unu yavaşlatmak için).
+export const passwordResetRateLimit = createLimiter(5, "15 m");
+
 export type RateLimitResult = { allowed: true } | { allowed: false };
 
 export async function checkRateLimit(
