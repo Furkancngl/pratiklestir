@@ -10,7 +10,11 @@ const isConfigured = Boolean(
   process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN
 );
 
-const redis = isConfigured ? Redis.fromEnv() : null;
+// guest-usage-server.ts de aynı Redis bağlantısını paylaşıp kullanır
+// (misafir IP+araç sayacı için) - Ratelimit bu iş için uygun değil çünkü
+// o kayan zaman penceresinde sıfırlanan bir limit, burada ise ömür boyu
+// (TTL'e kadar) kalıcı bir kullanım sayacı gerekiyor.
+export const redis = isConfigured ? Redis.fromEnv() : null;
 
 function createLimiter(tokens: number, window: `${number} ${"s" | "m" | "h" | "d"}`) {
   if (!redis) return null;

@@ -9,6 +9,7 @@ type Row = {
   icon: RowIcon;
   label: string;
   value: string | "check" | "dash";
+  subtext?: string;
 };
 
 const freeRows: Row[] = [
@@ -23,7 +24,12 @@ const proRows: Row[] = [
   { icon: "bolt", label: "Günlük Kredi", value: "200" },
   { icon: "clock", label: "İşlem Önceliği", value: "Hızlı" },
   { icon: "grid", label: "Aynı Anda Dosya", value: "10" },
-  { icon: "batch", label: "Toplu İşlem", value: "check" },
+  {
+    icon: "batch",
+    label: "Toplu İşlem",
+    value: "check",
+    subtext: "E-ticaret satıcıları, içerik üreticileri için",
+  },
   { icon: "support", label: "Öncelikli Destek", value: "check" },
 ];
 
@@ -118,20 +124,27 @@ function PlanRows({ rows, proAccent }: { rows: Row[]; proAccent: boolean }) {
       {rows.map((row, index) => (
         <div
           key={row.label}
-          className={`flex items-center justify-between py-3.25 ${
+          className={`py-3.25 ${
             index < rows.length - 1 ? "border-b border-black/[.06] dark:border-white/[.06]" : ""
           }`}
         >
-          <div className="flex items-center gap-2.25 text-[13.5px] text-zinc-700 dark:text-zinc-300">
-            <RowIconGlyph
-              icon={row.icon}
-              className={`h-3.75 w-3.75 shrink-0 ${
-                proAccent ? "text-purple-400" : "text-zinc-400 dark:text-zinc-500"
-              }`}
-            />
-            {row.label}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2.25 text-[13.5px] text-zinc-700 dark:text-zinc-300">
+              <RowIconGlyph
+                icon={row.icon}
+                className={`h-3.75 w-3.75 shrink-0 ${
+                  proAccent ? "text-purple-400" : "text-zinc-400 dark:text-zinc-500"
+                }`}
+              />
+              {row.label}
+            </div>
+            <RowValue value={row.value} proAccent={proAccent} />
           </div>
-          <RowValue value={row.value} proAccent={proAccent} />
+          {row.subtext && (
+            <p className="mt-1 pl-6 text-[11.5px] leading-4 text-zinc-400 dark:text-zinc-500">
+              {row.subtext}
+            </p>
+          )}
         </div>
       ))}
     </div>

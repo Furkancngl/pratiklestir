@@ -22,10 +22,13 @@ export function useCreditGate(tool: ToolKey) {
     setCreditError(null);
 
     // Kredi sistemi sadece giriş yapmış kullanıcıların günlük plan limitini
-    // düşürür. Login yapmamış ziyaretçiler ilk GUEST_FREE_USES denemeyi
-    // serbestçe kullanabilir, sonrasında kayıt daveti gösterilir.
+    // düşürür. Login yapmamış ziyaretçiler araç başına ilk GUEST_FREE_USES
+    // denemeyi serbestçe kullanabilir, sonrasında kayıt daveti gösterilir.
     if (status !== "authenticated") {
-      if (getGuestUseCount() >= GUEST_FREE_USES) {
+      // Hızlı, anlık client-side ön kontrol - sunucuya gitmeden önce bariz
+      // durumlarda gereksiz istek atmayı önler. Asıl/kesin karar aşağıdaki
+      // sunucu (Redis, IP+araç bazlı) yanıtına göre verilir.
+      if (getGuestUseCount(tool) >= GUEST_FREE_USES) {
         setCreditError({
           message: `İlk ${GUEST_FREE_USES} ücretsiz denemeni kullandın. Sınırsız kullanmak için hemen ücretsiz hesap oluştur.`,
           showUpgrade: false,
@@ -33,7 +36,29 @@ export function useCreditGate(tool: ToolKey) {
         });
         return false;
       }
-      recordGuestUse();
+
+      try {
+        const res = await fetch("/api/guest-usage", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ tool }),
+        });
+        const data: { allowed?: boolean } = await res.json();
+        if (!res.ok || !data.allowed) {
+          setCreditError({
+            message: `İlk ${GUEST_FREE_USES} ücretsiz denemeni kullandın. Sınırsız kullanmak için hemen ücretsiz hesap oluştur.`,
+            showUpgrade: false,
+            kind: "guest-invite",
+          });
+          return false;
+        }
+      } catch {
+        // Sunucuya ulaşılamadıysa fail-open: misafir deneyimini bozma,
+        // yalnızca client sayaçla devam et (rate-limit.ts'deki Redis
+        // yapılandırılmamış durumundaki aynı fail-open felsefesi).
+      }
+
+      recordGuestUse(tool);
       return true;
     }
 

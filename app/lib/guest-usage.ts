@@ -1,19 +1,35 @@
 const STORAGE_KEY = "pratiklestir:guest-tool-uses";
 
-// Login yapmamış ziyaretçiler için sunucu tarafında oturum/cookie yok, bu
-// yüzden sayaç tarayıcı başına localStorage'da tutuluyor (site geneli
-// toplam, araç bazlı değil).
+// Login yapmamış ziyaretçiler için araç başına ücretsiz deneme sayısı. Bu
+// dosyadaki sayaç yalnızca hızlı, anlık bir client-side ön kontrol - asıl/
+// kesin doğrulama artık sunucu tarafında IP+araç bazlı Redis sayacıyla
+// yapılıyor (bkz. app/lib/guest-usage-server.ts, app/api/guest-usage).
+// localStorage temizlense bile Redis sayacı kullanıcıyı yakalar.
 export const GUEST_FREE_USES = 2;
 
-export function getGuestUseCount(): number {
-  if (typeof window === "undefined") return 0;
-  const raw = window.localStorage.getItem(STORAGE_KEY);
-  const parsed = raw ? parseInt(raw, 10) : 0;
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
+type UsageMap = Record<string, number>;
+
+function readUsageMap(): UsageMap {
+  if (typeof window === "undefined") return {};
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (!raw) return {};
+    const parsed: unknown = JSON.parse(raw);
+    return parsed && typeof parsed === "object" ? (parsed as UsageMap) : {};
+  } catch {
+    return {};
+  }
 }
 
-export function recordGuestUse(): number {
-  const next = getGuestUseCount() + 1;
-  window.localStorage.setItem(STORAGE_KEY, String(next));
+export function getGuestUseCount(tool: string): number {
+  const count = readUsageMap()[tool];
+  return typeof count === "number" && count > 0 ? count : 0;
+}
+
+export function recordGuestUse(tool: string): number {
+  const map = readUsageMap();
+  const next = (map[tool] ?? 0) + 1;
+  map[tool] = next;
+  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(map));
   return next;
 }
