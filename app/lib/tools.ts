@@ -57,6 +57,10 @@ export type Tool = {
   // "PDF" kategorisi altında "PDF Sıkıştırıcı" yerine sadece "Sıkıştır").
   // Belirtilmezse `name` kullanılır.
   shortLabel?: string;
+  // Ana sayfadaki "En Popüler Araçlar" bölümünde gösterilsin mi - editoryal
+  // bir seçim, gerçek kullanım istatistiğine dayanmıyor (henüz analytics
+  // yok). Bkz. app/components/popular-tools.tsx.
+  popular?: boolean;
   seo?: ToolSeoContent;
 };
 
@@ -81,6 +85,7 @@ export const tools: Tool[] = [
     accentClassName: "bg-blue-500",
     icon: QrCodeIcon,
     group: "Günlük",
+    popular: true,
     seo: {
       metaTitle: "QR Kod Oluştur | Ücretsiz Online QR Kod Oluşturucu | Pratikleştir",
       metaDescription:
@@ -293,6 +298,7 @@ export const tools: Tool[] = [
     icon: DocumentIcon,
     group: "PDF",
     shortLabel: "Birleştir",
+    popular: true,
     seo: {
       metaTitle: "PDF Birleştir | Ücretsiz Online PDF Birleştirme Aracı | Pratikleştir",
       metaDescription:
@@ -348,6 +354,7 @@ export const tools: Tool[] = [
     beta: true,
     group: "Görsel",
     shortLabel: "Arka Plan Sil",
+    popular: true,
     seo: {
       metaTitle: "Arka Plan Sil | Yapay Zeka ile Ücretsiz Arka Plan Kaldırma | Pratikleştir",
       metaDescription:
@@ -409,6 +416,7 @@ export const tools: Tool[] = [
     icon: CompressIcon,
     group: "Görsel",
     shortLabel: "Sıkıştır",
+    popular: true,
     seo: {
       metaTitle: "Görsel Sıkıştır | Ücretsiz Online Fotoğraf Sıkıştırma Aracı | Pratikleştir",
       metaDescription:

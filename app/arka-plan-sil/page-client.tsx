@@ -3,8 +3,9 @@
 import { useRef, useState } from "react";
 import type { Config } from "@imgly/background-removal";
 import CreditErrorNotice from "../components/credit-error-notice";
+import FileSizeErrorNotice from "../components/file-size-error-notice";
 import { useCreditGate } from "../hooks/use-credit-gate";
-import { MAX_IMAGE_FILE_SIZE_BYTES, formatFileSizeMB } from "../lib/file-limits";
+import { type FileSizeError, useFileSizeLimit } from "../hooks/use-file-size-limit";
 import { hasDownloadedModelBefore, markModelDownloaded } from "../lib/model-cache-flag";
 import { tools } from "../lib/tools";
 
@@ -25,11 +26,13 @@ export default function ArkaPlanSilPage({
   const [isProcessing, setIsProcessing] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState("");
+  const [fileSizeError, setFileSizeError] = useState<FileSizeError | null>(null);
   const [progressPhase, setProgressPhase] = useState<"downloading" | "processing" | null>(null);
   const [progressPercent, setProgressPercent] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const downloadTotalsRef = useRef<Map<string, { loaded: number; total: number }>>(new Map());
   const { checkAndConsume, creditError } = useCreditGate("/arka-plan-sil");
+  const { maxFileSizeBytes, buildOversizedError } = useFileSizeLimit();
   // Bu tarayıcıda daha önce başarılı bir indirme oldu mu - sadece gerçek ilk
   // kullanımda "ilk kullanım" mesajı göstermek için (bkz. lib/model-cache-flag).
   const [isFirstModelDownload] = useState(() => !hasDownloadedModelBefore());
@@ -38,13 +41,12 @@ export default function ArkaPlanSilPage({
     if (!selected) return;
     if (!selected.type.startsWith("image/")) {
       setError("Lütfen bir görsel dosyası seçin.");
+      setFileSizeError(null);
       return;
     }
 
-    if (selected.size > MAX_IMAGE_FILE_SIZE_BYTES) {
-      setError(
-        `Dosya çok büyük: maksimum ${formatFileSizeMB(MAX_IMAGE_FILE_SIZE_BYTES)} boyutunda görsel yükleyebilirsiniz.`
-      );
+    if (selected.size > maxFileSizeBytes) {
+      setFileSizeError(buildOversizedError());
       return;
     }
 
@@ -52,6 +54,7 @@ export default function ArkaPlanSilPage({
     if (resultUrl) URL.revokeObjectURL(resultUrl);
 
     setError("");
+    setFileSizeError(null);
     setFile(selected);
     setPreviewUrl(URL.createObjectURL(selected));
     setResultUrl(null);
@@ -164,6 +167,7 @@ export default function ArkaPlanSilPage({
             {error}
           </p>
         )}
+        <FileSizeErrorNotice error={fileSizeError} />
         <CreditErrorNotice error={creditError} />
 
         {previewUrl && (

@@ -2,8 +2,9 @@
 
 import { useRef, useState } from "react";
 import CreditErrorNotice from "../components/credit-error-notice";
+import FileSizeErrorNotice from "../components/file-size-error-notice";
 import { useCreditGate } from "../hooks/use-credit-gate";
-import { MAX_IMAGE_FILE_SIZE_BYTES, formatFileSizeMB } from "../lib/file-limits";
+import { type FileSizeError, useFileSizeLimit } from "../hooks/use-file-size-limit";
 import { tools } from "../lib/tools";
 
 const accentClassName =
@@ -17,20 +18,21 @@ export default function QrKodOkuPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [copied, setCopied] = useState(false);
   const [previewUrl, setPreviewUrl] = useState("");
+  const [fileSizeError, setFileSizeError] = useState<FileSizeError | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const { checkAndConsume, creditError } = useCreditGate("/qr-kod-oku");
+  const { maxFileSizeBytes, buildOversizedError } = useFileSizeLimit();
 
   const handleFile = async (file: File | null | undefined) => {
     if (!file) return;
     if (!file.type.startsWith("image/")) {
       setError("Lütfen bir görsel dosyası seçin.");
+      setFileSizeError(null);
       return;
     }
 
-    if (file.size > MAX_IMAGE_FILE_SIZE_BYTES) {
-      setError(
-        `Dosya çok büyük: maksimum ${formatFileSizeMB(MAX_IMAGE_FILE_SIZE_BYTES)} boyutunda görsel yükleyebilirsiniz.`
-      );
+    if (file.size > maxFileSizeBytes) {
+      setFileSizeError(buildOversizedError());
       return;
     }
 
@@ -39,6 +41,7 @@ export default function QrKodOkuPage() {
 
     setIsProcessing(true);
     setError("");
+    setFileSizeError(null);
     setResult("");
     setCopied(false);
     setPreviewUrl((current) => {
@@ -170,6 +173,7 @@ export default function QrKodOkuPage() {
             {error}
           </p>
         )}
+        <FileSizeErrorNotice error={fileSizeError} />
         <CreditErrorNotice error={creditError} />
 
         {result && (

@@ -3,30 +3,30 @@ import Reveal from "./reveal";
 const STEPS = [
   {
     numberGradient: "bg-linear-to-br from-purple-500 to-indigo-500 shadow-purple-500/35",
-    title: "Ücretsiz Hesap Oluştur",
+    title: "Aracını Seç",
     description:
-      "30 saniyede email ile ya da Google hesabınla kayıt ol. Kredi kartı istemiyoruz, Free planda tüm temel araçlar sınırsız kullanılabilir.",
-    badge: "🎉 Kredi kartı gerekmez",
+      "QR kod oluşturmadan PDF birleştirmeye, arka plan silmeden görsel sıkıştırmaya kadar — kayıt olmadan, doğrudan istediğin aracı tek tıkla aç.",
+    badge: "🔓 Kayıt gerekmez",
   },
   {
     numberGradient: "bg-linear-to-br from-indigo-500 to-pink-500 shadow-indigo-500/35",
-    title: "İhtiyacın Olan Aracı Seç",
-    description:
-      "QR kod oluşturmadan PDF birleştirmeye, arka plan silmeden görsel sıkıştırmaya kadar — sidebar'dan istediğin aracı tek tıkla aç.",
-    badge: null,
-  },
-  {
-    numberGradient: "bg-linear-to-br from-pink-500 to-orange-500 shadow-pink-500/35",
     title: "Yükle, İşle, İndir",
     description:
       "Dosyanı sürükle-bırak ya da seç, aracın işlemesini bekle, sonucu anında indir. Tüm işlemler tarayıcında yapılır, dosyaların sunucuya hiç yüklenmez.",
     badge: null,
   },
+  {
+    numberGradient: "bg-linear-to-br from-pink-500 to-orange-500 shadow-pink-500/35",
+    title: "(Opsiyonel) Hesap Oluştur",
+    description:
+      "Daha fazla günlük kredi, toplu işlem ve öncelikli destek için 30 saniyede email ya da Google ile ücretsiz hesap oluştur.",
+    badge: "🎉 Kredi kartı gerekmez",
+  },
 ];
 
 export default function HowItWorks() {
   return (
-    <div id="how" className="relative mx-auto mt-20 w-full max-w-2xl px-6 pb-8">
+    <div id="how" className="relative mx-auto mt-20 w-full max-w-2xl scroll-mt-20 px-6 pb-8">
       <p className="text-center text-xs font-bold tracking-[0.1em] text-zinc-400 uppercase dark:text-zinc-600">
         Kolay Başlangıç
       </p>

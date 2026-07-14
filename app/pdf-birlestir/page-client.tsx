@@ -2,8 +2,9 @@
 
 import { useRef, useState } from "react";
 import CreditErrorNotice from "../components/credit-error-notice";
+import FileSizeErrorNotice from "../components/file-size-error-notice";
 import { useCreditGate } from "../hooks/use-credit-gate";
-import { MAX_PDF_FILE_SIZE_BYTES, formatFileSizeMB } from "../lib/file-limits";
+import { type FileSizeError, useFileSizeLimit } from "../hooks/use-file-size-limit";
 import { tools } from "../lib/tools";
 
 const accentClassName =
@@ -22,8 +23,10 @@ export default function PdfBirlestirPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [resultUrl, setResultUrl] = useState<string | null>(null);
   const [error, setError] = useState("");
+  const [fileSizeError, setFileSizeError] = useState<FileSizeError | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const { checkAndConsume, creditError } = useCreditGate("/pdf-birlestir");
+  const { maxFileSizeBytes, buildOversizedError } = useFileSizeLimit();
 
   const handleFiles = async (fileList: FileList | null) => {
     if (!fileList || fileList.length === 0) return;
@@ -35,10 +38,10 @@ export default function PdfBirlestirPage() {
     const isPdf = (file: File) =>
       file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
     const oversized = incoming.filter(
-      (file) => isPdf(file) && file.size > MAX_PDF_FILE_SIZE_BYTES
+      (file) => isPdf(file) && file.size > maxFileSizeBytes
     );
     const candidates = incoming.filter(
-      (file) => isPdf(file) && file.size <= MAX_PDF_FILE_SIZE_BYTES
+      (file) => isPdf(file) && file.size <= maxFileSizeBytes
     );
 
     const { PDFDocument } = await import("pdf-lib");
@@ -67,17 +70,12 @@ export default function PdfBirlestirPage() {
       setResultUrl(null);
     }
 
-    if (oversized.length > 0) {
-      setError(
-        `Bazı dosyalar eklenemedi: PDF başına maksimum ${formatFileSizeMB(MAX_PDF_FILE_SIZE_BYTES)} boyut sınırı var.`
-      );
-    } else if (notPdf.length > 0 || failedCount > 0) {
-      setError(
-        "Bazı dosyalar eklenemedi: yalnızca geçerli PDF dosyaları kabul edilir."
-      );
-    } else {
-      setError("");
-    }
+    setFileSizeError(oversized.length > 0 ? buildOversizedError() : null);
+    setError(
+      notPdf.length > 0 || failedCount > 0
+        ? "Bazı dosyalar eklenemedi: yalnızca geçerli PDF dosyaları kabul edilir."
+        : ""
+    );
   };
 
   const moveEntry = (index: number, direction: -1 | 1) => {
@@ -198,6 +196,7 @@ export default function PdfBirlestirPage() {
             {error}
           </p>
         )}
+        <FileSizeErrorNotice error={fileSizeError} />
         <CreditErrorNotice error={creditError} />
 
         {entries.length > 0 && (

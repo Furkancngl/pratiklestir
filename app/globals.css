@@ -79,30 +79,7 @@ body {
   background-size: 16px 16px;
 }
 
-/* Ana sayfadaki tanıtım banner'ı (PromoBanner) için animasyonlar. */
-@keyframes cycle-words {
-  0% {
-    opacity: 0;
-    transform: translateY(60%);
-  }
-  5% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  20% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  27% {
-    opacity: 0;
-    transform: translateY(-60%);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-60%);
-  }
-}
-
+/* Ana sayfa hero'su için animasyonlar. */
 @keyframes pulse-glow {
   0%,
   100% {

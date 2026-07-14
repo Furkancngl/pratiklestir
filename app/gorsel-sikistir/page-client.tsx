@@ -2,8 +2,9 @@
 
 import { useRef, useState } from "react";
 import CreditErrorNotice from "../components/credit-error-notice";
+import FileSizeErrorNotice from "../components/file-size-error-notice";
 import { useCreditGate } from "../hooks/use-credit-gate";
-import { MAX_IMAGE_FILE_SIZE_BYTES, formatFileSizeMB } from "../lib/file-limits";
+import { type FileSizeError, useFileSizeLimit } from "../hooks/use-file-size-limit";
 import { tools } from "../lib/tools";
 
 const accentClassName =
@@ -66,8 +67,10 @@ export default function GorselSikistirPage({
   const [isDragging, setIsDragging] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState("");
+  const [fileSizeError, setFileSizeError] = useState<FileSizeError | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const { checkAndConsume, creditError } = useCreditGate("/gorsel-sikistir");
+  const { maxFileSizeBytes, buildOversizedError } = useFileSizeLimit();
 
   const hasResults = entries.some((entry) => entry.compressedFile);
 
@@ -75,11 +78,12 @@ export default function GorselSikistirPage({
     if (!fileList || fileList.length === 0) return;
 
     const incoming = Array.from(fileList);
+    const notImage = incoming.filter((file) => !file.type.startsWith("image/"));
     const oversized = incoming.filter(
-      (file) => file.type.startsWith("image/") && file.size > MAX_IMAGE_FILE_SIZE_BYTES
+      (file) => file.type.startsWith("image/") && file.size > maxFileSizeBytes
     );
     const images = incoming.filter(
-      (file) => file.type.startsWith("image/") && file.size <= MAX_IMAGE_FILE_SIZE_BYTES
+      (file) => file.type.startsWith("image/") && file.size <= maxFileSizeBytes
     );
 
     if (images.length > 0) {
@@ -92,17 +96,12 @@ export default function GorselSikistirPage({
       setEntries((current) => [...current, ...newEntries]);
     }
 
-    if (oversized.length > 0) {
-      setError(
-        `Bazı dosyalar eklenemedi: görsel başına maksimum ${formatFileSizeMB(MAX_IMAGE_FILE_SIZE_BYTES)} boyut sınırı var.`
-      );
-    } else {
-      setError(
-        images.length !== incoming.length
-          ? "Bazı dosyalar eklenemedi: yalnızca görsel dosyaları kabul edilir."
-          : ""
-      );
-    }
+    setFileSizeError(oversized.length > 0 ? buildOversizedError() : null);
+    setError(
+      notImage.length > 0
+        ? "Bazı dosyalar eklenemedi: yalnızca görsel dosyaları kabul edilir."
+        : ""
+    );
   };
 
   const removeEntry = (id: string) => {
@@ -231,6 +230,7 @@ export default function GorselSikistirPage({
             {error}
           </p>
         )}
+        <FileSizeErrorNotice error={fileSizeError} />
         <CreditErrorNotice error={creditError} />
 
         <div className="mt-6 grid grid-cols-1 gap-2 sm:grid-cols-3">
