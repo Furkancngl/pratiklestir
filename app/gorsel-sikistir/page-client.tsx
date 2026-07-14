@@ -54,7 +54,13 @@ function formatBytes(bytes: number) {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-export default function GorselSikistirPage() {
+export default function GorselSikistirPage({
+  heading = "Görsel Sıkıştırıcı",
+  description = "Görsellerini yükle, kalite seviyesini seç, dosya boyutunu küçültüp indir.",
+}: {
+  heading?: string;
+  description?: string;
+}) {
   const [entries, setEntries] = useState<ImageEntry[]>([]);
   const [quality, setQuality] = useState<Quality>("medium");
   const [isDragging, setIsDragging] = useState(false);
@@ -176,11 +182,10 @@ export default function GorselSikistirPage() {
 
         <div className="mt-6 flex flex-col items-center gap-2 text-center">
           <h1 className="text-2xl font-semibold tracking-tight text-black dark:text-zinc-50">
-            Görsel Sıkıştırıcı
+            {heading}
           </h1>
           <p className="text-sm text-zinc-600 dark:text-zinc-400">
-            Görsellerini yükle, kalite seviyesini seç, dosya boyutunu
-            küçültüp indir.
+            {description}
           </p>
         </div>
 

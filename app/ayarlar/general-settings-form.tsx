@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import PlanBadge from "@/app/components/plan-badge";
@@ -156,14 +157,12 @@ export default function GeneralSettingsForm({
             </div>
             <p className="text-xs text-zinc-500 dark:text-zinc-400">{planInfo.desc}</p>
           </div>
-          <button
-            type="button"
-            disabled
-            title="Plan & Faturalama yakında"
-            className="shrink-0 touch-manipulation rounded-[9px] bg-linear-to-r from-violet-500 to-indigo-500 px-4 py-2 text-xs font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
+          <Link
+            href="/ayarlar/plan-faturalama"
+            className="shrink-0 touch-manipulation rounded-[9px] bg-linear-to-r from-violet-500 to-indigo-500 px-4 py-2 text-xs font-bold text-white transition-opacity hover:opacity-90"
           >
-            Yükselt
-          </button>
+            {plan === "pro" ? "Planı Yönet" : "Yükselt"}
+          </Link>
         </div>
       </div>
 

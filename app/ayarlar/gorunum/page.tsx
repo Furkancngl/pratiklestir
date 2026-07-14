@@ -1,12 +1,5 @@
-import { PaletteIcon } from "@/app/components/icons";
-import ComingSoon from "../coming-soon";
+import ThemeSettings from "./theme-settings";
 
 export default function AyarlarGorunumPage() {
-  return (
-    <ComingSoon
-      title="Görünüm"
-      description="Tema ve arayüz tercihlerini özelleştir."
-      icon={PaletteIcon}
-    />
-  );
+  return <ThemeSettings />;
 }

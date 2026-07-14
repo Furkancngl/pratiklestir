@@ -1,4 +1,4 @@
-import { integer, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { boolean, integer, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -10,6 +10,10 @@ export const users = pgTable("users", {
   planSelectedAt: timestamp("plan_selected_at", { withTimezone: true }),
   credits: integer("credits").notNull().default(30),
   creditsResetAt: timestamp("credits_reset_at", { withTimezone: true }),
+  // Hesap güvenlik uyarıları burada yok: her zaman açık ve kapatılamaz
+  // olduğu için ayrı bir alan tutmaya gerek yok (bkz. ayarlar/bildirimler).
+  notifyNewFeatures: boolean("notify_new_features").notNull().default(true),
+  notifyMarketing: boolean("notify_marketing").notNull().default(false),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),

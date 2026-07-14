@@ -23,7 +23,13 @@ function formatBytes(bytes: number) {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-export default function PdfSikistirPage() {
+export default function PdfSikistirPage({
+  heading = "PDF Sıkıştırıcı",
+  description = "PDF dosyalarını yükleyin, mümkün olan en iyi şekilde sıkıştırılmış hallerini indirin.",
+}: {
+  heading?: string;
+  description?: string;
+}) {
   const [entries, setEntries] = useState<PdfEntry[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -130,11 +136,10 @@ export default function PdfSikistirPage() {
 
         <div className="mt-6 flex flex-col items-center gap-2 text-center">
           <h1 className="text-2xl font-semibold tracking-tight text-black dark:text-zinc-50">
-            PDF Sıkıştırıcı
+            {heading}
           </h1>
           <p className="text-sm text-zinc-600 dark:text-zinc-400">
-            PDF dosyalarını yükleyin, mümkün olan en iyi şekilde
-            sıkıştırılmış hallerini indirin.
+            {description}
           </p>
         </div>
 

@@ -1,12 +1,15 @@
-import { BellIcon } from "@/app/components/icons";
-import ComingSoon from "../coming-soon";
+import { requireCurrentUser } from "@/app/lib/current-user";
+import NotificationSettings from "./notification-settings";
 
-export default function AyarlarBildirimlerPage() {
+export default async function AyarlarBildirimlerPage() {
+  const user = await requireCurrentUser();
+
   return (
-    <ComingSoon
-      title="Bildirimler"
-      description="Hangi konularda bildirim almak istediğini seç."
-      icon={BellIcon}
+    <NotificationSettings
+      initialPreferences={{
+        notifyNewFeatures: user.notifyNewFeatures,
+        notifyMarketing: user.notifyMarketing,
+      }}
     />
   );
 }

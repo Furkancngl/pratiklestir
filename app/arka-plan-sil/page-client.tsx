@@ -12,7 +12,13 @@ const accentClassName =
   tools.find((tool) => tool.href === "/arka-plan-sil")?.accentClassName ??
   "bg-green-500";
 
-export default function ArkaPlanSilPage() {
+export default function ArkaPlanSilPage({
+  heading = "Arka Plan Silici",
+  description = "Bir fotoğraf yükleyin, arka planını otomatik olarak kaldırıp PNG olarak indirin.",
+}: {
+  heading?: string;
+  description?: string;
+}) {
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [resultUrl, setResultUrl] = useState<string | null>(null);
@@ -113,11 +119,10 @@ export default function ArkaPlanSilPage() {
 
         <div className="mt-6 flex flex-col items-center gap-2 text-center">
           <h1 className="text-2xl font-semibold tracking-tight text-black dark:text-zinc-50">
-            Arka Plan Silici
+            {heading}
           </h1>
           <p className="text-sm text-zinc-600 dark:text-zinc-400">
-            Bir fotoğraf yükleyin, arka planını otomatik olarak kaldırıp PNG
-            olarak indirin.
+            {description}
           </p>
         </div>
 

@@ -7,6 +7,7 @@ import {
   getToolFaqJsonLd,
 } from "../lib/tool-metadata";
 import { getCategoryForTool } from "../lib/categories";
+import { getScenariosForTool } from "../lib/tool-scenarios";
 import AnimatedCard from "./animated-card";
 
 // Aynı gruptaki araçlar önceliklendirilir, grup dolmazsa (veya doldurmaya
@@ -26,6 +27,7 @@ export default function ToolSeoSections({ tool }: { tool: Tool }) {
   const seo = getToolSeoContent(tool);
   const related = getRelatedTools(tool);
   const category = getCategoryForTool(tool);
+  const scenarios = getScenariosForTool(tool.href);
   const jsonLd = getToolJsonLd(tool);
   const howToJsonLd = getToolHowToJsonLd(tool);
   const faqJsonLd = getToolFaqJsonLd(tool);
@@ -113,6 +115,25 @@ export default function ToolSeoSections({ tool }: { tool: Tool }) {
             ))}
           </div>
         </div>
+
+        {scenarios.length > 0 && (
+          <div>
+            <h2 className="text-lg font-semibold tracking-tight text-black dark:text-zinc-50">
+              Kullanım Senaryoları
+            </h2>
+            <div className="mt-3 flex flex-col gap-2">
+              {scenarios.map((scenario) => (
+                <Link
+                  key={scenario.slug}
+                  href={`${tool.href}/${scenario.slug}`}
+                  className="rounded-xl border border-black/[.08] bg-white px-4 py-3 text-sm font-medium text-black transition-colors hover:border-purple-400/40 hover:bg-purple-500/[.04] dark:border-white/10 dark:bg-zinc-950 dark:text-zinc-50 dark:hover:border-purple-400/30 dark:hover:bg-purple-400/[.06]"
+                >
+                  {scenario.h1} →
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
 
         {related.length > 0 && (
           <div>
