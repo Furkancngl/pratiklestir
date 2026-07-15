@@ -1,4 +1,4 @@
-type BadgeIcon = "shield" | "device" | "check";
+type BadgeIcon = "shield" | "device" | "check" | "bolt";
 
 type Badge = {
   icon: BadgeIcon;
@@ -6,6 +6,7 @@ type Badge = {
 };
 
 const badges: Badge[] = [
+  { icon: "bolt", label: "Anında Sonuç" },
   { icon: "shield", label: "Verileriniz Bizde Saklanmaz" },
   { icon: "device", label: "Sunucuya Yüklenmez" },
   { icon: "check", label: "Kayıt Gerektirmez" },
@@ -23,6 +24,12 @@ function BadgeIconGlyph({ icon, className }: { icon: BadgeIcon; className?: stri
   };
 
   switch (icon) {
+    case "bolt":
+      return (
+        <svg {...shared}>
+          <path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z" />
+        </svg>
+      );
     case "shield":
       return (
         <svg {...shared}>

@@ -91,20 +91,28 @@ export const tools: Tool[] = [
       metaDescription:
         "Metin, link veya bilgiyi saniyeler içinde QR koda dönüştürün, PNG olarak indirin. Kayıt gerekmez, tamamen tarayıcınızda ve ücretsiz çalışır.",
       about: [
-        "QR kod, bir web sitesi linkini, metni, wifi şifresini veya iletişim bilgisini kameradan tek okutuşta paylaşmanın en hızlı yollarından biridir. Menü, kartvizit, ambalaj ya da afiş gibi basılı materyallerde sıkça kullanılır.",
-        "Bu araç, girdiğiniz metni tarayıcınız içinde anında QR koda çevirir. Sunucuya herhangi bir veri gönderilmez; oluşturma işlemi cihazınızda tamamlanır ve sonucu PNG dosyası olarak indirebilirsiniz.",
+        "QR kod (\"Quick Response\" - hızlı yanıt), 1994'te Japon otomotiv endüstrisinde parça takibi için geliştirilmiş, günümüzde kameralı hemen her telefonun bir saniyede okuyabildiği kare bir matris barkod türüdür. Klasik çizgi barkodlardan farklı olarak hem yatay hem dikey eksende veri taşıdığı için tek bir karede çok daha fazla bilgi (bağlantı, düz metin, wifi şifresi, iletişim bilgisi) sığdırabilir.",
+        "Günlük hayatta en sık restoran masalarındaki temassız menülerde, ürün ambalajlarının üzerindeki kullanım kılavuzu linklerinde, etkinlik giriş biletlerinde ve kartvizitlerin köşesine eklenen iletişim kodlarında karşınıza çıkar. Bir işletme sahibiyseniz menünüzü her güncellediğinizde yeniden bastırma maliyetinden kurtulmak, bir etkinlik düzenliyorsanız katılımcıyı kağıda değil doğrudan bir kayıt linkine yönlendirmek için pratik bir çözümdür.",
+        "Bu araç girdiğiniz metni veya bağlantıyı doğrudan tarayıcınızda, açık kaynaklı bir kütüphaneyle QR koda çevirir; herhangi bir sunucuya veri gönderilmez, oluşturma anında tamamlanır ve sonucu PNG dosyası olarak indirirsiniz.",
+        "Burada ürettiğiniz kodlar statiktir - yani girdiğiniz metin doğrudan kodun içine gömülür. Bazı ücretli servisler bunun yerine \"dinamik QR\" sunar: kod aslında kısa bir yönlendirme linkine işaret eder ve arkasındaki hedefi sonradan değiştirebilirsiniz, ama bu durumda o servisin sunucusuna bağımlı kalırsınız ve genelde aylık ücret ödersiniz. Menü linki ya da wifi şifresi gibi nadiren değişen bir hedef için statik kod hem yeterlidir hem de tamamen sizin kontrolünüzdedir - üçüncü bir servise bağımlı olmadan süresiz çalışır.",
+        "QR kodlar Reed-Solomon hata düzeltme algoritması kullanır; bu sayede kodun bir kısmı lekelenir, buruşur ya da hafifçe yırtılırsa bile geri kalan kısımdan içerik yeniden okunabilir. Bu dayanıklılık, onları baskı materyallerinde bu kadar yaygın hale getiren nedenlerden biridir.",
+        "Bastıracağınız yüzeye göre boyut önemlidir: kartvizit gibi küçük bir alanda en az 2x2 cm, bir vitrin camı veya afişte en az 5x5 cm önerilir - kod küçüldükçe telefonun okuyabileceği mesafe de kısalır.",
+        "Misafirlerinize wifi şifresini sesli söylemek ya da bir kağıda yazmak yerine `WIFI:S:AğAdınız;T:WPA;P:Şifreniz;;` formatında bir metin girip QR koda çevirirseniz, telefon kamerasıyla tek okutuşta ağa bağlanmalarını sağlayabilirsiniz.",
       ],
       howTo: [
-        "QR koda dönüştürmek istediğiniz metni veya linki giriş alanına yazın.",
-        "\"Oluştur\" butonuna tıklayın; QR kodunuz anında ekranda belirir.",
-        "Oluşan kodu \"PNG olarak indir\" ile cihazınıza kaydedin.",
-        "İndirdiğiniz görseli baskı materyaline veya dijital paylaşıma ekleyin.",
+        "QR koda dönüştürmek istediğiniz metni, bağlantıyı veya yukarıdaki wifi formatını giriş alanına yazın.",
+        "\"Oluştur\" butonuna tıklayın; kodunuz anında ekranda belirir, herhangi bir işlem süresi beklemezsiniz.",
+        "Kodu telefonunuzun kamerasıyla test ederek doğru içeriğe yönlendirdiğinden emin olun.",
+        "\"PNG olarak indir\" ile sonucu cihazınıza kaydedin.",
+        "İndirdiğiniz görseli kartvizit, afiş, menü veya dijital paylaşımınıza ekleyin; kullanım alanına göre yeterli boyutta bastırmayı unutmayın.",
       ],
       advantages: [
-        "Kayıt veya üyelik olmadan anında kullanılır.",
-        "QR kod tarayıcınızda oluşturulur, herhangi bir sunucuya veri gönderilmez.",
-        "Yüksek çözünürlüklü PNG çıktısı baskı için de uygundur.",
-        "Tamamen ücretsizdir, kullanım sınırı yoktur.",
+        "Kayıt veya üyelik olmadan, saniyeler içinde kullanılır.",
+        "QR kod tamamen tarayıcınızda oluşturulur; girdiğiniz metin hiçbir sunucuya gönderilmez veya kaydedilmez.",
+        "Statik kod ürettiği için üçüncü bir servise bağımlı kalmaz, süresiz ve ücretsiz çalışmaya devam eder.",
+        "Yüksek çözünürlüklü PNG çıktısı hem ekranda hem baskıda net görünür.",
+        "Wifi paylaşımı, iletişim bilgisi, bağlantı gibi farklı içerik türlerini destekler.",
+        "Tamamen ücretsizdir, günlük veya aylık kullanım sınırı yoktur.",
       ],
       faq: [
         {
@@ -113,14 +121,29 @@ export const tools: Tool[] = [
             "Hayır. QR kod, içine kodladığınız metni veya linki temsil eden statik bir görseldir; süresi dolmaz. Yönlendirdiği link veya içerik değişmediği sürece kalıcı olarak çalışır.",
         },
         {
-          question: "Hangi içerikler için QR kod oluşturabilirim?",
+          question: "Statik ve dinamik QR kod arasındaki fark nedir?",
           answer:
-            "Web sitesi linki, düz metin, telefon numarası, e-posta adresi gibi herhangi bir metinsel içeriği QR koda çevirebilirsiniz.",
+            "Statik kodda girdiğiniz içerik doğrudan kodun içine gömülür ve asla değişmez - bu aracın ürettiği tür budur. Dinamik kodda ise kod bir yönlendirme linkine işaret eder, hedefi sonradan değiştirebilirsiniz ama genelde ücretli bir servise bağımlı kalırsınız.",
         },
         {
-          question: "QR kodum başka bir cihazda okunmayabilir mi?",
+          question: "Wifi şifremi QR kod olarak paylaşabilir miyim?",
           answer:
-            "Standart QR kod formatı kullanıldığı için güncel kameralı telefonların tamamı tarafından okunur. Kodu bastırırken yeterli boyutta ve net baskı yapmanız okunabilirliği artırır.",
+            "Evet. \"WIFI:S:AğAdınız;T:WPA;P:Şifreniz;;\" formatında bir metin girip QR koda çevirirseniz, çoğu telefon kamerayla okuttuğunda otomatik olarak ağa bağlanma seçeneği sunar.",
+        },
+        {
+          question: "QR kodun ortasına logo ekleyebilir miyim?",
+          answer:
+            "Şu an bu özellik desteklenmiyor; araç sade, yüksek kontrastlı bir QR kod üretir. Logo eklemek isterseniz indirdiğiniz PNG'yi bir görsel düzenleme aracında kodun okunabilirliğini bozmayacak şekilde düzenlemeniz gerekir.",
+        },
+        {
+          question: "Kartvizite veya menüye bastıracağım kod için hangi boyutu seçmeliyim?",
+          answer:
+            "Kartvizit gibi elle yakından okutulacak küçük alanlarda en az 2x2 cm, vitrin veya afiş gibi uzaktan okutulacak yerlerde en az 5x5 cm boyut önerilir.",
+        },
+        {
+          question: "Kodum hasar görürse (leke, buruşma) yine de okunur mu?",
+          answer:
+            "Çoğu zaman evet. QR kodlar Reed-Solomon hata düzeltme algoritması sayesinde kodun bir kısmı bozulsa bile kalan kısımdan içeriği yeniden oluşturabilir.",
         },
         {
           question: "Oluşturduğum QR kod bir yerlerde saklanıyor mu?",
@@ -304,20 +327,28 @@ export const tools: Tool[] = [
       metaDescription:
         "Birden fazla PDF dosyasını istediğiniz sırada tek bir dosyada birleştirin. Kayıt gerekmez, işlem tamamen tarayıcınızda ve ücretsiz yapılır.",
       about: [
-        "Sözleşme ekleri, fatura grupları, ödev sayfaları ya da rapor bölümleri gibi birden fazla PDF dosyasını tek bir dosyada toplamak, paylaşımı ve arşivlemeyi kolaylaştırır.",
-        "Bu araç, yüklediğiniz PDF dosyalarını istediğiniz sırayla tek bir dosyada birleştirir. Birleştirme işlemi pdf-lib kütüphanesiyle tarayıcınızda yapılır, dosyalarınız cihazınızdan çıkmaz.",
+        "İş başvurusunda bulunurken CV'nizi, ön yazınızı ve diplomanızı ayrı ayrı üç dosya olarak göndermek yerine tek bir PDF'te toplamak, hem sizi düzenli gösterir hem de karşı tarafın işini kolaylaştırır. Aynı ihtiyaç muhasebede fatura gruplarını, hukuk bürolarında sözleşme eklerini, okulda ödev ve rapor bölümlerini tek dosyada birleştirirken de karşınıza çıkar.",
+        "Bu araç, yüklediğiniz PDF dosyalarını belirlediğiniz sırayla tek bir dosyada toplar. Her dosyanın sayfa sayısını listede görür, yukarı/aşağı oklarla sırasını değiştirir, gerekirse listeden çıkarırsınız - birleştirme tamamlanana kadar hiçbir değişiklik kalıcı değildir.",
+        "Birleştirme işlemi pdf-lib kütüphanesiyle tarayıcınızda gerçekleşir: her dosyanın sayfaları tek tek okunup yeni bir belgeye kopyalanır, orijinal dosyalarınıza hiçbir şekilde dokunulmaz. Hiçbir dosya sunucuya yüklenmez.",
+        "Örneğin bir kira sözleşmesine ek olarak kimlik fotokopisi, gelir belgesi ve kefil bilgilerini tek dosyada sunmanız gerektiğinde, her belgeyi ayrı ayrı taratıp sıraya koyduktan sonra bu araçla tek bir PDF'te birleştirebilir, karşı tarafa tek dosya göndererek işini kolaylaştırabilirsiniz.",
+        "Bir tez veya uzun rapor hazırlıyorsanız her bölümü ayrı bir dosyada yazıp en son tek bir PDF'te birleştirmek, dosya yönetimini kolaylaştırır: kapak sayfası, içindekiler, her bölüm ve kaynakça ayrı ayrı hazırlanıp son adımda tek bir sırayla birleştirilebilir. Bir bölümde düzeltme yaptığınızda yalnızca o bölümün dosyasını güncelleyip tüm belgeyi yeniden birleştirmeniz yeterlidir.",
+        "Birden fazla kaynaktan gelen taranmış belgeleri (örneğin farklı kişilerin imzaladığı sayfaları) tek bir sözleşme dosyasında toplarken de aynı mantık işler: her taraf kendi sayfasını ayrı ayrı gönderir, siz de bunları doğru sırayla tek dosyada birleştirip resmi makama veya karşı tarafa tek seferde iletirsiniz.",
+        "Free planda dosya başına en fazla 50 MB, Pro planda 500 MB büyüklüğünde PDF'ler yükleyebilirsiniz; birleştirebileceğiniz dosya sayısında sabit bir sınır yoktur, pratik sınır tarayıcınızın belleğidir. Çok sayıda büyük dosyayı aynı anda birleştirirken işlem birkaç saniye sürebilir, bu normaldir.",
       ],
       howTo: [
         "Birleştirmek istediğiniz PDF dosyalarını sürükleyip bırakın veya seçin.",
-        "Listedeki yukarı/aşağı oklarla dosyaların sırasını istediğiniz gibi düzenleyin.",
-        "\"Birleştir\" butonuna tıklayarak tüm dosyaları tek bir PDF'te birleştirin.",
-        "Sonucu \"PDF olarak indir\" ile cihazınıza kaydedin.",
+        "Listede her dosyanın sayfa sayısını kontrol edin, eksik veya yanlış dosya varsa kaldırın.",
+        "Yukarı/aşağı oklarla dosyaların birleştirme sırasını istediğiniz gibi düzenleyin.",
+        "\"Birleştir\" butonuna tıklayarak tüm dosyaları tek bir PDF'te toplayın.",
+        "Sonucu \"PDF olarak indir\" ile cihazınıza kaydedin ve tek dosya olarak paylaşın.",
       ],
       advantages: [
         "Dosya sırasını sürükleme yerine tek tıkla yukarı/aşağı taşıyarak düzenlersiniz.",
         "Aynı anda birden fazla PDF dosyası yükleyip tek seferde birleştirebilirsiniz.",
         "Orijinal dosyalarınız değişmez, yalnızca yeni birleşik dosya oluşturulur.",
         "Yükleme veya bulut aktarımı olmadan tamamen tarayıcınızda çalışır.",
+        "Free planda 50 MB'a, Pro planda 500 MB'a kadar dosya boyutu desteklenir.",
+        "Başvuru, sözleşme veya rapor gibi çok parçalı belgeleri tek dosyada teslim etmenizi sağlar.",
       ],
       faq: [
         {
@@ -326,9 +357,19 @@ export const tools: Tool[] = [
             "Evet. Dosyayı yükledikten sonra listedeki yukarı ve aşağı taşıma butonlarıyla sırasını dilediğiniz gibi ayarlayabilirsiniz.",
         },
         {
+          question: "İş başvurusu için CV, ön yazı ve diplomamı nasıl tek dosyada toplarım?",
+          answer:
+            "Üç dosyayı da yükleyin, ok butonlarıyla istediğiniz sırayı (örneğin önce ön yazı, sonra CV, en son diploma) verin ve \"Birleştir\"e tıklayın; sonuç tek bir PDF olarak iner.",
+        },
+        {
           question: "Kaç PDF dosyasını birden birleştirebilirim?",
           answer:
             "Belirli bir dosya sayısı sınırı yoktur; pratik sınır, tarayıcınızın ve cihazınızın belleğiyle ilgilidir. Çok sayıda büyük dosyada işlem biraz daha uzun sürebilir.",
+        },
+        {
+          question: "Dosya başına boyut sınırı nedir?",
+          answer:
+            "Free planda dosya başına en fazla 50 MB, Pro planda 500 MB yükleyebilirsiniz.",
         },
         {
           question: "Yüklediğim PDF'ler bir sunucuya gönderiliyor mu?",
@@ -339,6 +380,16 @@ export const tools: Tool[] = [
           question: "Şifreli veya bozuk bir PDF'i birleştirebilir miyim?",
           answer:
             "Şifre korumalı veya bozuk PDF dosyaları okunamadığı için listeye eklenemez; bu durumda bir uyarı mesajı gösterilir.",
+        },
+        {
+          question: "Birleştirilen dosyanın sayfa sayısı ve içeriği değişir mi?",
+          answer:
+            "Hayır, her kaynak dosyanın tüm sayfaları olduğu gibi, sırayla yeni belgeye kopyalanır; içerik veya kalite kaybı olmaz.",
+        },
+        {
+          question: "Tez veya rapor gibi çok bölümlü bir belgeyi birleştirmek için önerini var mı?",
+          answer:
+            "Her bölümü ayrı dosyada tutup yalnızca son adımda birleştirmenizi öneririz; böylece bir bölümde düzeltme yaptığınızda yalnızca o dosyayı güncelleyip belgeyi yeniden birleştirmeniz yeterli olur.",
         },
       ],
       applicationCategory: "MultimediaApplication",
@@ -360,20 +411,29 @@ export const tools: Tool[] = [
       metaDescription:
         "Fotoğraflardaki arka planı yapay zeka ile tek tıkla kaldırın, şeffaf PNG olarak indirin. Ücretsiz, kayıt gerektirmez, tarayıcıda çalışır.",
       about: [
-        "Ürün fotoğrafı, profil resmi veya tasarım çalışması hazırlarken arka planı temizlemek genelde ayrı bir düzenleme programı gerektirir. Bu araç, yapay zeka destekli bir model kullanarak arka planı otomatik olarak tespit edip kaldırır.",
-        "İşlem tamamen tarayıcınızda çalışır; fotoğrafınız hiçbir sunucuya yüklenmez. İlk kullanımda model dosyalarının indirilmesi biraz zaman alabilir, sonraki kullanımlarda işlem daha hızlıdır.",
+        "Trendyol, Hepsiburada veya Amazon gibi pazar yerlerine ürün eklerken çoğu platform düz, temiz bir arka plan bekler; dağınık bir masada veya evin bir köşesinde çekilmiş fotoğraflar hem onay sürecinde reddedilebilir hem de vitrinde amatör görünür. Aynı ihtiyaç LinkedIn profil fotoğrafında, sunum hazırlarken bir ürün görselini slayta oturturken veya sosyal medya için tasarım yaparken de karşınıza çıkar.",
+        "Normalde bu işlem Photoshop gibi bir düzenleme programında elle seçim yapmayı gerektirir. Bu araç bunun yerine tarayıcınızda çalışan bir yapay zeka modeli kullanarak ürünü ya da kişiyi arka plandan otomatik olarak ayırır; siz yalnızca fotoğrafı yükler, sonucu bekler ve indirirsiniz.",
+        "İşlem tamamen tarayıcınızda gerçekleşir - fotoğrafınız hiçbir sunucuya yüklenmez. Model dosyaları ilk kullanımda tarayıcınıza indirilir (bu yüzden ilk işlem birkaç saniye daha uzun sürer), sonraki kullanımlarda tarayıcı önbelleğinden okunduğu için işlem belirgin biçimde hızlanır.",
+        "Sonuç, arka planın yerini şeffaflığın aldığı bir PNG dosyasıdır. Bazı pazar yerleri şeffaf PNG'yi doğrudan kabul ederken bazıları düz beyaz arka plan şart koşar - bu durumda şeffaf sonucu bir görsel düzenleme aracında beyaz bir zemine yerleştirmeniz yeterlidir.",
+        "En iyi sonucu almak için ürünü düz, kontrastlı bir zemin (beyaz, gri veya tek renk) üzerinde çekmenizi öneririz; bu, yapay zekanın kenarları daha net ayırt etmesini sağlar. Saydam cam, ince tel veya saç gibi çok ince detaylarda kenarlarda küçük kusurlar görülebilir.",
+        "Free planda en fazla 50 MB, Pro planda 500 MB büyüklüğünde fotoğraf yükleyebilirsiniz; araç şu an tek seferde bir fotoğraf işleyecek şekilde tasarlandı, birden fazla ürün fotoğrafınız varsa her birini sırayla yüklemeniz gerekir.",
+        "Sonucu indirdikten sonra tasarım araçlarında (sunum, sosyal medya gönderisi, ürün kataloğu) doğrudan kullanabilirsiniz - şeffaf zemin sayesinde görseli istediğiniz renkte bir arka planın veya başka bir görselin üzerine sorunsuzca yerleştirebilirsiniz.",
+        "Profil fotoğrafı için kullanıyorsanız, arka planı kaldırdıktan sonra LinkedIn'in yuvarlak kırpma alanına veya bir sosyal medya platformunun kare/dairesel çerçevesine göre görseli yeniden konumlandırmanız gerekebilir; araç yalnızca arka planı kaldırır, kırpma ve konumlandırmayı platformun kendi yükleme ekranında yapmanız gerekir.",
       ],
       howTo: [
-        "Arka planı kaldırılacak fotoğrafı sürükleyip bırakın veya seçin.",
-        "\"Arka Planı Kaldır\" butonuna tıklayın ve işlemin tamamlanmasını bekleyin.",
+        "Arka planı kaldırılacak fotoğrafı sürükleyip bırakın veya seçin (PNG, JPG veya WebP).",
+        "\"Arka Planı Kaldır\" butonuna tıklayın; ilk kullanımda model indirilirken bir ilerleme göstergesi görürsünüz.",
         "Orijinal ve arka planı silinmiş halini yan yana karşılaştırın.",
         "Sonucu şeffaf arka planlı PNG olarak indirin.",
+        "Platformunuz düz beyaz arka plan istiyorsa, indirdiğiniz şeffaf PNG'yi bir düzenleme aracında beyaz zemine yerleştirin.",
       ],
       advantages: [
         "Elle seçim yapmadan, yapay zeka ile otomatik arka plan tespiti sağlar.",
         "Sonuç şeffaf arka planlı PNG olarak indirilir, tasarım araçlarında doğrudan kullanılabilir.",
         "PNG, JPG ve WebP gibi yaygın formatları destekler.",
         "Fotoğrafınız cihazınızdan çıkmadan, tarayıcı içinde işlenir.",
+        "Free planda 50 MB'a, Pro planda 500 MB'a kadar dosya boyutu desteklenir.",
+        "Model tarayıcınızda önbelleğe alınır, ilk kullanımdan sonraki işlemler belirgin şekilde hızlanır.",
       ],
       faq: [
         {
@@ -381,14 +441,28 @@ export const tools: Tool[] = [
           answer: "PNG, JPG ve WebP formatındaki fotoğrafları yükleyebilirsiniz.",
         },
         {
+          question: "Sonuç dosyası Trendyol veya Hepsiburada'ya doğrudan yüklenebilir mi?",
+          answer:
+            "Şeffaf PNG çoğu pazar yerinde kabul edilir, ancak bazı platformlar düz beyaz arka plan şart koşar. Bu durumda şeffaf sonucu bir düzenleme aracında beyaz zemine yerleştirmeniz gerekebilir.",
+        },
+        {
           question: "İlk kullanımda neden daha yavaş çalışıyor?",
           answer:
             "Arka plan kaldırma modeli ilk çalıştırmada tarayıcınıza indirilir; bu tek seferlik indirme işlemi birkaç saniye sürebilir. Sonraki kullanımlarda işlem belirgin şekilde hızlanır.",
         },
         {
-          question: "Sonuç dosyası şeffaf mı çıkıyor?",
+          question: "Birden fazla ürün fotoğrafını aynı anda işleyebilir miyim?",
           answer:
-            "Evet, kaldırılan arka planın yerini şeffaflık alır ve dosya PNG formatında, şeffaf arka planlı olarak indirilir.",
+            "Hayır, araç şu an tek seferde bir görsel işliyor. Birden fazla ürününüz varsa her birini sırayla yükleyip indirmeniz gerekir.",
+        },
+        {
+          question: "Parlak, saydam veya ince detaylı ürünlerde (takı, cam, kumaş) sonuç ne kadar iyi olur?",
+          answer:
+            "Yapay zeka modeli çoğu üründe iyi sonuç verir, ancak saydam cam, ince tel veya saç gibi çok ince detaylarda kenarlarda küçük kusurlar görülebilir. Düz ve kontrastlı bir zeminde çekilen fotoğraflar bu durumlarda daha iyi sonuç verir.",
+        },
+        {
+          question: "Dosya boyutu sınırı nedir?",
+          answer: "Free planda en fazla 50 MB, Pro planda 500 MB büyüklüğünde fotoğraf yükleyebilirsiniz.",
         },
         {
           question: "Fotoğrafım bir sunucuya yükleniyor mu?",
@@ -475,20 +549,28 @@ export const tools: Tool[] = [
       metaDescription:
         "PDF dosyalarınızın boyutunu küçültüp paylaşımını kolaylaştırın. Birden fazla dosyayı aynı anda sıkıştırın, kayıt olmadan ücretsiz kullanın.",
       about: [
-        "Büyük PDF dosyaları e-posta eklerinde reddedilebilir veya paylaşım platformlarında yavaş yüklenebilir. Bu araç, PDF içindeki gereksiz veriyi temizleyerek dosya boyutunu küçültmeye çalışır.",
-        "Sıkıştırma, pdf-lib kütüphanesiyle tarayıcınızda gerçekleşir ve öncelikle dosya yapısındaki fazlalıkları temizler; görselleri yeniden sıkıştırmadığı için bazı PDF'lerde boyut değişimi sınırlı kalabilir.",
+        "Büyüyen bir PDF dosyası genelde üç yerde sorun çıkarır: e-posta ekleri, online başvuru formları ve bulut depolama kotanız. Gmail ve Outlook gibi yaygın servisler tek bir e-postada genelde 25 MB civarında bir ek sınırı uygular; bu sınırı aşan bir dosya sessizce reddedilir ve çoğu zaman bunu ancak alıcı size dönüş yaptığında fark edersiniz.",
+        "Üniversite başvuru sistemleri, e-Devlet formları ve iş başvuru portalları ise çok daha katı, kimi zaman 200 KB ile 2 MB arasında değişen limitler koyar. Telefonla taratılan bir belge - özellikle renkli ve yüksek çözünürlükle taranmışsa - bu sınırları kolaylıkla aşar.",
+        "Bu araç, PDF'inizin iç yapısındaki gereksiz veriyi (kullanılmayan nesneler, tekrarlanan veri akışları, eski düzenleme geçmişinden kalan artıklar) temizleyerek dosya boyutunu küçültür. İşlem tamamen tarayıcınızda çalışır; dosyanız hiçbir sunucuya yüklenmez.",
+        "Bilmeniz gereken önemli bir sınır var: araç, PDF içindeki görselleri yeniden sıkıştırmaz, yalnızca dosyanın iç yapısını optimize eder. Bu yüzden metin ağırlıklı bir sözleşme veya rapor belirgin şekilde küçülürken, yüksek çözünürlüklü taranmış sayfalardan oluşan bir belgede küçülme oranı sınırlı kalabilir. Böyle durumlarda sayfaları önce Görsel Sıkıştırıcı ile küçültüp yeniden PDF'e dönüştürmek çok daha etkili bir sonuç verir.",
+        "Free planda tek seferde en fazla 50 MB, Pro planda 500 MB büyüklüğünde dosyalar yükleyebilirsiniz; birden fazla dosyayı aynı anda seçip tek işlemde sıkıştırabilir, her biri için elde edilen küçülme yüzdesini anında görebilirsiniz.",
+        "Sıkıştırma sonrası belgenizin içeriği, sayfa sayısı ve metin kalitesi hiç değişmez - yalnızca dosyanın taşıdığı gereksiz teknik veri azalır, bu yüzden sonuç aynı belgenin daha hafif bir kopyasıdır.",
+        "Zaten bir kez sıkıştırılmış veya modern bir PDF oluşturucuyla (ör. doğrudan Word'den \"PDF olarak kaydet\" ile) üretilmiş dosyalarda küçülme oranı düşük çıkabilir - bu bir hata değildir, dosyada zaten temizlenecek gereksiz veri kalmamış demektir.",
       ],
       howTo: [
-        "Sıkıştırmak istediğiniz PDF dosyalarını sürükleyip bırakın veya seçin.",
-        "\"Sıkıştır\" butonuna tıklayarak tüm dosyaları işleyin.",
-        "Her dosya için orijinal ve sıkıştırılmış boyutu karşılaştırın.",
+        "Sıkıştırmak istediğiniz PDF dosyalarını sürükleyip bırakın veya seçin - birden fazla dosyayı aynı anda ekleyebilirsiniz.",
+        "\"Sıkıştır\" butonuna tıklayarak tüm dosyaları tek seferde işleyin.",
+        "Her dosya için orijinal boyut, sıkıştırılmış boyut ve küçülme yüzdesini karşılaştırın.",
         "Sonuçları tek tek \"İndir\" ikonuyla cihazınıza kaydedin.",
+        "Hedef sisteminizin (e-posta, başvuru formu) boyut sınırını aştıysanız ve belge taranmış sayfalar içeriyorsa, sayfaları Görsel Sıkıştırıcı ile ayrıca küçültmeyi deneyin.",
       ],
       advantages: [
         "Birden fazla PDF dosyasını tek seferde sıkıştırabilirsiniz.",
         "Her dosya için elde edilen küçülme yüzdesini anında görürsünüz.",
         "Belge içeriği ve görsel kalitesi değişmez, yalnızca gereksiz veri temizlenir.",
         "Yükleme gerektirmeden tamamen tarayıcınızda çalışır.",
+        "Free planda 50 MB'a, Pro planda 500 MB'a kadar dosya boyutu desteklenir.",
+        "Dosya sayısında bir sınır yoktur; pratik sınır yalnızca cihazınızın belleğidir.",
       ],
       faq: [
         {
@@ -497,13 +579,29 @@ export const tools: Tool[] = [
             "Hayır. Sıkıştırma oranı dosyanın yapısına göre değişir; zaten optimize edilmiş bir PDF'te boyut çok az değişebilir veya hiç değişmeyebilir.",
         },
         {
+          question: "Taranmış (scan) bir PDF neden yeterince küçülmüyor?",
+          answer:
+            "Araç görselleri yeniden sıkıştırmaz, yalnızca dosya yapısını optimize eder. Belgeniz esas olarak taranmış sayfalardan oluşuyorsa, sayfaları önce Görsel Sıkıştırıcı ile küçültüp yeniden PDF'e dönüştürmeniz çok daha etkili sonuç verir.",
+        },
+        {
+          question: "E-posta eki veya başvuru formu boyut sınırını aşıyorum, ne yapmalıyım?",
+          answer:
+            "Önce dosyayı bu araçtan geçirin. Sonuç hâlâ sınırın üzerindeyse ve belge taranmış sayfalar içeriyorsa, sayfaları görsele çevirip Görsel Sıkıştırıcı'nın \"Maksimum Sıkıştırma\" seçeneğiyle küçülttükten sonra yeniden PDF'e dönüştürmeyi deneyin.",
+        },
+        {
           question: "Sıkıştırma sonrası görsel kalitesi düşer mi?",
           answer:
             "Hayır. Araç, PDF içindeki görselleri yeniden sıkıştırmaz; yalnızca dosya yapısındaki gereksiz verileri temizler, bu yüzden içerik kalitesi korunur.",
         },
         {
-          question: "Aynı anda birden fazla PDF sıkıştırabilir miyim?",
-          answer: "Evet, istediğiniz kadar PDF dosyasını aynı anda yükleyip tek seferde sıkıştırabilirsiniz.",
+          question: "Aynı anda kaç PDF dosyası sıkıştırabilirim, boyut sınırı nedir?",
+          answer:
+            "İstediğiniz kadar dosyayı aynı anda yükleyip tek seferde sıkıştırabilirsiniz. Dosya başına boyut sınırı Free planda 50 MB, Pro planda 500 MB'tır.",
+        },
+        {
+          question: "Şifreli veya bozuk bir PDF'i sıkıştırabilir miyim?",
+          answer:
+            "Şifre korumalı veya bozuk PDF dosyaları tarayıcı tarafından okunamadığı için işlenemez; bu durumda ilgili dosya için bir hata mesajı gösterilir.",
         },
         {
           question: "Dosyalarım bir sunucuya yükleniyor mu?",
@@ -522,6 +620,377 @@ export const tools: Tool[] = [
     icon: DocumentIcon,
     group: "PDF",
     shortLabel: "Dönüştür",
+  },
+  {
+    name: "PDF Böl",
+    href: "/pdf-bol",
+    description: "PDF'ten seçtiğiniz sayfa aralığını ayrı bir dosya olarak çıkarır.",
+    available: true,
+    accentClassName: "bg-teal-500",
+    icon: DocumentIcon,
+    group: "PDF",
+    shortLabel: "Böl",
+    seo: {
+      metaTitle: "PDF Böl | Ücretsiz Online PDF Sayfa Ayırma Aracı | Pratikleştir",
+      metaDescription:
+        "PDF dosyanızdan istediğiniz sayfa aralığını ayrı bir PDF olarak çıkarın. Kayıt gerekmez, işlem tamamen tarayıcınızda ve ücretsiz yapılır.",
+      about: [
+        "Uzun bir sözleşmenin yalnızca imza sayfasını, kalın bir raporun tek bir bölümünü ya da bir kitabın belirli sayfalarını ayrı bir dosya olarak paylaşmanız gerektiğinde, tüm belgeyi göndermek yerine yalnızca ilgili sayfaları çıkarmak hem daha profesyonel görünür hem de karşı tarafın işini kolaylaştırır.",
+        "Bu araç, yüklediğiniz PDF'in sayfa sayısını okuyup küçük önizlemelerini gösterir; başlangıç ve bitiş sayfasını seçtiğinizde (yazarak veya önizlemeye tıklayarak) yalnızca o aralık yeni bir PDF olarak oluşturulur. İşlem tamamen tarayıcınızda gerçekleşir, orijinal dosyanız değişmeden kalır.",
+      ],
+      howTo: [
+        "PDF dosyanızı sürükleyip bırakın veya seçin.",
+        "Aşağıda beliren sayfa önizlemelerinden başlangıç ve bitiş sayfasına tıklayın veya sayı kutularına yazın.",
+        "\"Böl\" butonuna tıklayın; yalnızca seçtiğiniz aralık yeni bir PDF olarak oluşturulur.",
+        "Sonucu \"PDF olarak indir\" ile cihazınıza kaydedin.",
+      ],
+      advantages: [
+        "Sayfa aralığını hem yazarak hem önizlemeye tıklayarak seçebilirsiniz.",
+        "Orijinal dosyanız değişmeden kalır, yalnızca seçilen aralık yeni bir dosyada toplanır.",
+        "Yükleme veya bulut aktarımı olmadan tamamen tarayıcınızda çalışır.",
+        "Sayfa kalitesi ve içeriği hiç değişmez, yalnızca istenmeyen sayfalar dışarıda bırakılır.",
+      ],
+      faq: [
+        {
+          question: "Birden fazla ayrı aralığı tek seferde çıkarabilir miyim?",
+          answer:
+            "Şu an tek seferde tek bir aralık çıkarabilirsiniz. Farklı bir aralık daha çıkarmak isterseniz aynı dosyada yeni bir başlangıç/bitiş sayfası seçip \"Böl\"e tekrar tıklamanız yeterlidir.",
+        },
+        {
+          question: "Seçtiğim aralık dışındaki sayfalara ne olur?",
+          answer:
+            "Yeni oluşan dosyaya dahil edilmez; orijinal dosyanız hiçbir şekilde değişmez veya silinmez, yalnızca seçtiğiniz aralığı içeren ayrı bir kopya oluşturulur.",
+        },
+        {
+          question: "Sayfa önizlemeleri neden birkaç saniye sonra beliriyor?",
+          answer:
+            "Her sayfa, dosyanızı yükledikten hemen sonra tarayıcınızda tek tek render edilir; büyük veya çok sayfalı PDF'lerde önizlemelerin tamamlanması birkaç saniye sürebilir.",
+        },
+        {
+          question: "Dosyam bir sunucuya yükleniyor mu?",
+          answer:
+            "Hayır. Hem önizleme hem bölme işlemi tamamen tarayıcınızda yapılır, dosyanız cihazınızdan çıkmaz.",
+        },
+      ],
+      applicationCategory: "MultimediaApplication",
+    },
+  },
+  {
+    name: "PDF Döndür",
+    href: "/pdf-dondur",
+    description: "PDF sayfalarını seçip 90, 180 veya 270 derece döndürür.",
+    available: true,
+    accentClassName: "bg-indigo-500",
+    icon: DocumentIcon,
+    group: "PDF",
+    shortLabel: "Döndür",
+    seo: {
+      metaTitle: "PDF Döndür | Ücretsiz Online PDF Sayfa Döndürme Aracı | Pratikleştir",
+      metaDescription:
+        "Yanlış yönde taranmış PDF sayfalarını 90, 180 veya 270 derece döndürün. Kayıt gerekmez, işlem tamamen tarayıcınızda ve ücretsiz yapılır.",
+      about: [
+        "Bir belgeyi tararken yanlışlıkla ters veya yan çevirmek yaygın bir sorundur; sonuçta ekranda döndürerek okunabilen ama yazdırıldığında veya bir sisteme yüklendiğinde hep yan duran bir PDF ortaya çıkar. Bu araç, sayfaları kalıcı olarak doğru yöne çevirmenizi sağlar.",
+        "Yüklediğiniz PDF'in her sayfasının küçük bir önizlemesini görür, düzeltmek istediğiniz sayfa(lar)ı seçip 90, 180 veya 270 derece döndürme yönünü belirtirsiniz; önizleme seçtiğiniz döndürmeyi anında yansıtır.",
+      ],
+      howTo: [
+        "PDF dosyanızı sürükleyip bırakın veya seçin.",
+        "Önizlemeden döndürmek istediğiniz sayfa(lar)a tıklayarak seçin (\"Tümünü Seç\" ile hepsini birden seçebilirsiniz).",
+        "90°, 180° veya 270° butonlarından istediğiniz yönü seçin; önizleme anında güncellenir.",
+        "\"Döndür\" butonuna tıklayıp sonucu indirin.",
+      ],
+      advantages: [
+        "Sayfaları tek tek veya toplu olarak seçip döndürebilirsiniz.",
+        "Seçilen döndürme açısını uygulamadan önce önizlemede görürsünüz.",
+        "Yalnızca seçtiğiniz sayfalar döner, diğer sayfalar olduğu gibi kalır.",
+        "Yükleme gerektirmeden tamamen tarayıcınızda çalışır.",
+      ],
+      faq: [
+        {
+          question: "Yalnızca bazı sayfaları, diğerlerini olduğu gibi bırakarak döndürebilir miyim?",
+          answer:
+            "Evet. Önizlemeden yalnızca döndürmek istediğiniz sayfaları seçersiniz; seçilmeyen sayfalar hiç değişmeden kalır.",
+        },
+        {
+          question: "Yanlış yön seçersem geri alabilir miyim?",
+          answer:
+            "Henüz indirmediyseniz sayfayı tekrar seçip istediğiniz açıyla yeniden döndürebilirsiniz; döndürme açıları birikimli uygulanır (örneğin 90°'ye tekrar tıklamak toplamda 180° yapar).",
+        },
+        {
+          question: "Taranmış (yatık) sayfalarımı düzeltmek için hangi açıyı seçmeliyim?",
+          answer:
+            "Önizlemede sayfanın hangi yönde durduğuna bakarak 90°, 180° veya 270° seçeneklerinden doğru sonucu veren açıyı deneyebilirsiniz; önizleme her tıklamada anında güncellenir.",
+        },
+        {
+          question: "Dosyam bir sunucuya yükleniyor mu?",
+          answer: "Hayır. Önizleme ve döndürme işlemi tamamen tarayıcınızda yapılır.",
+        },
+      ],
+      applicationCategory: "MultimediaApplication",
+    },
+  },
+  {
+    name: "PDF Sayfa Sil",
+    href: "/pdf-sayfa-sil",
+    description: "Önizlemeden seçtiğiniz PDF sayfalarını kalıcı olarak siler.",
+    available: true,
+    accentClassName: "bg-red-500",
+    icon: DocumentIcon,
+    group: "PDF",
+    shortLabel: "Sayfa Sil",
+    seo: {
+      metaTitle: "PDF Sayfa Sil | Ücretsiz Online PDF Sayfa Silme Aracı | Pratikleştir",
+      metaDescription:
+        "PDF'inizdeki boş, hatalı veya gereksiz sayfaları önizlemeden seçip silin. Kayıt gerekmez, işlem tamamen tarayıcınızda ve ücretsiz yapılır.",
+      about: [
+        "Taranmış bir belgenin arasına karışan boş bir sayfa, eski bir kapak sayfası veya artık gerekmeyen bir ek genellikle tüm PDF'i yeniden oluşturmadan çıkarılamaz. Bu araç, sayfaları tek tek görüp istemediklerinizi seçerek kalan sayfalardan yeni ve temiz bir PDF oluşturmanızı sağlar.",
+        "Yüklediğiniz PDF'in her sayfasının küçük bir önizlemesi gösterilir; silmek istediğiniz sayfa(lar)a tıklamanız yeterlidir, geri kalan sayfalar sırası korunarak yeni bir dosyada birleştirilir.",
+      ],
+      howTo: [
+        "PDF dosyanızı sürükleyip bırakın veya seçin.",
+        "Önizlemeden silmek istediğiniz sayfa(lar)a tıklayarak seçin.",
+        "\"Sil\" butonuna tıklayın; seçilen sayfalar dışındaki tüm sayfalar yeni bir PDF'te toplanır.",
+        "Sonucu \"PDF olarak indir\" ile cihazınıza kaydedin.",
+      ],
+      advantages: [
+        "Hangi sayfayı sildiğinizi önizlemeden görerek karar verirsiniz, sayfa numarası ezberlemeniz gerekmez.",
+        "Kalan sayfaların sırası ve içeriği hiç değişmez.",
+        "Birden fazla sayfayı tek seferde seçip silebilirsiniz.",
+        "Yükleme gerektirmeden tamamen tarayıcınızda çalışır.",
+      ],
+      faq: [
+        {
+          question: "Tüm sayfaları silebilir miyim?",
+          answer:
+            "Hayır, PDF'te en az bir sayfa kalması gerekir; tüm sayfaları seçtiğinizde araç bir uyarı gösterir ve işlemi tamamlamaz.",
+        },
+        {
+          question: "Sildiğim sayfaları geri getirebilir miyim?",
+          answer:
+            "Sonucu indirmeden önce seçimi \"Seçimi Temizle\" ile sıfırlayabilirsiniz; indirdikten sonra ise orijinal dosyanızı tekrar yükleyip yeniden seçim yapmanız gerekir (orijinal dosyanız hiçbir zaman değişmez).",
+        },
+        {
+          question: "Sayfa numaraları silme sonrası nasıl olur?",
+          answer:
+            "Kalan sayfalar, aralarındaki sıra korunarak 1'den başlayacak şekilde yeniden numaralanmış bir PDF'te birleştirilir.",
+        },
+        {
+          question: "Dosyam bir sunucuya yükleniyor mu?",
+          answer: "Hayır. Önizleme ve silme işlemi tamamen tarayıcınızda yapılır.",
+        },
+      ],
+      applicationCategory: "MultimediaApplication",
+    },
+  },
+  {
+    name: "PDF → JPG",
+    href: "/pdf-jpg",
+    description: "PDF'in her sayfasını ayrı bir JPG görsel olarak dışa aktarır.",
+    available: true,
+    accentClassName: "bg-fuchsia-500",
+    icon: DocumentIcon,
+    group: "PDF",
+    shortLabel: "JPG'ye Çevir",
+    seo: {
+      metaTitle: "PDF'ten JPG'ye Çevir | Ücretsiz Online Dönüştürme Aracı | Pratikleştir",
+      metaDescription:
+        "PDF'inizin her sayfasını ayrı bir JPG görsele dönüştürün, tek tek veya zip olarak toplu indirin. Kayıt gerekmez, tamamen tarayıcınızda çalışır.",
+      about: [
+        "Bir sunuma tek bir sayfa eklemeniz, bir belgeyi sosyal medyada paylaşmanız veya PDF açamayan bir sisteme görsel yüklemeniz gerektiğinde, PDF'in sayfalarını görsele çevirmek pratik bir çözümdür.",
+        "Bu araç, yüklediğiniz PDF'in her sayfasını tarayıcınızda yüksek çözünürlüklü bir JPG görsele render eder; sonuçları tek tek veya \"Tümünü İndir (.zip)\" ile toplu olarak indirebilirsiniz.",
+      ],
+      howTo: [
+        "PDF dosyanızı sürükleyip bırakın veya seçin.",
+        "\"JPG'ye Dönüştür\" butonuna tıklayın; her sayfa sırayla görsele render edilir.",
+        "Sonuçları tek tek indirin veya birden fazla sayfa varsa \"Tümünü İndir (.zip)\" ile toplu alın.",
+      ],
+      advantages: [
+        "Her sayfa yüksek çözünürlüklü, ayrı bir JPG dosyası olarak üretilir.",
+        "Birden fazla sayfayı tek seferde işleyip zip olarak indirebilirsiniz.",
+        "Dönüştürme tamamen tarayıcınızda yapılır, dosyanız sunucuya yüklenmez.",
+        "Ek bir PDF görüntüleyici veya dönüştürme programına ihtiyaç duymazsınız.",
+      ],
+      faq: [
+        {
+          question: "Çıkan görsellerin kalitesi nasıl belirleniyor?",
+          answer:
+            "Sayfalar yüksek çözünürlüklü bir ölçekte render edilir, bu sayede metin ve görseller net görünür; ekstra bir kalite ayarı yapmanız gerekmez.",
+        },
+        {
+          question: "Çok sayfalı bir PDF'i dönüştürmek uzun sürer mi?",
+          answer:
+            "Her sayfa sırayla tarayıcınızda render edildiği için sayfa sayısı arttıkça işlem süresi de artar, ancak çoğu belge için bu birkaç saniyeyi geçmez.",
+        },
+        {
+          question: "Sonuçları tek tek mi indirmem gerekiyor?",
+          answer:
+            "Birden fazla sayfa varsa \"Tümünü İndir (.zip)\" seçeneğiyle tüm görselleri tek bir zip dosyasında toplu indirebilirsiniz.",
+        },
+        {
+          question: "Dosyam bir sunucuya yükleniyor mu?",
+          answer: "Hayır. Dönüştürme işlemi tamamen tarayıcınızda yapılır, PDF'iniz cihazınızdan çıkmaz.",
+        },
+      ],
+      applicationCategory: "MultimediaApplication",
+    },
+  },
+  {
+    name: "JPG → PDF",
+    href: "/jpg-pdf",
+    description: "Bir veya birden fazla JPG görselini tek bir PDF'e dönüştürür.",
+    available: true,
+    accentClassName: "bg-lime-500",
+    icon: ImageIcon,
+    group: "PDF",
+    shortLabel: "PDF'e Çevir",
+    seo: {
+      metaTitle: "JPG'den PDF'e Çevir | Ücretsiz Online Dönüştürme Aracı | Pratikleştir",
+      metaDescription:
+        "Bir veya birden fazla JPG görselini sırasını düzenleyerek tek bir PDF dosyasında birleştirin. Kayıt gerekmez, tamamen tarayıcınızda çalışır.",
+      about: [
+        "Taranmış fatura fotoğraflarını, ürün görsellerini veya el yazısı notların fotoğraflarını tek tek göndermek yerine düzenli tek bir PDF olarak paylaşmak, iş başvurusu, muhasebe veya okul ödevi gibi birçok durumda beklenen formattır.",
+        "Bu araç, yüklediğiniz JPG görsellerini belirlediğiniz sırayla, her birini kendi sayfası olacak şekilde tek bir PDF'te birleştirir; işlem tamamen tarayıcınızda gerçekleşir.",
+      ],
+      howTo: [
+        "Dönüştürmek istediğiniz JPG görsellerini sürükleyip bırakın veya seçin.",
+        "Yukarı/aşağı oklarla sayfa sırasını istediğiniz gibi düzenleyin.",
+        "\"PDF'e Dönüştür\" butonuna tıklayın.",
+        "Sonucu \"PDF olarak indir\" ile cihazınıza kaydedin.",
+      ],
+      advantages: [
+        "Birden fazla JPG görselini tek seferde tek bir PDF'te birleştirir.",
+        "Sayfa sırasını yukarı/aşağı taşıma butonlarıyla kolayca düzenlersiniz.",
+        "Her görsel kendi boyutunda, kalite kaybı olmadan bir sayfaya yerleştirilir.",
+        "Yükleme gerektirmeden tamamen tarayıcınızda çalışır.",
+      ],
+      faq: [
+        {
+          question: "Görsellerin sırasını nasıl değiştirebilirim?",
+          answer:
+            "Her görseli yükledikten sonra listedeki yukarı ve aşağı taşıma butonlarıyla PDF'teki sayfa sırasını dilediğiniz gibi ayarlayabilirsiniz.",
+        },
+        {
+          question: "PNG veya diğer görsel formatlarını da yükleyebilir miyim?",
+          answer:
+            "Bu araç yalnızca JPG/JPEG formatındaki görselleri kabul eder. Farklı bir formatınız varsa önce görseli JPG'ye çevirmeniz gerekir.",
+        },
+        {
+          question: "Sayfa boyutu görsele göre mi ayarlanıyor?",
+          answer:
+            "Evet, her sayfa kendi görselinin genişlik ve yüksekliğine göre oluşturulur; görseller kırpılmaz veya oranı bozulmaz.",
+        },
+        {
+          question: "Görsellerim bir sunucuya yükleniyor mu?",
+          answer: "Hayır. Dönüştürme işlemi tamamen tarayıcınızda yapılır, görselleriniz cihazınızdan çıkmaz.",
+        },
+      ],
+      applicationCategory: "MultimediaApplication",
+    },
+  },
+  {
+    name: "PDF Kilitle",
+    href: "/pdf-kilitle",
+    description: "PDF'i belirlediğiniz şifreyle gerçek AES-256 şifrelemesiyle korumaya alır.",
+    available: true,
+    accentClassName: "bg-slate-600",
+    icon: LockIcon,
+    group: "PDF",
+    shortLabel: "Kilitle",
+    seo: {
+      metaTitle: "PDF Şifrele | Ücretsiz Online PDF Kilitleme Aracı | Pratikleştir",
+      metaDescription:
+        "PDF dosyanıza gerçek AES-256 şifrelemesiyle şifre koyun; yalnızca doğru şifreyi bilenler açabilsin. Kayıt gerekmez, tamamen tarayıcınızda çalışır.",
+      about: [
+        "Bir bordroyu, sözleşmeyi veya kimlik fotokopisini e-posta ile gönderirken içeriğin yalnızca doğru kişi tarafından açılabilmesini istemek makul bir güvenlik ihtiyacıdır. Bu araç, PDF'inize gerçek, sektör standardı AES-256 şifrelemesi uygular.",
+        "Bazı online \"PDF kilitleme\" araçları aslında yalnızca görünüşte bir koruma ekler; bu araç ise açık kaynaklı ve yaygın kullanılan qpdf motorunu tarayıcınızda (WebAssembly ile) çalıştırarak gerçek bir şifreleme uygular - şifreyi bilmeyen biri dosyayı hiçbir PDF okuyucuda açamaz.",
+      ],
+      howTo: [
+        "PDF dosyanızı sürükleyip bırakın veya seçin.",
+        "Bir şifre belirleyin ve doğrulamak için tekrar girin.",
+        "\"Kilitle\" butonuna tıklayın; dosyanız tarayıcınızda şifrelenir.",
+        "Şifrelenmiş PDF'i indirin ve şifreyi güvenli bir şekilde saklayın.",
+      ],
+      advantages: [
+        "Gerçek AES-256 şifrelemesi uygular, yüzeysel bir koruma değildir.",
+        "Şifreleme tamamen tarayıcınızda çalışır; dosyanız ve şifreniz hiçbir sunucuya gönderilmez.",
+        "Şifrelenmiş dosya standart PDF okuyucularda (Adobe Acrobat, tarayıcı vb.) şifre sorularak açılır.",
+        "Kayıt olmadan, saniyeler içinde kullanılır.",
+      ],
+      faq: [
+        {
+          question: "Şifremi unutursam dosyayı siz açabilir misiniz?",
+          answer:
+            "Hayır. Şifreleme tarayıcınızda yapılır, şifreniz hiçbir yerde saklanmaz; şifrenizi unutursanız dosyayı kimse (biz dahil) açamaz.",
+        },
+        {
+          question: "Şifrelenmiş dosyayı herkes açabilir mi?",
+          answer:
+            "Hayır, yalnızca doğru şifreyi girenler açabilir. Standart bir PDF okuyucuyla açmaya çalıştığınızda önce şifre sorulur.",
+        },
+        {
+          question: "Bu gerçek bir şifreleme mi, yoksa sadece görünüşte mi?",
+          answer:
+            "Gerçek bir şifreleme. Araç, açık kaynaklı ve yaygın kullanılan qpdf motorunun tarayıcı için derlenmiş (WebAssembly) hâlini kullanarak sektör standardı AES-256 şifrelemesi uygular.",
+        },
+        {
+          question: "Dosyam veya şifrem bir sunucuya gönderiliyor mu?",
+          answer: "Hayır. Şifreleme işlemi tamamen tarayıcınızda yapılır, hiçbir veri cihazınızdan çıkmaz.",
+        },
+      ],
+      applicationCategory: "MultimediaApplication",
+    },
+  },
+  {
+    name: "PDF Kilit Kaldır",
+    href: "/pdf-kilit-kaldir",
+    description: "Şifreyle korunan PDF'in şifresini girip korumasını kaldırır.",
+    available: true,
+    accentClassName: "bg-emerald-500",
+    icon: LockIcon,
+    group: "PDF",
+    shortLabel: "Kilit Kaldır",
+    seo: {
+      metaTitle: "PDF Şifre Kaldır | Ücretsiz Online Kilit Kaldırma Aracı | Pratikleştir",
+      metaDescription:
+        "Şifresini bildiğiniz, korumalı bir PDF'in şifresini kaldırın; tekrar şifre sormadan açılan bir kopyasını indirin. Kayıt gerekmez, tarayıcıda çalışır.",
+      about: [
+        "Şifresini bildiğiniz ama her açışında yeniden girmek istemediğiniz bir PDF için korumayı kalıcı olarak kaldırmak pratik bir çözümdür - örneğin kendi taradığınız ve şifrelediğiniz bir belgeyi artık paylaşmayacaksanız.",
+        "Bu araç, dosyanızın şifresini girmenizi ister ve açık kaynaklı qpdf motorunu tarayıcınızda çalıştırarak korumayı kaldırır; sonuç, şifre sormadan doğrudan açılan normal bir PDF'tir.",
+      ],
+      howTo: [
+        "Şifreyle korunan PDF dosyanızı sürükleyip bırakın veya seçin.",
+        "Dosyanın şifresini girin.",
+        "\"Kilidi Kaldır\" butonuna tıklayın.",
+        "Şifre sormadan açılan yeni dosyayı indirin.",
+      ],
+      advantages: [
+        "Şifreyi bildiğiniz dosyalar için korumayı kalıcı olarak kaldırır.",
+        "İşlem tamamen tarayıcınızda çalışır; dosyanız ve şifreniz hiçbir sunucuya gönderilmez.",
+        "Yanlış şifre girildiğinde net bir hata mesajı gösterilir.",
+        "Kayıt olmadan, saniyeler içinde kullanılır.",
+      ],
+      faq: [
+        {
+          question: "Şifresini bilmediğim bir PDF'in kilidini kaldırabilir miyim?",
+          answer:
+            "Hayır. Bu araç şifreyi kırmaz; yalnızca doğru şifreyi girerek kendi dosyanızın korumasını kaldırmanızı sağlar. Şifreyi bilmiyorsanız işlem başarısız olur.",
+        },
+        {
+          question: "Yanlış şifre girersem ne olur?",
+          answer:
+            "Araç şifrenin yanlış olduğunu belirten bir hata gösterir ve dosyayı işlemez; doğru şifreyi girip tekrar denemeniz gerekir.",
+        },
+        {
+          question: "Kilidi kaldırılan dosyanın içeriği değişir mi?",
+          answer:
+            "Hayır, yalnızca şifre koruması kaldırılır; sayfa içeriği, sırası ve kalitesi hiç değişmez.",
+        },
+        {
+          question: "Dosyam veya şifrem bir sunucuya gönderiliyor mu?",
+          answer: "Hayır. İşlem tamamen tarayıcınızda yapılır, hiçbir veri cihazınızdan çıkmaz.",
+        },
+      ],
+      applicationCategory: "MultimediaApplication",
+    },
   },
   {
     name: "Video Sıkıştırıcı",

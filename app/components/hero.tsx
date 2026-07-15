@@ -25,12 +25,21 @@ export default function Hero() {
         <ToolSearch />
       </div>
 
-      <a
-        href="#how"
-        className="relative mt-5 text-sm font-medium text-zinc-500 underline-offset-4 hover:text-purple-600 hover:underline dark:text-zinc-400 dark:hover:text-purple-300"
-      >
-        Nasıl çalıştığını gör →
-      </a>
+      <div className="relative mt-6 flex flex-wrap items-center justify-center gap-3">
+        <a
+          href="#kategoriler"
+          className="inline-flex touch-manipulation items-center gap-2 rounded-full bg-linear-to-r from-purple-500 to-indigo-500 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-purple-500/30 transition-transform! duration-200! hover:-translate-y-0.5 hover:shadow-xl hover:shadow-purple-500/40"
+        >
+          Araçları Keşfet
+          <span aria-hidden="true">→</span>
+        </a>
+        <a
+          href="#populer"
+          className="inline-flex touch-manipulation items-center gap-2 rounded-full border border-black/10 bg-white px-6 py-3 text-sm font-semibold text-zinc-700 transition-colors! duration-200! hover:border-purple-400/50 hover:text-purple-700 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:text-purple-300"
+        >
+          En Popüler Araçlar
+        </a>
+      </div>
     </div>
   );
 }

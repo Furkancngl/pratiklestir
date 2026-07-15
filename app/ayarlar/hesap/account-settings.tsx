@@ -26,6 +26,7 @@ export default function AccountSettings({
   const [error, setError] = useState("");
   const [resetPending, setResetPending] = useState(false);
   const [resetSent, setResetSent] = useState(false);
+  const [resetError, setResetError] = useState("");
   const [connecting, setConnecting] = useState(false);
 
   async function handleConnectGoogle() {
@@ -42,10 +43,15 @@ export default function AccountSettings({
 
   async function handlePasswordResetRequest() {
     setResetPending(true);
+    setResetError("");
     const formData = new FormData();
     formData.set("email", email);
-    await requestPasswordReset(undefined, formData);
+    const result = await requestPasswordReset(undefined, formData);
     setResetPending(false);
+    if (result?.error) {
+      setResetError(result.error);
+      return;
+    }
     setResetSent(true);
   }
 
@@ -97,6 +103,9 @@ export default function AccountSettings({
           <p className="mt-2 text-xs text-zinc-400 dark:text-zinc-500">
             {email} adresine şifre sıfırlama bağlantısı gönderilecek.
           </p>
+          {resetError && (
+            <p className="mt-2 text-sm text-red-600 dark:text-red-400">{resetError}</p>
+          )}
         </>
       )}
 

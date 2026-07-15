@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { categories } from "../lib/categories";
 
 const COMPANY_LINKS = [
   { label: "İletişim", href: "/iletisim" },
@@ -27,6 +28,22 @@ export default function Footer() {
           </div>
 
           <div className="flex flex-wrap items-start gap-10">
+            <div>
+              <h4 className="mb-2.5 text-[11px] font-bold tracking-wider text-zinc-500 uppercase dark:text-zinc-400">
+                Kategoriler
+              </h4>
+              <div className="flex flex-col gap-2">
+                {categories.map((category) => (
+                  <Link
+                    key={category.slug}
+                    href={`/${category.slug}`}
+                    className="text-[13.5px] whitespace-nowrap text-zinc-500 transition-colors hover:text-purple-600 dark:text-zinc-400 dark:hover:text-purple-400"
+                  >
+                    {category.name}
+                  </Link>
+                ))}
+              </div>
+            </div>
             <div>
               <h4 className="mb-2.5 text-[11px] font-bold tracking-wider text-zinc-500 uppercase dark:text-zinc-400">
                 Şirket

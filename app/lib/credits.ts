@@ -23,6 +23,13 @@ export const TOOL_CREDIT_COSTS = {
   "/pdf-sikistir": 1,
   "/gorsel-sikistir": 1,
   "/arka-plan-sil": 2,
+  "/pdf-bol": 1,
+  "/pdf-dondur": 1,
+  "/pdf-sayfa-sil": 1,
+  "/pdf-jpg": 1,
+  "/jpg-pdf": 1,
+  "/pdf-kilitle": 1,
+  "/pdf-kilit-kaldir": 1,
 } as const;
 
 export type ToolKey = keyof typeof TOOL_CREDIT_COSTS;

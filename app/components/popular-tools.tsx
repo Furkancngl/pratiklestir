@@ -8,7 +8,7 @@ export default function PopularTools() {
   if (popularTools.length === 0) return null;
 
   return (
-    <div className="mt-14 w-full max-w-4xl">
+    <div id="populer" className="mt-16 w-full max-w-4xl scroll-mt-20">
       <Reveal>
         <h2 className="mb-4 text-center text-sm font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-600">
           🔥 En Popüler Araçlar

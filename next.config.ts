@@ -58,10 +58,20 @@ const securityHeaders = [
     key: "Permissions-Policy",
     value: "camera=(), microphone=(), geolocation=(), payment=()",
   },
-  {
-    key: "Strict-Transport-Security",
-    value: "max-age=63072000; includeSubDomains; preload",
-  },
+  // Sadece prod'da eklenir: yerel geliştirme sunucusu düz HTTP üzerinden
+  // çalışıyor (next dev/start, TLS yok). Bu header dev'de de gönderilirse
+  // tarayıcı o an itibariyle localhost'a yapılan TÜM sonraki istekleri
+  // (aynı sekme/profil içinde, kalıcı olarak - max-age 2 yıl) otomatik
+  // HTTPS'e yükseltir; sunucu TLS dinlemediği için bu istekler
+  // SSL_PROTOCOL_ERROR ile başarısız olur ve yerel geliştirme kilitlenir.
+  ...(isDev
+    ? []
+    : [
+        {
+          key: "Strict-Transport-Security",
+          value: "max-age=63072000; includeSubDomains; preload",
+        },
+      ]),
 ];
 
 const nextConfig: NextConfig = {
@@ -72,6 +82,19 @@ const nextConfig: NextConfig = {
         headers: securityHeaders,
       },
     ];
+  },
+  // PDF Kilitle/Kilit Kaldır'ın kullandığı @neslinesli93/qpdf-wasm
+  // (Emscripten çıktısı), pdfjs-dist'in aksine bir "browser" alanı
+  // tanımlamıyor: dosyasında hiç çalışmayacağı bir Node.js dalında
+  // `require("fs")`/`require("path")` bulunuyor. Turbopack bunu build
+  // sırasında statik olarak çözmeye çalışıp hata veriyor - bu iki modülü
+  // tarayıcı paketlerinde zararsız bir boş shim'e yönlendiriyoruz (bkz.
+  // node-empty-shim.js).
+  turbopack: {
+    resolveAlias: {
+      fs: { browser: "./node-empty-shim.js" },
+      path: { browser: "./node-empty-shim.js" },
+    },
   },
 };
 

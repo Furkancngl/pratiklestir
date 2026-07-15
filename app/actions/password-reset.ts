@@ -54,9 +54,16 @@ export async function requestPasswordReset(
   const [user] = await db.select().from(users).where(eq(users.email, email)).limit(1);
 
   // Hesap yoksa veya Google-only ise (passwordHash yok, sıfırlanacak bir
-  // şifre yok) sessizce hiçbir şey yapmıyoruz - ama kullanıcıya her zaman
-  // aynı "gönderildi" mesajını dönüyoruz, aksi halde e-posta enumeration'a
+  // şifre yok) sessizce hiçbir şey yapmıyoruz - kullanıcıya her zaman aynı
+  // genel "gönderildi" mesajını dönüyoruz, aksi halde e-posta enumeration'a
   // açık olurdu.
+  //
+  // Hesap VARSA ama e-posta teknik bir nedenle (ör. Resend sandbox modu
+  // kısıtlaması) gönderilemezse bunu artık kullanıcıya bildiriyoruz -
+  // sessizce başarılı görünüp kullanıcıyı hiç gelmeyecek bir e-postayı
+  // beklerken bırakmıyoruz. Bilinçli bir ödünleşim: bu durumda "hesap var"
+  // sinyali sızıyor, ama gerçek gönderim hatalarını gizlemek kullanıcı
+  // deneyimini bozacağı için tercih edilmedi.
   if (user && user.passwordHash) {
     const token = crypto.randomBytes(32).toString("hex");
     const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
@@ -68,7 +75,12 @@ export async function requestPasswordReset(
     });
 
     const resetUrl = `${getRequestOrigin(headersList)}/sifre-sifirla?token=${token}`;
-    await sendPasswordResetEmail(user.email, resetUrl);
+    const result = await sendPasswordResetEmail(user.email, resetUrl);
+    if (!result.ok) {
+      return {
+        error: "E-posta gönderilemedi. Lütfen daha sonra tekrar deneyin.",
+      };
+    }
   }
 
   return { success: true };

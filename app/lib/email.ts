@@ -9,15 +9,20 @@ const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KE
 // RESEND_FROM_EMAIL ortam değişkenini ayarla.
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL ?? "Pratikleştir <onboarding@resend.dev>";
 
-export async function sendPasswordResetEmail(to: string, resetUrl: string) {
+export type SendEmailResult = { ok: true } | { ok: false; message: string };
+
+export async function sendPasswordResetEmail(
+  to: string,
+  resetUrl: string
+): Promise<SendEmailResult> {
   if (!resend) {
     console.error(
       "RESEND_API_KEY tanımlı değil, şifre sıfırlama e-postası gönderilemedi."
     );
-    return;
+    return { ok: false, message: "E-posta servisi yapılandırılmamış." };
   }
 
-  await resend.emails.send({
+  const { data, error } = await resend.emails.send({
     from: FROM_EMAIL,
     to,
     subject: "Şifreni sıfırla - Pratikleştir",
@@ -42,4 +47,18 @@ export async function sendPasswordResetEmail(to: string, resetUrl: string) {
       </div>
     `,
   });
+
+  // resend.emails.send() API hatalarında THROW ETMEZ - { data, error }
+  // döner. Bunu kontrol etmezsek gönderim sessizce başarısız olur. En sık
+  // görülen hata: domain doğrulanmadan (Resend sandbox modu) yalnızca
+  // hesap sahibinin kendi Resend e-postasına gönderim yapılabiliyor,
+  // başka adreslere "You can only send testing emails to your own email
+  // address" mesajıyla reddediliyor.
+  if (error) {
+    console.error("Resend e-posta gönderme hatası:", error);
+    return { ok: false, message: error.message };
+  }
+
+  console.log("Şifre sıfırlama e-postası gönderildi, Resend id:", data?.id);
+  return { ok: true };
 }

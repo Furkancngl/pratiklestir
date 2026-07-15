@@ -29,7 +29,9 @@ export default async function AdminLayout({
         userEmail={session?.user?.email}
         userPlan={session?.user?.plan}
       />
-      <div className="flex flex-1 flex-col">{children}</div>
+      {/* Sidebar.tsx'teki aynı sabit (fixed) genişlik düzeltmesi - bkz.
+          app-chrome.tsx yorumu. */}
+      <div className="flex flex-1 flex-col md:pl-[250px]">{children}</div>
     </div>
   );
 }
