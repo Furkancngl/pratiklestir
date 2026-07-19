@@ -8,6 +8,16 @@ export const users = pgTable("users", {
   name: text("name"),
   plan: text("plan").notNull().default("free"),
   planSelectedAt: timestamp("plan_selected_at", { withTimezone: true }),
+  // Gumroad "cancellation" ping'i geldiğinde true olur - kullanıcı hâlâ
+  // "pro" planında kalır, sadece dönem sonunda otomatik Free'ye düşeceği
+  // işaretlenir. Gerçek düşürme "subscription_ended" ping'inde olur (bkz.
+  // app/api/webhooks/gumroad/route.ts).
+  cancelAtPeriodEnd: boolean("cancel_at_period_end").notNull().default(false),
+  // Destek/denetim amaçlı - Gumroad'un genel API'sinde abonelik iptal/geri
+  // alma endpoint'i olmadığı için bu ID üzerinden otomatik bir işlem
+  // yapılmıyor, sadece hangi Gumroad aboneliğine karşılık geldiğini
+  // izlemek için tutuluyor.
+  gumroadSubscriptionId: text("gumroad_subscription_id"),
   credits: integer("credits").notNull().default(30),
   creditsResetAt: timestamp("credits_reset_at", { withTimezone: true }),
   // Hesap güvenlik uyarıları burada yok: her zaman açık ve kapatılamaz

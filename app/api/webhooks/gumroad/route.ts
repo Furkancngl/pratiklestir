@@ -9,18 +9,21 @@ import { checkRateLimit, getClientIp, webhookRateLimit } from "@/app/lib/rate-li
 // abonelik bitişi bildirimlerini de almak için Gumroad API'sinde ayrıca
 // resource_subscriptions (resource_name: refund, dispute, cancellation,
 // subscription_ended) kaydı açılmalı - bkz. cevaptaki açıklama.
-const DOWNGRADE_RESOURCE_NAMES = new Set([
-  "refund",
-  "dispute",
-  "cancellation",
-  "subscription_ended",
-]);
+//
+// "cancellation" ile "subscription_ended" AYNI ŞEY DEĞİL: cancellation,
+// kullanıcı (veya biz) aboneliği iptal ettiğinde - ödediği dönem henüz
+// bitmemiştir, hâlâ "pro" kalmalı, sadece dönem sonunda düşeceği
+// işaretlenir. subscription_ended, dönem gerçekten bittiğinde gelir - asıl
+// "free"ye düşürme burada olur. refund/dispute ise anlık iade/itiraz
+// olduğu için hemen düşürülür.
+const IMMEDIATE_DOWNGRADE_RESOURCE_NAMES = new Set(["refund", "dispute", "subscription_ended"]);
 
 type GumroadSale = {
   email: string;
   refunded: boolean;
   disputed: boolean;
   product_id: string;
+  subscription_id?: string | null;
 };
 
 // Gumroad Ping isteği imzalanmıyor (Stripe'taki gibi bir HMAC/imza başlığı
@@ -81,11 +84,13 @@ export async function POST(request: Request) {
   }
 
   const resourceName = form.get("resource_name")?.toString() || "sale";
-  const isDowngradeEvent = DOWNGRADE_RESOURCE_NAMES.has(resourceName);
+  const isCancellationEvent = resourceName === "cancellation";
+  const isImmediateDowngradeEvent = IMMEDIATE_DOWNGRADE_RESOURCE_NAMES.has(resourceName);
   const saleId = form.get("sale_id")?.toString();
 
   let email: string | null = null;
   let refunded = false;
+  let subscriptionId: string | null = null;
 
   if (saleId) {
     const sale = await verifySale(saleId);
@@ -104,10 +109,12 @@ export async function POST(request: Request) {
     }
     email = sale.email;
     refunded = sale.refunded || sale.disputed;
-  } else if (isDowngradeEvent) {
+    subscriptionId = sale.subscription_id ?? null;
+  } else if (isCancellationEvent || isImmediateDowngradeEvent) {
     // Abonelik iptali/bitişi bildirimlerinde sale_id bulunmayabilir (bkz.
-    // cevaptaki açıklama) - bu olaylar sadece plan düşürdüğü için (bedava
-    // Pro erişimi vermediği için) gövdedeki email'e güveniyoruz.
+    // cevaptaki açıklama) - bu olaylar bedava Pro erişimi vermediği
+    // (sadece işaretleme/düşürme yaptığı) için gövdedeki email'e
+    // güveniyoruz.
     email = form.get("email")?.toString() || null;
   } else {
     return NextResponse.json({ error: "sale_id eksik." }, { status: 400 });
@@ -130,7 +137,19 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true });
   }
 
-  const nextPlan = isDowngradeEvent || refunded ? "free" : "pro";
+  if (isCancellationEvent) {
+    // Ödenen dönem henüz bitmedi - kullanıcı hâlâ "pro" kalır, sadece
+    // dönem sonunda otomatik düşeceği işaretlenir. Gerçek düşürme
+    // "subscription_ended" ping'i gelince aşağıdaki dalda yapılır.
+    await db
+      .update(users)
+      .set({ cancelAtPeriodEnd: true })
+      .where(eq(users.id, user.id));
+
+    return NextResponse.json({ ok: true });
+  }
+
+  const nextPlan = isImmediateDowngradeEvent || refunded ? "free" : "pro";
 
   await db
     .update(users)
@@ -139,6 +158,8 @@ export async function POST(request: Request) {
       planSelectedAt: new Date(),
       credits: getDailyCreditLimit(nextPlan),
       creditsResetAt: new Date(),
+      cancelAtPeriodEnd: false,
+      gumroadSubscriptionId: nextPlan === "pro" ? subscriptionId : null,
     })
     .where(eq(users.id, user.id));
 

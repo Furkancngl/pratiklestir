@@ -17,5 +17,11 @@ export default async function AyarlarPlanFaturalamaPage() {
     });
   }
 
-  return <PlanBillingSettings plan={user.plan} renewalDateLabel={renewalDateLabel} />;
+  return (
+    <PlanBillingSettings
+      plan={user.plan}
+      renewalDateLabel={renewalDateLabel}
+      cancelAtPeriodEnd={user.cancelAtPeriodEnd}
+    />
+  );
 }

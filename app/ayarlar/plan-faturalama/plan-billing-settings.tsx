@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import Link from "next/link";
 import PlanBadge from "@/app/components/plan-badge";
+import { cancelProPlan, undoCancelProPlan } from "@/app/actions/plan";
 
 const PLAN_DESCRIPTIONS: Record<string, string> = {
   free: "Günde 30 kredi, aynı anda 1 dosya işleme.",
@@ -12,13 +13,37 @@ const PLAN_DESCRIPTIONS: Record<string, string> = {
 export default function PlanBillingSettings({
   plan,
   renewalDateLabel,
+  cancelAtPeriodEnd,
 }: {
   plan: string;
   renewalDateLabel: string | null;
+  cancelAtPeriodEnd: boolean;
 }) {
   const [confirmOpen, setConfirmOpen] = useState(false);
-  const [cancelRequested, setCancelRequested] = useState(false);
+  const [error, setError] = useState("");
+  const [isPending, startTransition] = useTransition();
   const isPro = plan === "pro";
+
+  const handleConfirmCancel = () => {
+    setError("");
+    startTransition(async () => {
+      const result = await cancelProPlan();
+      if (result?.error) {
+        setError(result.error);
+      }
+      setConfirmOpen(false);
+    });
+  };
+
+  const handleUndo = () => {
+    setError("");
+    startTransition(async () => {
+      const result = await undoCancelProPlan();
+      if (result?.error) {
+        setError(result.error);
+      }
+    });
+  };
 
   return (
     <div>
@@ -51,25 +76,43 @@ export default function PlanBillingSettings({
 
         {isPro && renewalDateLabel && (
           <p className="mt-4 border-t border-violet-500/15 pt-4 text-xs text-zinc-500 dark:text-zinc-400">
-            Tahmini yenileme tarihi:{" "}
-            <span className="font-medium text-black dark:text-zinc-50">
-              {renewalDateLabel}
-            </span>
-            <br />
-            Otomatik faturalandırma sistemi tam entegre edildiğinde bu tarih
-            gerçek ödeme döngünüzü yansıtacaktır.
+            {cancelAtPeriodEnd ? "Erişiminizin sona ereceği tarih" : "Tahmini yenileme tarihi"}:{" "}
+            <span className="font-medium text-black dark:text-zinc-50">{renewalDateLabel}</span>
+            {!cancelAtPeriodEnd && (
+              <>
+                <br />
+                Otomatik faturalandırma sistemi tam entegre edildiğinde bu tarih
+                gerçek ödeme döngünüzü yansıtacaktır.
+              </>
+            )}
           </p>
         )}
       </div>
 
       {isPro && (
         <div className="mt-8 max-w-[460px]">
-          {cancelRequested ? (
-            <div className="rounded-[10px] border border-emerald-500/25 bg-emerald-500/10 px-4 py-3 text-[13px] text-emerald-700 dark:text-emerald-400">
-              İptal talebini aldık. Ödeme sistemimiz tam entegre olduğunda bu
-              talep otomatik işleyip mevcut dönemin sonunda hesabını Free
-              plana geçirecek şekilde aktif olacak. Şimdilik plan durumunda
-              bir değişiklik yapılmadı.
+          {cancelAtPeriodEnd ? (
+            <div className="rounded-[10px] border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-[13px] text-amber-700 dark:text-amber-400">
+              <p className="font-semibold">
+                Pro üyeliğiniz{renewalDateLabel ? ` ${renewalDateLabel}` : ""} tarihinde sona
+                erecek.
+              </p>
+              <p className="mt-1 text-amber-700/80 dark:text-amber-400/80">
+                Bu tarihe kadar Pro özelliklerini kullanmaya devam edersin, sonrasında hesabın
+                otomatik olarak Free plana döner.
+              </p>
+              <button
+                type="button"
+                onClick={handleUndo}
+                disabled={isPending}
+                className="mt-3 touch-manipulation rounded-[10px] border border-amber-600/40 px-3.5 py-2 text-xs font-semibold text-amber-700 transition-colors hover:bg-amber-500/10 disabled:cursor-not-allowed disabled:opacity-50 dark:text-amber-400"
+              >
+                {isPending ? "İşleniyor..." : "İptali Geri Al"}
+              </button>
+              <p className="mt-2 text-[11px] text-amber-700/70 dark:text-amber-400/70">
+                Bu, yalnızca uygulamamızdaki iptal işaretini kaldırır. Gumroad tarafında da
+                aboneliğini iptal ettiysen, orayı da ayrıca kontrol etmen gerekir.
+              </p>
             </div>
           ) : (
             <>
@@ -86,6 +129,7 @@ export default function PlanBillingSettings({
               </p>
             </>
           )}
+          {error && <p className="mt-2 text-xs text-red-600 dark:text-red-400">{error}</p>}
         </div>
       )}
 
@@ -106,37 +150,38 @@ export default function PlanBillingSettings({
       {confirmOpen && (
         <div
           className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 px-4"
-          onClick={() => setConfirmOpen(false)}
+          onClick={() => !isPending && setConfirmOpen(false)}
         >
           <div
             onClick={(e) => e.stopPropagation()}
             className="w-full max-w-sm rounded-2xl border border-black/[.08] bg-white p-6 shadow-xl dark:border-zinc-800 dark:bg-zinc-950"
           >
-            <h2 className="text-lg font-bold text-black dark:text-zinc-50">
-              Planını iptal etmek istediğine emin misin?
-            </h2>
+            <h2 className="text-lg font-bold text-black dark:text-zinc-50">Emin misiniz?</h2>
             <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
-              İptal ettiğinde Pro özelliklerini mevcut dönemin sonuna kadar
-              kullanmaya devam edersin; dönem bitiminde hesabın otomatik
-              olarak Free plana döner.
+              Pro üyeliğiniz{renewalDateLabel ? ` ${renewalDateLabel}` : ""} tarihine kadar aktif
+              kalmaya devam edecek. Bu tarihten sonra otomatik olarak Free plana geçeceksiniz.
+            </p>
+            <p className="mt-3 rounded-[10px] bg-amber-500/10 px-3 py-2.5 text-xs text-amber-700 dark:text-amber-400">
+              Önemli: Bir sonraki dönemde tekrar ücretlendirilmemek için, Gumroad&apos;dan
+              aldığın makbuz e-postasındaki bağlantıdan aboneliğini Gumroad tarafında da iptal
+              etmen gerekiyor. Bu işlemi senin adına otomatik yapamıyoruz.
             </p>
             <div className="mt-6 flex justify-end gap-2">
               <button
                 type="button"
                 onClick={() => setConfirmOpen(false)}
-                className="rounded-[10px] border border-black/[.12] px-4 py-2 text-sm font-medium text-zinc-600 hover:bg-black/[.04] dark:border-white/[.12] dark:text-zinc-300 dark:hover:bg-white/[.06]"
+                disabled={isPending}
+                className="rounded-[10px] border border-black/[.12] px-4 py-2 text-sm font-medium text-zinc-600 hover:bg-black/[.04] disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/[.12] dark:text-zinc-300 dark:hover:bg-white/[.06]"
               >
                 Vazgeç
               </button>
               <button
                 type="button"
-                onClick={() => {
-                  setConfirmOpen(false);
-                  setCancelRequested(true);
-                }}
-                className="rounded-[10px] bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700"
+                onClick={handleConfirmCancel}
+                disabled={isPending}
+                className="rounded-[10px] bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                Evet, İptal Et
+                {isPending ? "İşleniyor..." : "İptal Et, Onaylıyorum"}
               </button>
             </div>
           </div>
