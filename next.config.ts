@@ -17,6 +17,11 @@ const VERCEL_SPEED_INSIGHTS = "https://va.vercel-scripts.com";
 // connect-src'ye eklenmezse istek CSP tarafından engellenir.
 const EXCHANGE_RATE_API = "https://open.er-api.com";
 
+// recent-activity-card.tsx, son giriş konumunu göstermek için bu ücretsiz,
+// anahtarsız uçtan doğrudan tarayıcıda IP-konum sorgusu çekiyor;
+// connect-src'ye eklenmezse istek CSP tarafından engellenir.
+const IP_GEOLOCATION_API = "https://ipwho.is";
+
 // next dev (Turbopack/Fast Refresh) HMR client'ı modül değiştirmede
 // eval() kullanıyor; production build'de (next build/start, Vercel dahil)
 // bu dev-only çalışma zamanı hiç var olmuyor, dolayısıyla 'unsafe-eval'e
@@ -40,7 +45,7 @@ const contentSecurityPolicy = [
   "font-src 'self' data:",
   // blob:: arka plan silme aracının worker'ı, WASM/model verisini kendi
   // ürettiği blob: URL'lerinden fetch() ile okuyor.
-  `connect-src 'self' blob: ${IMGLY_CDN} ${EXCHANGE_RATE_API}`,
+  `connect-src 'self' blob: ${IMGLY_CDN} ${EXCHANGE_RATE_API} ${IP_GEOLOCATION_API}`,
   "worker-src 'self' blob:",
   "object-src 'none'",
   "base-uri 'self'",

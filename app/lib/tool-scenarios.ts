@@ -193,6 +193,114 @@ export const toolScenarios: ToolScenario[] = [
       },
     ],
   },
+  {
+    toolHref: "/gorsel-sikistir",
+    slug: "whatsapp-icin-kucult",
+    h1: "WhatsApp'ta Göndermek İçin Fotoğraf Boyutu Küçültme",
+    shortLede:
+      "WhatsApp'ın kendi sıkıştırmasına bırakmadan, fotoğraflarınızı siz küçültüp hem hızlı gönderin hem sonucu kontrol edin.",
+    metaTitle: "WhatsApp İçin Fotoğraf Küçült - Hızlı Gönderim | Pratikleştir",
+    metaDescription:
+      "WhatsApp'ta fotoğraf gönderirken veri ve zaman kazanın. Görsellerinizi WhatsApp'ın kendi sıkıştırmasına bırakmadan, siz kontrol ederek küçültün - ücretsiz, tamamen tarayıcınızda.",
+    intro: [
+      "WhatsApp'ta \"Fotoğraf\" olarak gönderdiğiniz her görsel, uygulamanın kendi sıkıştırma algoritmasından geçer - bu süreç üzerinde sizin bir kontrolünüz yoktur. Bazen beklediğinizden fazla kalite kaybı olur, bazen de yavaş bir bağlantıda gönderimi geciktiren büyüklükte dosyalar ortaya çıkar. Özellikle bir düğün, etkinlik veya iş klasöründen onlarca fotoğrafı tek seferde paylaşırken bu fark iyice belirginleşir.",
+      "Aşağıdaki Görsel Sıkıştırıcı ile fotoğraflarınızı WhatsApp'a yüklemeden önce siz küçültürsünüz; hem gönderim belirgin şekilde hızlanır hem de sonucun nasıl göründüğünü WhatsApp'ın algoritmasına bırakmadan siz belirlersiniz.",
+    ],
+    tips: [
+      {
+        title: "Toplu galeriler için \"Orta\" kalite genelde yeterlidir",
+        body: "Bir etkinlik veya toplantıdan onlarca fotoğrafı aynı anda paylaşacaksanız, \"Orta\" kalite seviyesi dosya boyutunu belirgin küçültürken telefon ekranında fark edilir bir kalite kaybı yaratmaz.",
+      },
+      {
+        title: "Kaliteyi tam korumak istiyorsanız \"Belge\" olarak göndermeyi düşünün",
+        body: "WhatsApp'ta bir görseli \"Fotoğraf\" yerine \"Belge\" (Document) olarak gönderirseniz uygulama ek bir sıkıştırma uygulamaz, orijinal kaliteyi korur. Ama dosya zaten büyükse gönderim yine yavaş olur - bu durumda önce bu araçla küçültüp sonra belge olarak göndermek hem hızlı hem kontrollü bir sonuç verir.",
+      },
+      {
+        title: "Çok sayıda fotoğrafı zip ile toplu indirip WhatsApp Web'den paylaşın",
+        body: "Birden fazla görseli aynı anda sıkıştırdıktan sonra \"Tümünü İndir (.zip)\" ile hepsini bilgisayarınıza indirebilir, WhatsApp Web veya masaüstü uygulamasından zip'i açıp dosyaları tek seferde seçebilirsiniz.",
+      },
+      {
+        title: "Kısıtlı veri planında veya yurt dışındaysanız önceliği boyuta verin",
+        body: "Sınırlı mobil veri kullanıyorsanız veya roaming'deyseniz, göndermeden önce fotoğrafları \"Maksimum Sıkıştırma\" ile küçültmek hem sizin hem alıcının veri kullanımını azaltır.",
+      },
+    ],
+    faq: [
+      {
+        question: "WhatsApp zaten fotoğrafları sıkıştırmıyor mu, neden ayrıca küçültmeliyim?",
+        answer:
+          "Evet, WhatsApp \"Fotoğraf\" olarak gönderilen görselleri kendi algoritmasıyla sıkıştırır, ancak bu süreç üzerinde kontrolünüz yoktur - bazen beklediğinizden fazla kalite kaybı, bazen de gereğinden büyük dosya boyutu ortaya çıkabilir. Görseli siz önceden küçültürseniz sonucu kontrol eder, gönderimi de hızlandırırsınız.",
+      },
+      {
+        question: "Fotoğrafı \"Belge\" olarak gönderirsem sıkıştırmaya hiç gerek kalır mı?",
+        answer:
+          "\"Belge\" olarak göndermek WhatsApp'ın ek sıkıştırmasını atlar ve orijinal kaliteyi korur, ama dosya boyutu büyük kalmaya devam eder - yavaş bağlantılarda veya çok sayıda dosyada yine de önce küçültmeniz gönderimi belirgin şekilde hızlandırır.",
+      },
+      {
+        question: "Kaç fotoğrafı aynı anda küçültüp WhatsApp'a hazırlayabilirim?",
+        answer:
+          "İstediğiniz kadar görseli aynı anda yükleyip sıkıştırabilir, sonuçları \"Tümünü İndir (.zip)\" ile tek seferde indirip WhatsApp'tan paylaşabilirsiniz.",
+      },
+      {
+        question: "Fotoğraflarım bir sunucuya yükleniyor mu?",
+        answer:
+          "Hayır. Sıkıştırma işlemi tamamen tarayıcınızda yapılır, fotoğraflarınız cihazınızdan çıkmaz.",
+      },
+    ],
+  },
+  {
+    toolHref: "/arka-plan-sil",
+    slug: "vesikalik-fotograf",
+    h1: "Vesikalık Fotoğraf İçin Arka Planı Beyaza Çevirme",
+    shortLede:
+      "Kimlik, pasaport, ehliyet ve iş başvurusu gibi resmi işlemler için fotoğrafınızın arka planını temizleyip düz beyaza hazırlayın.",
+    metaTitle: "Vesikalık Fotoğraf Arka Planı Beyaz Yap - Ücretsiz | Pratikleştir",
+    metaDescription:
+      "Kimlik, pasaport, ehliyet ve iş başvurusu fotoğraflarınızın arka planını yapay zeka ile temizleyip düz beyaza hazırlayın. Ücretsiz, tamamen tarayıcınızda çalışır.",
+    intro: [
+      "Kimlik kartı, pasaport, ehliyet, vize veya iş başvurusu gibi resmi işlemlerde istenen vesikalık fotoğraflarda genellikle düz, gölgesiz ve tek renk (çoğunlukla beyaz) bir arka plan şartı aranır. Evde veya ofiste çekilen bir fotoğrafta arka planda duvar dokusu, gölge veya eşyalar bulunması bu şartı karşılamayabilir.",
+      "Aşağıdaki Arka Plan Silici, fotoğrafınızdaki arka planı yapay zeka ile otomatik olarak kaldırıp şeffaf bir PNG üretir. Resmi bir sisteme yüklemeden önce bu şeffaf alanı düz beyaz bir zeminle doldurmanız gerekir - bunu nasıl yapacağınızı aşağıdaki ipuçlarında anlatıyoruz.",
+    ],
+    tips: [
+      {
+        title: "Şeffaf PNG'yi olduğu gibi yüklemeyin, beyaza oturtun",
+        body: "Çoğu resmi sistem şeffaflığı desteklemez; şeffaf alanlar bazı görüntüleyicilerde siyah veya damalı görünebilir. Arka planı sildikten sonra sonucu bir görsel düzenleme aracında düz beyaz bir tuvalin üzerine yerleştirip yeniden JPG veya PNG olarak kaydedin.",
+      },
+      {
+        title: "Çekim öncesi düz, aydınlık bir zemin seçin",
+        body: "Arka planı zaten olabildiğince sade (düz duvar, gölgesiz) bir yerde çekmek, yapay zekanın saç ve omuz kenarlarını daha temiz ayırmasını sağlar; beyaza oturttuğunuzda kenarlarda renk taşması ihtimali de azalır.",
+      },
+      {
+        title: "Kurumun istediği tam boyut ve oranı ayrıca kontrol edin",
+        body: "Bu araç yalnızca arka planı temizler. Kimlik, pasaport, ehliyet gibi her belge türünün kendi piksel/santimetre boyutu ve baş oranı kuralı olabilir; arka planı temizledikten sonra ilgili kurumun istediği ölçüye göre görseli Görsel Kırp veya Görsel Boyutlandır araçlarımızla ayrıca hazırlamanız gerekebilir.",
+      },
+      {
+        title: "Düz, önden ve nötr ifadeyle çekilmiş bir fotoğraf kullanın",
+        body: "Arka plan temizliği açıyı veya yüz ifadesini düzeltmez; resmi fotoğraf kurallarının çoğu doğrudan kameraya bakan, nötr ifadeli ve gözlüksüz (yansımasız) bir çekim ister. En iyi sonuç için bu şartlara uygun bir fotoğrafla başlayın.",
+      },
+    ],
+    faq: [
+      {
+        question: "Bu araçla oluşturduğum fotoğrafı doğrudan e-Devlet veya nüfus müdürlüğü sistemine yükleyebilir miyim?",
+        answer:
+          "Araç yalnızca arka planı temizler ve şeffaf bir PNG üretir; resmi sistemler genelde şeffaflığı kabul etmez. Yüklemeden önce sonucu düz beyaz bir zemine oturtup JPG/PNG olarak kaydetmeniz, ayrıca ilgili kurumun istediği boyut kuralına uymanız gerekir.",
+      },
+      {
+        question: "Arka planı beyaz değil, mavi veya gri yapmam gerekiyorsa ne yapmalıyım?",
+        answer:
+          "Araç arka planı kaldırıp şeffaf bırakır; hangi renk zemine oturtacağınız size kalmıştır. Kurumun istediği renk beyaz değilse, şeffaf sonucu bir düzenleme aracında istediğiniz renkte bir zemine yerleştirebilirsiniz.",
+      },
+      {
+        question: "Fotoğrafımın boyutunu da (örneğin belirli bir santimetre ölçüsünü) bu araçla ayarlayabilir miyim?",
+        answer:
+          "Hayır, bu araç yalnızca arka planı temizler. Kurumun istediği tam boyut ve orana getirmek için Görsel Kırp veya Görsel Boyutlandır araçlarımızı ayrıca kullanabilirsiniz.",
+      },
+      {
+        question: "Fotoğrafım bir sunucuya yükleniyor mu?",
+        answer:
+          "Hayır. Arka plan kaldırma işlemi tamamen tarayıcınızda çalışan bir yapay zeka modeliyle yapılır, fotoğrafınız cihazınızdan çıkmaz.",
+      },
+    ],
+  },
 ];
 
 export function getToolScenario(toolHref: string, slug: string): ToolScenario | undefined {

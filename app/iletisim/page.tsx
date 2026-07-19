@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   alternates: { canonical: `${SITE_URL}/iletisim` },
 };
 
-const SUPPORT_EMAIL = "destek@pratiklestir.com";
+const SUPPORT_EMAIL = "iletisim@pratiklestir.com";
 
 export default function Page() {
   const breadcrumbItems = [{ name: "Ana Sayfa", href: "/" }, { name: "İletişim" }];

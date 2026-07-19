@@ -30,6 +30,10 @@ export const TOOL_CREDIT_COSTS = {
   "/jpg-pdf": 1,
   "/pdf-kilitle": 1,
   "/pdf-kilit-kaldir": 1,
+  "/gorsel-donustur": 1,
+  "/gorsel-boyutlandir": 1,
+  "/gorsel-kirp": 1,
+  "/gorsel-netlestir": 1,
 } as const;
 
 export type ToolKey = keyof typeof TOOL_CREDIT_COSTS;

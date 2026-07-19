@@ -15,7 +15,11 @@ export default async function Home() {
 
   if (session?.user) {
     return (
-      <LoggedInHome name={session.user.name} plan={session.user.plan} />
+      <LoggedInHome
+        name={session.user.name}
+        plan={session.user.plan}
+        email={session.user.email}
+      />
     );
   }
 

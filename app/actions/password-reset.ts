@@ -12,10 +12,11 @@ import { checkRateLimit, getClientIp, passwordResetRateLimit } from "@/app/lib/r
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const RESET_TOKEN_TTL_MS = 30 * 60 * 1000;
 
-// SITE_URL (app/lib/site.ts) prod domain'i henüz deploy edilmemişse
-// gerçekte erişilemeyen bir placeholder olabilir (SEO/canonical tag'ler
-// için var). E-posta linki her zaman gerçekten çalışan adrese gitmeli, bu
-// yüzden isteğin geldiği host/protokolden üretiyoruz.
+// SITE_URL (app/lib/site.ts) SEO/canonical tag'ler için sabit prod domain'i
+// taşır; ama preview/staging deploy'larında istek gerçek prod domain'e değil
+// o ortamın kendi host'una gitmiş olabilir. E-posta linki her zaman gerçekten
+// çalışan adrese gitmeli, bu yüzden isteğin geldiği host/protokolden
+// üretiyoruz.
 function getRequestOrigin(headersList: Headers): string {
   const host = headersList.get("host");
   if (!host) return process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";

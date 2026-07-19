@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 
-const SUPPORT_EMAIL = "destek@pratiklestir.com";
+const SUPPORT_EMAIL = "iletisim@pratiklestir.com";
 
 const inputClass =
   "w-full rounded-[10px] border border-black/[.12] bg-black/[.02] px-3.5 py-2.75 text-sm text-black placeholder:text-zinc-400 outline-none focus:border-violet-500 focus:shadow-[0_0_0_3px_rgba(139,92,246,0.15)] dark:border-white/[.12] dark:bg-white/[.04] dark:text-white dark:placeholder:text-zinc-600";

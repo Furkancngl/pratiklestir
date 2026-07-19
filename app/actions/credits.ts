@@ -3,7 +3,7 @@
 import { and, eq, gte, sql } from "drizzle-orm";
 import { auth } from "@/auth";
 import { db } from "@/app/lib/db";
-import { users } from "@/app/lib/db/schema";
+import { users, toolUsageEvents } from "@/app/lib/db/schema";
 import { getFreshCredits, TOOL_CREDIT_COSTS, type ToolKey } from "@/app/lib/credits";
 
 export type ConsumeCreditResult =
@@ -71,6 +71,15 @@ export async function consumeCredit(tool: ToolKey): Promise<ConsumeCreditResult>
       limit,
     };
   }
+
+  // Dashboard'daki "Toplam İşlem" / "En Çok Kullanılan Araç" istatistikleri
+  // (bkz. app/lib/usage-stats.ts) bu tablodan hesaplanır - kredi düşümü
+  // başarılı olduğunda kullanım kalıcı olarak burada loglanır.
+  await db.insert(toolUsageEvents).values({
+    userId: user.id,
+    tool,
+    creditsCost: cost,
+  });
 
   return { ok: true, remaining: updated.credits, limit };
 }

@@ -120,24 +120,24 @@ const categorySeo: Record<string, CategorySeoContent> = {
   Görsel: {
     metaTitle: "Görsel Araçları | Ücretsiz Online Fotoğraf Düzenleme | Pratikleştir",
     metaDescription:
-      "Fotoğraflarınızı sıkıştırın, arka planını kaldırın; yakında genişletme, netleştirme ve format dönüştürme de eklenecek. Ücretsiz, tarayıcı tabanlı.",
+      "Fotoğraflarınızı sıkıştırın, boyutlandırın, kırpın, format dönüştürün veya arka planını kaldırın; yakında genişletme ve netleştirme de eklenecek. Ücretsiz, tarayıcı tabanlı.",
     intro:
-      "Fotoğraf ve görsellerinizle ilgili işlemleri tek yerden yönetin: dosya boyutunu küçültün, arka planı yapay zeka ile kaldırın. Genişletme, kalite artırma, netleştirme ve format dönüştürme araçları yakında bu kategoriye katılacak.",
+      "Fotoğraf ve görsellerinizle ilgili işlemleri tek yerden yönetin: dosya boyutunu küçültün, piksel ölçüsünü değiştirin, istediğiniz alanı kırpın, formatını dönüştürün veya arka planı yapay zeka ile kaldırın. Genişletme, kalite artırma ve netleştirme araçları yakında bu kategoriye katılacak.",
     faq: [
       {
-        question: "Görsel Sıkıştırıcı ve Arka Plan Silici ücretsiz mi?",
+        question: "Görsel kategorisindeki araçlar ücretsiz mi?",
         answer:
-          "Evet, ikisi de ücretsizdir ve kayıt olmadan kullanılabilir.",
+          "Evet, Görsel Sıkıştırıcı, Görsel Boyutlandır, Görsel Kırp, Görsel Dönüştür ve Arka Plan Silici'nin tamamı ücretsizdir ve kayıt olmadan kullanılabilir.",
       },
       {
         question: "Fotoğraflarım işlem sırasında bir yere yükleniyor mu?",
         answer:
-          "Hayır, sıkıştırma tamamen tarayıcınızda yapılır. Arka plan silme ise tarayıcınızda çalışan bir yapay zeka modeliyle gerçekleşir; fotoğrafınız cihazınızdan çıkmaz.",
+          "Hayır, sıkıştırma, boyutlandırma, kırpma ve format dönüştürme tamamen tarayıcınızda yapılır. Arka plan silme ise tarayıcınızda çalışan bir yapay zeka modeliyle gerçekleşir; fotoğrafınız cihazınızdan çıkmaz.",
       },
       {
         question: "Bu kategoriye ne zaman yeni araç eklenecek?",
         answer:
-          "Görsel genişletme, kalite artırma, netleştirme ve format dönüştürme araçları üzerinde çalışıyoruz; her biri hazır olduğunda bu kategoride \"yakında\" etiketi kalkacak.",
+          "Görsel genişletme, kalite artırma ve netleştirme araçları üzerinde çalışıyoruz; her biri hazır olduğunda bu kategoride \"yakında\" etiketi kalkacak.",
       },
     ],
   },

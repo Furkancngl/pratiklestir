@@ -622,6 +622,41 @@ export function PaletteIcon({ className }: IconProps) {
   );
 }
 
+export function ResizeIcon({ className }: IconProps) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <rect x="3" y="3" width="10" height="10" rx="1" />
+      <path d="M13 21h8v-8" />
+      <path d="M21 21 13 13" />
+    </svg>
+  );
+}
+
+export function CropIcon({ className }: IconProps) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="M6 2v14a2 2 0 0 0 2 2h14" />
+      <path d="M18 22V8a2 2 0 0 0-2-2H2" />
+    </svg>
+  );
+}
+
 // Araç bazlı ikon eşlemesi artık burada değil: her aracın ikonu
 // app/lib/tools.ts içindeki kendi kaydında (`icon` alanı) tanımlanır - tek
 // kaynak orası. Bu dosya yalnızca ikon bileşenlerini tanımlar/export eder.

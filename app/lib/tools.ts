@@ -3,6 +3,7 @@ import {
   AverageIcon,
   CompressIcon,
   CreditCardIcon,
+  CropIcon,
   CurrencyExchangeIcon,
   DocumentIcon,
   ExpandIcon,
@@ -13,6 +14,7 @@ import {
   PercentIcon,
   QrCodeIcon,
   ReceiptIcon,
+  ResizeIcon,
   ScanIcon,
   SparkleIcon,
   TagIcon,
@@ -1025,22 +1027,238 @@ export const tools: Tool[] = [
   {
     name: "Görsel Netleştir",
     href: "/gorsel-netlestir",
-    description: "Bulanık görselleri yapay zeka ile netleştirir.",
-    available: false,
+    description: "Görsellerinizdeki kenar ve detayları keskinleştirerek daha net gösterir.",
+    available: true,
     accentClassName: "bg-amber-500",
     icon: FocusIcon,
     group: "Görsel",
     shortLabel: "Netleştir",
+    seo: {
+      metaTitle: "Görsel Netleştir | Ücretsiz Online Keskinleştirme Aracı | Pratikleştir",
+      metaDescription:
+        "Görsellerinizdeki kenarları keskinleştirin, detayları belirginleştirin. Netleştirme gücünü ayarlayın, kayıt gerekmeden, tamamen tarayıcınızda.",
+      about: [
+        "Hafif odak kaymış bir fotoğraf, ekran görüntüsü veya küçük çözünürlükten büyütülmüş bir görsel, kenarları biraz yumuşak/bulanık görünebilir. Bu araç, \"unsharp mask\" adı verilen ve çoğu fotoğraf düzenleme programının (Photoshop, GIMP, Lightroom) \"Keskinleştir/Sharpen\" özelliğinin de temelini oluşturan klasik bir teknikle kenar kontrastını artırarak görseli gözle daha net gösterir.",
+        "Önemli bir netlik: bu, kaybolmuş gerçek detayı geri getiren bir yapay zeka modeli değildir - kenarlardaki renk/parlaklık geçişlerinin kontrastını artırarak görseli gözle daha keskin gösteren, onlarca yıldır kullanılan matematiksel bir tekniktir. Görsel zaten çok bulanıksa (örneğin hareket bulanıklığı) bu teknik sınırlı bir iyileşme sağlar; hafif yumuşaklık veya küçük çözünürlükten büyütme sonrası oluşan bulanıklık için en etkilidir.",
+        "Teknik olarak araç, görselin hafifçe bulanıklaştırılmış bir kopyasını çıkarır (\"blur\"), bu kopya ile orijinal arasındaki farkı (yüksek frekanslı kenar bilgisini) bulur ve bu farkı seçtiğiniz güçte orijinale geri ekler - kenarlar belirginleşir, düz alanlar olduğu gibi kalır.",
+        "Netleştirme gücünü çok yükseğe çekmek, özellikle kenarlarda ince beyaz/koyu \"halo\" çizgileri ve gürültü artışına yol açabilir; çoğu görselde orta seviye bir güç (%100 civarı) doğal görünen bir sonuç verir.",
+      ],
+      howTo: [
+        "Netleştirmek istediğiniz görseli sürükleyip bırakın veya seçin.",
+        "Netleştirme gücünü kaydırıcıyla ayarlayın; önizleme değişikliği anında yansıtır.",
+        "\"Netleştir\" butonuna tıklayın.",
+        "Orijinal ve netleştirilmiş halini yan yana karşılaştırın.",
+        "Sonucu indirin.",
+      ],
+      advantages: [
+        "Klasik, kanıtlanmış \"unsharp mask\" tekniğiyle kenar kontrastını artırır.",
+        "Netleştirme gücünü kendiniz ayarlayabilir, sonucu önizleyip karşılaştırabilirsiniz.",
+        "İşlem tamamen tarayıcınızda yapılır, görseliniz hiçbir sunucuya gönderilmez.",
+        "Kayıt gerekmez, ücretsiz kullanılır.",
+      ],
+      faq: [
+        {
+          question: "Bu araç yapay zeka ile mi çalışıyor?",
+          answer:
+            "Hayır. Araç, fotoğraf düzenleme programlarındaki klasik \"keskinleştirme/unsharp mask\" tekniğini kullanır - kenar kontrastını artırarak görseli gözle daha net gösterir. Kaybolmuş gerçek detayı yeniden üreten bir yapay zeka modeli değildir.",
+        },
+        {
+          question: "Çok bulanık (hareket bulanıklığı olan) bir fotoğrafı düzeltebilir mi?",
+          answer:
+            "Sınırlı ölçüde. Bu teknik hafif yumuşaklık ve küçük çözünürlükten büyütme sonrası oluşan bulanıklık için en etkilidir; ciddi hareket bulanıklığında kayıp detayı geri getiremez.",
+        },
+        {
+          question: "Netleştirme gücünü çok yükseğe çekersem ne olur?",
+          answer:
+            "Kenarlarda ince beyaz/koyu \"halo\" çizgileri ve gürültü artışı görülebilir. Çoğu görsel için orta seviye bir güç daha doğal bir sonuç verir; önizlemeden farkı görüp ayarlayabilirsiniz.",
+        },
+        {
+          question: "Hangi dosya formatları destekleniyor?",
+          answer:
+            "PNG, JPG ve WebP çıktısı desteklenir; farklı bir formatta bir görsel yüklerseniz sonuç PNG olarak indirilir.",
+        },
+        {
+          question: "Görselim bir sunucuya yükleniyor mu?",
+          answer:
+            "Hayır, netleştirme işlemi tarayıcınızın Canvas API'siyle tamamen cihazınızda yapılır; dosyanız cihazınızdan çıkmaz.",
+        },
+      ],
+      applicationCategory: "MultimediaApplication",
+    },
   },
   {
     name: "Görsel Dönüştür",
     href: "/gorsel-donustur",
     description: "Görselleri PNG, JPG ve WebP gibi formatlar arasında dönüştürür.",
-    available: false,
+    available: true,
     accentClassName: "bg-fuchsia-500",
     icon: ImageIcon,
     group: "Görsel",
     shortLabel: "Dönüştür",
+    seo: {
+      metaTitle: "Görsel Dönüştür | PNG, JPG, WebP Dönüştürücü | Pratikleştir",
+      metaDescription:
+        "Görselleri PNG, JPG ve WebP formatları arasında ücretsiz dönüştürün. Kayıt gerekmez, tamamen tarayıcınızda çalışır, verileriniz hiçbir sunucuya gönderilmez.",
+      about: [
+        "Farklı platformlar farklı görsel formatları bekler: bir web sitesi küçük dosya boyutu için WebP isterken, bir eski sistem veya form yalnızca JPG kabul edebilir, saydamlık gerektiren bir logo ise PNG olmalıdır. Bu araç yüklediğiniz görseli seçtiğiniz formata anında dönüştürür.",
+        "PNG kayıpsız bir formattır ve saydamlığı (alfa kanalı) destekler; logo, ikon ve ekran görüntüleri için uygundur ama dosya boyutu genelde daha büyüktür. JPG kayıplı sıkıştırma kullanır, saydamlığı desteklemez ve fotoğraflar için küçük dosya boyutu sağlar. WebP ise Google'ın geliştirdiği modern bir format olup hem kayıplı hem kayıpsız sıkıştırmayı destekler, saydamlığı korur ve genelde aynı kalitede JPG/PNG'den daha küçük dosya üretir - ancak çok eski tarayıcı veya programlarda açılmayabilir.",
+        "Birden fazla görseli aynı anda yükleyip hepsini tek seferde aynı hedef formata dönüştürebilir, sonuçları tek tek veya .zip olarak toplu indirebilirsiniz.",
+        "PNG veya farklı bir kaynaktan JPG'ye dönüştürürken saydam alanlar otomatik olarak beyaz arka planla doldurulur, çünkü JPG formatı saydamlığı desteklemez - bu davranış aracın kendisi tarafından otomatik yönetilir.",
+      ],
+      howTo: [
+        "Dönüştürmek istediğiniz görseli veya görselleri sürükleyip bırakın ya da seçin.",
+        "Hedef formatı seçin: PNG, JPG veya WebP.",
+        "JPG veya WebP seçtiyseniz isterseniz kalite seviyesini ayarlayın.",
+        "\"Dönüştür\" butonuna tıklayın; işlem tarayıcınızda saniyeler içinde tamamlanır.",
+        "Sonucu tek tek indirin veya birden fazla dosya varsa \"Tümünü İndir (.zip)\" ile toplu indirin.",
+      ],
+      advantages: [
+        "PNG, JPG ve WebP formatları arasında serbestçe dönüştürme yapar.",
+        "İşlem tamamen tarayıcınızda gerçekleşir, görselleriniz hiçbir sunucuya yüklenmez.",
+        "Birden fazla görseli aynı anda dönüştürüp toplu indirebilirsiniz.",
+        "JPG/WebP için kalite seviyesini kendiniz ayarlayabilirsiniz.",
+        "Kayıt gerekmez, ücretsiz kullanılır.",
+      ],
+      faq: [
+        {
+          question: "Hangi formatlar destekleniyor?",
+          answer:
+            "Çıktı formatı olarak PNG, JPG ve WebP arasından seçim yapabilirsiniz. Girdi olarak PNG, JPG, WebP, GIF ve BMP gibi tarayıcınızın açabildiği neredeyse tüm yaygın görsel formatlarını yükleyebilirsiniz.",
+        },
+        {
+          question: "PNG'yi JPG'ye çevirince saydam alanlara ne olur?",
+          answer:
+            "JPG saydamlığı desteklemediği için saydam alanlar otomatik olarak beyaz arka planla doldurulur.",
+        },
+        {
+          question: "WebP hangi durumlarda tercih edilmeli?",
+          answer:
+            "Web sitenizde sayfa yükleme hızını artırmak istiyorsanız WebP genelde aynı görsel kalitede PNG veya JPG'den daha küçük dosya boyutu sağlar. Ancak çok eski bir program veya sistemle paylaşacaksanız JPG/PNG daha güvenli bir seçim olabilir.",
+        },
+        {
+          question: "Aynı anda birden fazla görsel dönüştürebilir miyim?",
+          answer:
+            "Evet, istediğiniz kadar görseli aynı anda yükleyip hepsini aynı hedef formata dönüştürebilir, sonuçları .zip olarak toplu indirebilirsiniz.",
+        },
+        {
+          question: "Görsellerim bir sunucuya yükleniyor mu?",
+          answer:
+            "Hayır, dönüştürme işlemi tarayıcınızın Canvas API'siyle tamamen cihazınızda yapılır; dosyalarınız cihazınızdan çıkmaz.",
+        },
+      ],
+      applicationCategory: "MultimediaApplication",
+    },
+  },
+  {
+    name: "Görsel Boyutlandır",
+    href: "/gorsel-boyutlandir",
+    description:
+      "Görselin genişlik/yükseklik boyutunu veya yüzdesini değiştirip indirir.",
+    available: true,
+    accentClassName: "bg-orange-500",
+    icon: ResizeIcon,
+    group: "Görsel",
+    shortLabel: "Boyutlandır",
+    seo: {
+      metaTitle: "Görsel Boyutlandır | Ücretsiz Online Resim Boyutlandırma | Pratikleştir",
+      metaDescription:
+        "Görselleri istediğiniz piksel boyutuna veya yüzdeye göre küçültün/büyütün. Oran kilitleme desteğiyle, kayıt gerekmeden, tamamen tarayıcınızda.",
+      about: [
+        "Bir görselin \"boyutlandırılması\" (resize), dosya boyutunu değil piksel cinsinden genişlik ve yüksekliğini değiştirmek demektir - bu, dosya boyutunu küçültmeyi amaçlayan sıkıştırmadan farklıdır. Bir e-ticaret sitesine ürün fotoğrafı yüklerken istenen tam ölçüye getirmek, bir formun izin verdiği maksimum piksel sınırına uymak veya sosyal medya platformlarının önerdiği ölçülere göre kırpmadan önce görseli hazırlamak gibi durumlarda kullanışlıdır.",
+        "Yeni genişlik veya yükseklik değerini piksel cinsinden girebilir, \"oranı kilitle\" seçeneğiyle en-boy oranını bozmadan tek bir değeri değiştirdiğinizde diğerinin otomatik hesaplanmasını sağlayabilirsiniz. Alternatif olarak yüzde bazlı modda görseli örneğin %50 küçültüp veya %150 büyütüp orijinal oranı hiç bozmadan ölçeklendirebilirsiniz.",
+        "Görseli büyütmek, kaybolan detayı geri getirmez - piksel sayısı arttıkça mevcut piksellerin arası enterpolasyonla doldurulur, bu da özellikle çok büyütmelerde bulanıklaşmaya yol açabilir. En iyi sonucu almak için genelde küçültme yönünde kullanmak veya orijinali olabildiğince yüksek çözünürlükte tutmak önerilir.",
+      ],
+      howTo: [
+        "Boyutlandırmak istediğiniz görseli sürükleyip bırakın veya seçin.",
+        "Piksel modunda yeni genişlik/yükseklik girin (isterseniz \"oranı kilitle\" ile en-boy oranını koruyun) veya yüzde modunda bir küçültme/büyütme oranı seçin.",
+        "\"Boyutlandır\" butonuna tıklayın; sonuç anında önizlemede görünür.",
+        "Sonucu indirin.",
+      ],
+      advantages: [
+        "Piksel bazlı tam ölçü girişi veya yüzde bazlı hızlı ölçekleme sunar.",
+        "\"Oranı kilitle\" seçeneğiyle görsel istemeden çarpıtılmaz.",
+        "İşlem tamamen tarayıcınızda yapılır, görseliniz hiçbir sunucuya gönderilmez.",
+        "Kayıt gerekmez, ücretsiz kullanılır.",
+      ],
+      faq: [
+        {
+          question: "Boyutlandırma ile sıkıştırma arasındaki fark nedir?",
+          answer:
+            "Boyutlandırma görselin piksel cinsinden genişlik/yüksekliğini değiştirir. Sıkıştırma ise boyutları aynı bırakıp dosya boyutunu küçültür. Dosya boyutunu küçültmek istiyorsanız Görsel Sıkıştırıcı aracımızı kullanabilirsiniz.",
+        },
+        {
+          question: "\"Oranı kilitle\" ne işe yarar?",
+          answer:
+            "Açık olduğunda genişlik veya yükseklikten birini değiştirdiğinizde diğeri orijinal en-boy oranına göre otomatik hesaplanır, görsel çarpıtılmaz.",
+        },
+        {
+          question: "Görseli büyütünce kalite kaybı olur mu?",
+          answer:
+            "Evet, büyütme mevcut piksel bilgisinden enterpolasyonla yeni pikseller üretir; bu da özellikle büyük oranlı büyütmelerde bulanıklaşmaya yol açabilir. En iyi sonuç için mümkünse yüksek çözünürlüklü bir orijinalle başlayın.",
+        },
+        {
+          question: "Yüzde modu ne zaman kullanışlı?",
+          answer:
+            "Tam piksel değeriyle uğraşmadan görseli hızlıca örneğin yarı boyuta indirmek veya %150 büyütmek istediğinizde, oranı otomatik koruduğu için piksel modundan daha pratiktir.",
+        },
+      ],
+      applicationCategory: "MultimediaApplication",
+    },
+  },
+  {
+    name: "Görsel Kırp",
+    href: "/gorsel-kirp",
+    description: "Görsel üzerinde alan seçip istediğiniz kısmı kırpıp indirir.",
+    available: true,
+    accentClassName: "bg-rose-500",
+    icon: CropIcon,
+    group: "Görsel",
+    shortLabel: "Kırp",
+    seo: {
+      metaTitle: "Görsel Kırp | Ücretsiz Online Resim Kırpma Aracı | Pratikleştir",
+      metaDescription:
+        "Görselinizi önizleme üzerinde sürükleyerek istediğiniz alanı seçin, kırpıp indirin. Kayıt gerekmez, tamamen tarayıcınızda çalışır.",
+      about: [
+        "Kırpma, bir görselin yalnızca ihtiyacınız olan kısmını almak için geri kalanını kesip atmaktır - profil fotoğrafını kareye getirmek, bir ekran görüntüsündeki gereksiz kenarları temizlemek veya bir ürün fotoğrafını istenen en-boy oranına oturtmak gibi durumlarda sık kullanılır.",
+        "Bu araç yüklediğiniz görseli önizlemede gösterir; köşelerinden veya kenarlarından sürükleyerek istediğiniz kırpma alanını seçer, ardından yalnızca seçtiğiniz bölgeyi yeni bir görsel olarak indirirsiniz. Kırpma alanının konumu ve boyutu tamamen serbesttir, sabit bir oranla sınırlı değilsiniz.",
+        "İşlem, seçtiğiniz alanı bir Canvas üzerine orijinal çözünürlükte yeniden çizerek yapılır - yani kırpılan bölge, kaynak görselin kalitesini korur, ek bir kalite kaybı yaşanmaz.",
+      ],
+      howTo: [
+        "Kırpmak istediğiniz görseli sürükleyip bırakın veya seçin.",
+        "Önizleme üzerinde kırpma alanının köşelerini veya kenarlarını sürükleyerek istediğiniz bölgeyi seçin.",
+        "\"Kırp\" butonuna tıklayın; seçtiğiniz alan anında önizlemede görünür.",
+        "Sonucu indirin.",
+      ],
+      advantages: [
+        "Önizleme üzerinde sürükle-bırak ile serbest kırpma alanı seçimi.",
+        "Kırpılan bölge kaynak çözünürlüğü korur, ek kalite kaybı yaşanmaz.",
+        "İşlem tamamen tarayıcınızda yapılır, görseliniz hiçbir sunucuya gönderilmez.",
+        "Kayıt gerekmez, ücretsiz kullanılır.",
+      ],
+      faq: [
+        {
+          question: "Kırpma alanını sabit bir en-boy oranıyla mı seçmem gerekiyor?",
+          answer:
+            "Hayır, kırpma alanını tamamen serbest boyutta seçebilirsiniz; sabit bir oranla sınırlı değilsiniz.",
+        },
+        {
+          question: "Kırpılan görsel kalite kaybeder mi?",
+          answer:
+            "Hayır, seçtiğiniz alan kaynak görselin orijinal çözünürlüğünden yeniden çizilir; ek bir sıkıştırma veya kalite kaybı uygulanmaz.",
+        },
+        {
+          question: "Hangi dosya formatları destekleniyor?",
+          answer:
+            "PNG, JPG, WebP gibi tarayıcınızın açabildiği yaygın görsel formatlarını yükleyebilirsiniz; sonuç, kaynak görselin formatında indirilir.",
+        },
+        {
+          question: "Görselim bir sunucuya yükleniyor mu?",
+          answer:
+            "Hayır, kırpma işlemi tarayıcınızın Canvas API'siyle tamamen cihazınızda yapılır; dosyanız cihazınızdan çıkmaz.",
+        },
+      ],
+      applicationCategory: "MultimediaApplication",
+    },
   },
   {
     name: "KDV Hesapla",

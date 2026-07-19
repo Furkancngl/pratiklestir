@@ -161,13 +161,12 @@ export default function Page() {
         <p>
           Bu şartlarla ilgili sorularınız için bize{" "}
           <a
-            href="mailto:destek@pratiklestir.com"
+            href="mailto:iletisim@pratiklestir.com"
             className="font-medium text-purple-600 underline underline-offset-2 dark:text-purple-400"
           >
-            destek@pratiklestir.com
+            iletisim@pratiklestir.com
           </a>{" "}
-          adresinden ulaşabilirsiniz. (Bu adres, alan adımız kesinleştiğinde
-          güncellenecektir.)
+          adresinden ulaşabilirsiniz.
         </p>
       </LegalSection>
     </LegalPage>

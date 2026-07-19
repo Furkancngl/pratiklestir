@@ -151,18 +151,18 @@ function PlanRows({ rows, proAccent }: { rows: Row[]; proAccent: boolean }) {
   );
 }
 
-export default function PlanCards() {
-  const [pendingPlan, setPendingPlan] = useState<"free" | "pro" | null>(null);
+export default function PlanCards({ proCheckoutUrl }: { proCheckoutUrl: string | null }) {
+  const [pendingPlan, setPendingPlan] = useState<"free" | null>(null);
   const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
 
-  const handleSelect = (plan: "free" | "pro") => {
+  const handleSelectFree = () => {
     setError("");
-    setPendingPlan(plan);
+    setPendingPlan("free");
     startTransition(async () => {
       // Başarılıysa selectPlan içindeki redirect() zaten yönlendiriyor;
       // buraya sadece hata durumunda dönüyoruz.
-      const result = await selectPlan(plan);
+      const result = await selectPlan("free");
       if (result?.error) {
         setError(result.error);
         setPendingPlan(null);
@@ -192,7 +192,7 @@ export default function PlanCards() {
 
           <button
             type="button"
-            onClick={() => handleSelect("free")}
+            onClick={handleSelectFree}
             disabled={isPending}
             className="w-full touch-manipulation rounded-xl bg-black/[.06] p-3 text-[13.5px] font-bold text-black transition-opacity! duration-200! hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-white/[.08] dark:text-white"
           >
@@ -221,14 +221,24 @@ export default function PlanCards() {
 
           <PlanRows rows={proRows} proAccent={true} />
 
-          <button
-            type="button"
-            onClick={() => handleSelect("pro")}
-            disabled={isPending}
-            className="w-full touch-manipulation rounded-xl bg-linear-to-r from-purple-500 to-indigo-500 p-3 text-[13.5px] font-bold text-white shadow-[0_8px_20px_rgba(139,92,246,0.35)] transition-transform! duration-200! hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
-          >
-            {isPending && pendingPlan === "pro" ? "Kaydediliyor..." : "Seç"}
-          </button>
+          {proCheckoutUrl ? (
+            <a
+              href={proCheckoutUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full touch-manipulation rounded-xl bg-linear-to-r from-purple-500 to-indigo-500 p-3 text-center text-[13.5px] font-bold text-white shadow-[0_8px_20px_rgba(139,92,246,0.35)] transition-transform! duration-200! hover:-translate-y-0.5"
+            >
+              Seç
+            </a>
+          ) : (
+            <button
+              type="button"
+              disabled
+              className="w-full cursor-not-allowed touch-manipulation rounded-xl bg-linear-to-r from-purple-500 to-indigo-500 p-3 text-[13.5px] font-bold text-white opacity-50 shadow-[0_8px_20px_rgba(139,92,246,0.35)]"
+            >
+              Şu an kullanılamıyor
+            </button>
+          )}
         </div>
       </div>
 

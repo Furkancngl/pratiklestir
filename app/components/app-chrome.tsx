@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import Footer from "./footer";
 
-const NO_CHROME_PATHS = new Set(["/giris", "/kayit"]);
+const NO_CHROME_PATHS = new Set(["/giris", "/kayit", "/bakim"]);
 
 function shouldHideChrome(pathname: string) {
   return (
@@ -16,10 +16,12 @@ function shouldHideChrome(pathname: string) {
 
 export default function AppChrome({
   session,
+  forceHideChrome,
   nav,
   children,
 }: {
   session: boolean;
+  forceHideChrome?: boolean;
   nav: ReactNode;
   children: ReactNode;
 }) {
@@ -30,7 +32,13 @@ export default function AppChrome({
   // bakan bir server bileşeni yerine burada veriyoruz. Aksi halde
   // (örn. TopNav'daki bir linkle /giris'e geçişte) layout önceki
   // render'dan kalma nav'ı göstermeye devam ediyordu.
-  if (shouldHideChrome(pathname)) {
+  //
+  // forceHideChrome bakım modu için: proxy.ts bir rewrite ile isteği
+  // /bakim'e yönlendirdiğinde tarayıcı URL'i (dolayısıyla bu pathname)
+  // orijinal yol olarak kalır (ör. "/", "/gorsel-kirp"), asla "/bakim"
+  // olmaz - bu yüzden o durumda chrome'u gizlemek için pathname'e değil,
+  // layout'un header'dan okuduğu bu ayrı sinyale güveniyoruz.
+  if (forceHideChrome || shouldHideChrome(pathname)) {
     return <main className="flex flex-1 flex-col">{children}</main>;
   }
 

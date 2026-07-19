@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
+import { headers } from "next/headers";
 import { Geist_Mono, Inter } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { auth } from "@/auth";
@@ -62,11 +63,19 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth();
+  // proxy.ts, bakım moduna düşen istekleri /bakim'e rewrite ederken bu
+  // header'ı ekliyor (bkz. proxy.ts) - rewrite tarayıcı URL'ini
+  // değiştirmediğinden AppChrome'un pathname'e bakan chrome-gizleme mantığı
+  // bu durumda işe yaramaz, bu yüzden ayrı bir sinyal gerekiyor. Bakım
+  // sayfası oturuma/DB'ye ihtiyaç duymadığından ikisi de burada atlanıyor -
+  // bakım sırasında DB erişilemez olsa bile sayfa yine de render olabilsin.
+  const isMaintenance = (await headers()).get("x-maintenance-mode") === "1";
+
+  const session = isMaintenance ? null : await auth();
   const isAdmin = isAdminEmail(session?.user?.email);
 
   let credits: { credits: number; limit: number } | null = null;
-  if (session?.user?.email) {
+  if (!isMaintenance && session?.user?.email) {
     const [dbUser] = await db
       .select()
       .from(users)
@@ -97,6 +106,7 @@ export default async function RootLayout({
           <ThemeProvider>
             <AppChrome
               session={!!session}
+              forceHideChrome={isMaintenance}
               nav={
                 session ? (
                   <Sidebar

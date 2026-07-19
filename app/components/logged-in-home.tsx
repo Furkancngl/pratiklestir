@@ -5,20 +5,29 @@ import QuickAccessMore from "./quick-access-more";
 import RecentActivityCard from "./recent-activity-card";
 import Reveal from "./reveal";
 import { tools } from "../lib/tools";
+import { getUsageStats } from "../lib/usage-stats";
 
 const featuredHrefs = ["/qr-kod", "/pdf-birlestir"];
 const quickAccessTools = featuredHrefs
   .map((href) => tools.find((tool) => tool.href === href))
   .filter((tool): tool is (typeof tools)[number] => tool != null);
 
-export default function LoggedInHome({
+export default async function LoggedInHome({
   name,
   plan,
+  email,
 }: {
   name?: string | null;
   plan?: string | null;
+  email?: string | null;
 }) {
   const isFree = (plan ?? "free").toLowerCase() === "free";
+  const [weekData, monthData] = email
+    ? await Promise.all([getUsageStats(email, "week"), getUsageStats(email, "month")])
+    : [
+        { total: 0, topTool: "—", recentItems: [] },
+        { total: 0, topTool: "—", recentItems: [] },
+      ];
 
   return (
     <div className="flex flex-1 flex-col items-center bg-zinc-50 px-6 py-16 dark:bg-zinc-900">
@@ -63,7 +72,7 @@ export default function LoggedInHome({
 
         <div className="flex flex-col gap-6">
           <RecentActivityCard />
-          <DashboardCard />
+          <DashboardCard weekData={weekData} monthData={monthData} />
         </div>
       </div>
     </div>

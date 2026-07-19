@@ -67,22 +67,22 @@ export default function UserMenu({ name, email, plan }: UserMenuProps) {
             <SettingsIcon className="h-4 w-4 shrink-0" />
             Ayarlar
           </Link>
-          <button
-            type="button"
+          <Link
+            href="/sss"
             onClick={() => setOpen(false)}
             className="flex w-full items-center gap-2.5 px-3.5 py-2.5 text-left text-sm font-medium text-zinc-700 transition-colors hover:bg-black/[.04] dark:text-zinc-300 dark:hover:bg-zinc-800"
           >
             <HelpIcon className="h-4 w-4 shrink-0" />
             Yardım
-          </button>
-          <button
-            type="button"
+          </Link>
+          <Link
+            href="/planlar"
             onClick={() => setOpen(false)}
             className="flex w-full items-center gap-2.5 px-3.5 py-2.5 text-left text-sm font-medium text-zinc-700 transition-colors hover:bg-black/[.04] dark:text-zinc-300 dark:hover:bg-zinc-800"
           >
             <TrendingUpIcon className="h-4 w-4 shrink-0" />
             Planı Yükselt
-          </button>
+          </Link>
 
           <div className="my-1.5 border-t border-black/[.08] dark:border-zinc-800" />
 

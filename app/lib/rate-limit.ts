@@ -42,6 +42,11 @@ export const apiMutationRateLimit = createLimiter(30, "1 m");
 // bombalama ve token brute-force'unu yavaşlatmak için).
 export const passwordResetRateLimit = createLimiter(5, "15 m");
 
+// Gumroad webhook: aynı IP'den dakikada 60 istek (Gumroad'un normal ping
+// trafiğini etkilemeyecek kadar gevşek, ama endpoint'e karşı otomasyonu
+// yavaşlatır).
+export const webhookRateLimit = createLimiter(60, "1 m");
+
 export type RateLimitResult = { allowed: true } | { allowed: false };
 
 export async function checkRateLimit(

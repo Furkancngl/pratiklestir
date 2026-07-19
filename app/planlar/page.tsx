@@ -2,11 +2,23 @@ import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import PlanCards from "./plan-cards";
 
+function buildProCheckoutUrl(email: string | null | undefined): string | null {
+  const base = process.env.GUMROAD_PRODUCT_URL;
+  if (!base) return null;
+
+  const url = new URL(base);
+  url.searchParams.set("wanted", "true");
+  if (email) url.searchParams.set("email", email);
+  return url.toString();
+}
+
 export default async function PlanlarPage() {
   const session = await auth();
   if (!session?.user) {
     redirect("/giris");
   }
+
+  const proCheckoutUrl = buildProCheckoutUrl(session.user.email);
 
   return (
     <div className="flex flex-1 items-center justify-center bg-zinc-50 px-6 py-16 dark:bg-[#0a0a0f]">
@@ -20,7 +32,7 @@ export default async function PlanlarPage() {
           </p>
         </div>
 
-        <PlanCards />
+        <PlanCards proCheckoutUrl={proCheckoutUrl} />
       </div>
     </div>
   );
