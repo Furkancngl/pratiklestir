@@ -12,7 +12,14 @@ export default function GirisPage() {
   const searchParams = useSearchParams();
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
+  const [googlePending, setGooglePending] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const isBusy = pending || googlePending;
+
+  const handleGoogleSignIn = () => {
+    setGooglePending(true);
+    signIn("google", { callbackUrl: searchParams.get("callbackUrl") ?? "/" });
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -63,15 +70,21 @@ export default function GirisPage() {
 
           <button
             type="button"
-            onClick={() =>
-              signIn("google", {
-                callbackUrl: searchParams.get("callbackUrl") ?? "/",
-              })
-            }
-            className="mb-5 flex w-full touch-manipulation items-center justify-center gap-2.5 rounded-xl border border-black/[.12] bg-black/[.03] p-3 text-sm font-semibold text-black transition-all! duration-200! hover:-translate-y-0.5 hover:border-black/[.22] hover:bg-black/[.06] dark:border-white/[.12] dark:bg-white/[.04] dark:text-white dark:hover:border-white/[.22] dark:hover:bg-white/[.08]"
+            onClick={handleGoogleSignIn}
+            disabled={isBusy}
+            className="mb-5 flex w-full touch-manipulation items-center justify-center gap-2.5 rounded-xl border border-black/[.12] bg-black/[.03] p-3 text-sm font-semibold text-black transition-all! duration-200! hover:-translate-y-0.5 hover:border-black/[.22] hover:bg-black/[.06] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 dark:border-white/[.12] dark:bg-white/[.04] dark:text-white dark:hover:border-white/[.22] dark:hover:bg-white/[.08]"
           >
-            <GoogleIcon className="h-4.5 w-4.5" />
-            Google ile devam et
+            {googlePending ? (
+              <>
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-current/30 border-t-current" />
+                Yönlendiriliyor...
+              </>
+            ) : (
+              <>
+                <GoogleIcon className="h-4.5 w-4.5" />
+                Google ile devam et
+              </>
+            )}
           </button>
 
           <div className="mb-5 flex items-center gap-3 text-xs text-zinc-400 dark:text-zinc-500">
@@ -145,10 +158,17 @@ export default function GirisPage() {
 
             <button
               type="submit"
-              disabled={pending}
-              className="w-full touch-manipulation rounded-xl bg-linear-to-r from-violet-500 to-indigo-500 p-3.25 text-[14.5px] font-bold text-white shadow-[0_10px_26px_rgba(99,102,241,0.4)] transition-all! duration-200! hover:-translate-y-0.5 hover:shadow-[0_14px_32px_rgba(99,102,241,0.55)] disabled:cursor-not-allowed disabled:opacity-60"
+              disabled={isBusy}
+              className="flex w-full touch-manipulation items-center justify-center gap-2.5 rounded-xl bg-linear-to-r from-violet-500 to-indigo-500 p-3.25 text-[14.5px] font-bold text-white shadow-[0_10px_26px_rgba(99,102,241,0.4)] transition-all! duration-200! hover:-translate-y-0.5 hover:shadow-[0_14px_32px_rgba(99,102,241,0.55)] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
             >
-              {pending ? "Giriş yapılıyor..." : "Giriş Yap"}
+              {pending ? (
+                <>
+                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                  Giriş yapılıyor...
+                </>
+              ) : (
+                "Giriş Yap"
+              )}
             </button>
           </form>
         </div>

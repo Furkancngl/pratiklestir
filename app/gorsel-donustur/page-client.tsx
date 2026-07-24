@@ -35,6 +35,29 @@ function formatBytes(bytes: number) {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
+const HEIC_EXTENSION_RE = /\.(heic|heif)$/i;
+
+function isHeicFile(file: File): boolean {
+  return (
+    file.type === "image/heic" ||
+    file.type === "image/heif" ||
+    HEIC_EXTENSION_RE.test(file.name)
+  );
+}
+
+// HEIC/HEIF, Chrome/Firefox/Edge'de createImageBitmap ile decode edilemiyor
+// (yalnızca Safari/macOS native destekliyor) - bu yüzden önce heic2any
+// (libheif WASM) ile kayıpsız bir PNG'ye çevrilip normal Canvas pipeline'ına
+// sokuluyor. Kütüphane ağır olduğu için yalnızca gerçekten bir HEIC dosyası
+// geldiğinde dinamik import ediliyor.
+async function decodeHeicToFile(file: File): Promise<File> {
+  const { default: heic2any } = await import("heic2any");
+  const result = await heic2any({ blob: file, toType: "image/png" });
+  const pngBlob = Array.isArray(result) ? result[0] : result;
+  const baseName = file.name.replace(/\.[^./\\]+$/, "") || "gorsel";
+  return new File([pngBlob], `${baseName}.png`, { type: "image/png" });
+}
+
 // Kaynak görseli hedef formata Canvas API ile dönüştürür. JPG saydamlığı
 // desteklemediği için önce beyaz bir arka plan çizilir, aksi halde saydam
 // alanlar tarayıcıya göre siyah çıkabilir.
@@ -43,7 +66,8 @@ async function convertImage(
   format: TargetFormat,
   quality: number
 ): Promise<File> {
-  const bitmap = await createImageBitmap(file);
+  const sourceFile = isHeicFile(file) ? await decodeHeicToFile(file) : file;
+  const bitmap = await createImageBitmap(sourceFile);
   try {
     const canvas = document.createElement("canvas");
     canvas.width = bitmap.width;
@@ -98,12 +122,17 @@ export default function GorselDonusturPage({
     if (!fileList || fileList.length === 0) return;
 
     const incoming = Array.from(fileList);
-    const notImage = incoming.filter((file) => !file.type.startsWith("image/"));
+    // HEIC/HEIF dosyalarında file.type çoğu zaman boş veya tanımsız gelir
+    // (özellikle Windows'ta) - bu yüzden salt MIME kontrolü yetmiyor, uzantıya
+    // da bakılıyor (bkz. isHeicFile).
+    const isAcceptedImage = (file: File) =>
+      file.type.startsWith("image/") || isHeicFile(file);
+    const notImage = incoming.filter((file) => !isAcceptedImage(file));
     const oversized = incoming.filter(
-      (file) => file.type.startsWith("image/") && file.size > maxFileSizeBytes
+      (file) => isAcceptedImage(file) && file.size > maxFileSizeBytes
     );
     const images = incoming.filter(
-      (file) => file.type.startsWith("image/") && file.size <= maxFileSizeBytes
+      (file) => isAcceptedImage(file) && file.size <= maxFileSizeBytes
     );
 
     if (images.length > 0) {
@@ -221,7 +250,7 @@ export default function GorselDonusturPage({
           <input
             ref={inputRef}
             type="file"
-            accept="image/*"
+            accept="image/*,.heic,.heif"
             multiple
             className="hidden"
             onChange={(e) => {

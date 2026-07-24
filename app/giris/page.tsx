@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { SITE_URL } from "@/app/lib/site";
 import GirisPage from "./page-client";
 
@@ -11,6 +12,13 @@ export const metadata: Metadata = {
   },
 };
 
+// GirisPage useSearchParams() kullanıyor (callbackUrl okumak için) - App
+// Router'da bu, <Suspense> ile sarılmayı gerektiriyor (Cache Components
+// altında build-time hata, öncesinde de client-render'a bail-out).
 export default function Page() {
-  return <GirisPage />;
+  return (
+    <Suspense fallback={null}>
+      <GirisPage />
+    </Suspense>
+  );
 }

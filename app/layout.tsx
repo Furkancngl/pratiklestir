@@ -1,27 +1,16 @@
-import { eq } from "drizzle-orm";
 import type { Metadata } from "next";
-import dynamic from "next/dynamic";
-import { headers } from "next/headers";
+import { Suspense } from "react";
 import { Geist_Mono, Inter } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { auth } from "@/auth";
 import AppChrome from "./components/app-chrome";
+import AuthNav from "./components/auth-nav";
 import AuthSessionProvider from "./components/session-provider";
 import ThemeToggle from "./components/theme-toggle";
 import TopNav from "./components/top-nav";
 import { ThemeProvider } from "./context/theme-context";
-import { isAdminEmail } from "./lib/admin";
-import { db } from "./lib/db";
-import { users } from "./lib/db/schema";
-import { getFreshCredits } from "./lib/credits";
 import { SITE_NAME, SITE_URL } from "./lib/site";
 import { getSiteJsonLd } from "./lib/site-schema";
 import "./globals.css";
-
-// Sidebar (framer-motion + tools/categories verisi içerir) yalnızca oturum
-// açmış kullanıcılara render edilir; dynamic import ile bu kod çıkarımsız
-// (marketing/anonim) sayfaların JS paketinden ayrı tutulur.
-const Sidebar = dynamic(() => import("./components/sidebar"));
 
 const inter = Inter({
   variable: "--font-inter",
@@ -58,34 +47,32 @@ export const metadata: Metadata = {
 // (bkz. context/theme-context.tsx), böylece hydration'da flaş olmaz.
 const themeInitScript = `(function(){try{var t=localStorage.getItem("theme");var isDark=t==="light"||t==="dark"?t==="dark":window.matchMedia("(prefers-color-scheme: dark)").matches;document.documentElement.classList.toggle("dark",isDark)}catch(e){}})()`;
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // proxy.ts, bakım moduna düşen istekleri /bakim'e rewrite ederken bu
-  // header'ı ekliyor (bkz. proxy.ts) - rewrite tarayıcı URL'ini
-  // değiştirmediğinden AppChrome'un pathname'e bakan chrome-gizleme mantığı
-  // bu durumda işe yaramaz, bu yüzden ayrı bir sinyal gerekiyor. Bakım
-  // sayfası oturuma/DB'ye ihtiyaç duymadığından ikisi de burada atlanıyor -
-  // bakım sırasında DB erişilemez olsa bile sayfa yine de render olabilsin.
-  const isMaintenance = (await headers()).get("x-maintenance-mode") === "1";
-
-  const session = isMaintenance ? null : await auth();
-  const isAdmin = isAdminEmail(session?.user?.email);
-
-  let credits: { credits: number; limit: number } | null = null;
-  if (!isMaintenance && session?.user?.email) {
-    const [dbUser] = await db
-      .select()
-      .from(users)
-      .where(eq(users.email, session.user.email))
-      .limit(1);
-    if (dbUser) {
-      credits = await getFreshCredits(dbUser);
-    }
-  }
-
+  // auth() (dolayısıyla cookies()) burada ARTIK çağrılmıyor - onu ve ona
+  // bağlı nav/credits hesaplamasını AuthNav'a taşıdık. AuthNav
+  // <Suspense> ile sarılı: cookies() okuyan tek yer orası olduğundan,
+  // anonim/pazarlama sayfaları (bu {children}) statik/ISR kabuk olarak
+  // kalabiliyor - Cache Components sadece AuthNav'ı request time'da
+  // stream ediyor, geri kalan her şey anında gidiyor.
+  //
+  // AuthSessionProvider'a artık server'da fetch edilmiş bir `session`
+  // seed'lenmiyor (session prop'u hiç verilmiyor - undefined kalıyor):
+  // next-auth/react kendi client-side /api/auth/session fetch'ini yapıyor.
+  // (`session={null}` YERİNE undefined bırakmak bilinçli - next-auth'un
+  // SessionProvider'ı session!==undefined olduğunda render sırasında
+  // senkron Date.now() çağırıyor, bu da Cache Components altında statik
+  // prerender'ı kırıyordu; bkz. session-provider.tsx yorumu.) Bu güvenli,
+  // çünkü useSession()
+  // kullanan tek yerler (use-credit-gate, use-file-size-limit,
+  // general-settings-form) session'ı ilk boyamada senkron göstermiyor,
+  // yalnızca kullanıcı etkileşiminde (buton tıklama, dosya seçme)
+  // okuyor - yani client fetch'in birkaç yüz ms sürmesi görünür bir
+  // flash'a yol açmıyor. Asıl görünür oturum göstergesi (sidebar/TopNav)
+  // zaten server-side AuthNav'dan geliyor, useSession()'a bağlı değil.
   return (
     <html
       lang="tr"
@@ -102,24 +89,13 @@ export default async function RootLayout({
         />
       </head>
       <body className="flex min-h-full flex-col">
-        <AuthSessionProvider session={session}>
+        <AuthSessionProvider>
           <ThemeProvider>
             <AppChrome
-              session={!!session}
-              forceHideChrome={isMaintenance}
               nav={
-                session ? (
-                  <Sidebar
-                    isAdmin={isAdmin}
-                    userName={session.user?.name}
-                    userEmail={session.user?.email}
-                    userPlan={session.user?.plan}
-                    userCredits={credits?.credits}
-                    userCreditLimit={credits?.limit}
-                  />
-                ) : (
-                  <TopNav />
-                )
+                <Suspense fallback={<TopNav />}>
+                  <AuthNav />
+                </Suspense>
               }
             >
               {children}

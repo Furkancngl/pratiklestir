@@ -335,6 +335,7 @@ export default function Sidebar({
       )}
 
       <aside
+        data-app-sidebar=""
         className={`fixed inset-y-0 left-0 z-50 flex w-[250px] shrink-0 flex-col border-r border-purple-300/30 bg-white bg-[radial-gradient(circle_at_15%_0%,rgba(168,85,247,0.05),transparent_55%),radial-gradient(circle_at_100%_40%,rgba(99,102,241,0.04),transparent_55%)] transition-[transform]! duration-200! dark:border-[rgba(167,139,250,0.08)] dark:bg-[#0d0a16] dark:bg-[radial-gradient(circle_at_15%_0%,rgba(139,92,246,0.08),transparent_55%),radial-gradient(circle_at_100%_40%,rgba(99,102,241,0.05),transparent_55%)] md:[transform:translateX(0)] ${
           isOpen ? "[transform:translateX(0)]" : "[transform:translateX(-100%)]"
         }`}

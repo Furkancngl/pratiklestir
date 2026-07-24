@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { auth } from "@/auth";
 import LoggedInHome from "./components/logged-in-home";
 import MarketingHome from "./components/marketing-home";
@@ -10,7 +11,21 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function Home() {
+// auth() (cookies() okur) burada, <Suspense> ile sarılı bir alt bileşene
+// taşındı - bu sayede anonim ziyaretçiler için sayfa statik/ISR kabuk
+// olarak kalabiliyor. Fallback olarak MarketingHome kullanıyoruz: anonim
+// ziyaretçi için bu zaten NİHAİ içerik (fallback'ten gerçek içeriğe geçiş
+// yok), oturum açmış ziyaretçi içinse request time'da (aynı stream
+// içinde, client flash olmadan) LoggedInHome'a çözülüyor.
+export default function Home() {
+  return (
+    <Suspense fallback={<MarketingHome />}>
+      <HomeContent />
+    </Suspense>
+  );
+}
+
+async function HomeContent() {
   const session = await auth();
 
   if (session?.user) {

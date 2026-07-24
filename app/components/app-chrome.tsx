@@ -15,13 +15,9 @@ function shouldHideChrome(pathname: string) {
 }
 
 export default function AppChrome({
-  session,
-  forceHideChrome,
   nav,
   children,
 }: {
-  session: boolean;
-  forceHideChrome?: boolean;
   nav: ReactNode;
   children: ReactNode;
 }) {
@@ -33,20 +29,33 @@ export default function AppChrome({
   // (örn. TopNav'daki bir linkle /giris'e geçişte) layout önceki
   // render'dan kalma nav'ı göstermeye devam ediyordu.
   //
-  // forceHideChrome bakım modu için: proxy.ts bir rewrite ile isteği
-  // /bakim'e yönlendirdiğinde tarayıcı URL'i (dolayısıyla bu pathname)
-  // orijinal yol olarak kalır (ör. "/", "/gorsel-kirp"), asla "/bakim"
-  // olmaz - bu yüzden o durumda chrome'u gizlemek için pathname'e değil,
-  // layout'un header'dan okuduğu bu ayrı sinyale güveniyoruz.
-  if (forceHideChrome || shouldHideChrome(pathname)) {
+  // Bakım modu (proxy.ts'in /bakim'e rewrite ettiği durum) burada ayrıca
+  // ele alınmıyor: tarayıcı URL'i (dolayısıyla bu pathname) değişmediği
+  // için o durumda chrome burada gizlenmez - onun yerine app/bakim/page.tsx
+  // kendini `fixed inset-0` ile tam ekran render edip altındaki chrome'u
+  // görsel olarak örter (bkz. o dosyadaki yorum). Bu, root layout'un
+  // maintenance sinyali için headers() okumasına (ve böylece Cache
+  // Components altında tüm anonim sayfaları dinamikleştirmesine) gerek
+  // bırakmıyor.
+  if (shouldHideChrome(pathname)) {
     return <main className="flex flex-1 flex-col">{children}</main>;
   }
 
   return (
     <div className="flex flex-1 flex-col">
-      <div className={`flex flex-1 flex-col ${session ? "md:flex-row" : ""}`}>
+      {/* nav (TopNav veya Sidebar) app/layout.tsx'te <Suspense> ile sarılı
+          bir server bileşeninden (AuthNav) geliyor - oturum var mı bilgisi
+          request time'da, bu static shell'in dışında çözülüyor. Bu yüzden
+          burada `session: boolean` gibi senkron bir prop yok; Sidebar
+          render olduğunda bıraktığı `data-app-sidebar` işaretini CSS
+          `:has()` ile okuyup satır yönünü ve içerik sütununun sol
+          boşluğunu (fixed sidebar'ın altında kalmaması için) ona göre
+          ayarlıyoruz. Bu, children'ı (asıl sayfa içeriği) Suspense
+          sınırının dışında, statik kabuğun parçası olarak tutmamızı
+          sağlıyor - nav'ın çözülmesini beklemesi gerekmiyor. */}
+      <div className="group/chrome flex flex-1 flex-col md:has-[[data-app-sidebar]]:flex-row">
         {nav}
-        {/* Sidebar artık her zaman position:fixed (bkz. sidebar.tsx) - sayfa
+        {/* Sidebar her zaman position:fixed (bkz. sidebar.tsx) - sayfa
             akışında yer kaplamaz, bu yüzden içerik sütununu onun genişliği
             kadar (250px) elle içeri kaydırmamız gerekiyor. Böylece sidebar,
             sayfa ne kadar uzun olursa olsun (ör. programatik SEO senaryo
@@ -57,7 +66,7 @@ export default function AppChrome({
             bırakıyordu.
             Footer da bu sütunun içinde, main ile birlikte kayıyor - böylece
             sidebar sayfanın geri kalanının üzerinde her zaman sabit durur. */}
-        <div className={`flex flex-1 flex-col ${session ? "md:pl-[250px]" : ""}`}>
+        <div className="flex flex-1 flex-col md:group-has-[[data-app-sidebar]]/chrome:pl-[250px]">
           <main className="flex flex-1 flex-col">{children}</main>
           <Footer />
         </div>

@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { requireCurrentUser } from "@/app/lib/current-user";
 import SettingsSidebar from "./settings-sidebar";
@@ -9,7 +10,23 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default async function AyarlarLayout({
+// Login gerektiren, tamamen dinamik bir subtree - statik kabuk
+// hedeflenmiyor. requireCurrentUser() (auth()/cookies() okur) yine de
+// Cache Components altında <Suspense> ile sarılı olmak zorunda, aksi
+// halde build hata verir; davranış aynı kalıyor.
+export default function AyarlarLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <Suspense fallback={null}>
+      <AyarlarLayoutContent>{children}</AyarlarLayoutContent>
+    </Suspense>
+  );
+}
+
+async function AyarlarLayoutContent({
   children,
 }: {
   children: React.ReactNode;

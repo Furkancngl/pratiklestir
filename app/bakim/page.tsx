@@ -6,8 +6,17 @@ export const metadata: Metadata = {
 };
 
 export default function BakimPage() {
+  // fixed inset-0 + yüksek z-index: proxy.ts bu sayfaya bir REWRITE ile
+  // düşüyor (bkz. proxy.ts), yani tarayıcı URL'i (ör. "/", "/gorsel-kirp")
+  // değişmiyor. Root layout artık chrome (TopNav/Sidebar/Footer) kararını
+  // Suspense ile request time'da veriyor ve bu rewrite'tan habersiz - yani
+  // chrome normal şekilde render olmaya çalışabilir. Bunu app/layout.tsx'te
+  // ayrıca engellemek yerine (ki bu, tüm anonim sayfaları yeniden dinamik
+  // yapardı), bu sayfa tüm viewport'u kaplayıp altında kalan her şeyi
+  // görsel olarak örtüyor - admin bakım sırasında siteyi test ederken
+  // kendi sidebar'ını hâlâ normal görüyor, DB'ye ihtiyaç duymuyor.
   return (
-    <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-white px-6 dark:bg-[#0a0a0f]">
+    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden bg-white px-6 dark:bg-[#0a0a0f]">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -top-30 -left-20 h-120 w-120 rounded-full bg-[radial-gradient(circle,rgba(139,92,246,0.25)_0%,transparent_70%)] blur-[70px] dark:bg-[radial-gradient(circle,rgba(139,92,246,0.35)_0%,transparent_70%)]"

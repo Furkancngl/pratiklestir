@@ -80,6 +80,14 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // Anonim/pazarlama sayfalarının statik/ISR kabuk olarak servis
+  // edilebilmesi için Cache Components (Next 16'nın PPR yerine geçen
+  // modeli) açık. Bu, cookies()/headers()/auth()/searchParams okuyan HER
+  // sayfa/layout'un <Suspense> ile sarılmasını zorunlu kılar (aksi halde
+  // build hata verir) - bkz. app/layout.tsx, app/components/auth-nav.tsx,
+  // app/page.tsx, app/planlar/page.tsx, app/admin/layout.tsx,
+  // app/ayarlar/layout.tsx, app/sifre-sifirla/page.tsx.
+  cacheComponents: true,
   async headers() {
     return [
       {

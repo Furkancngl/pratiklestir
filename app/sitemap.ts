@@ -9,12 +9,19 @@ import { SITE_URL } from "./lib/site";
 // yeni bir araç veya kategori eklerken bu dosyayı güncellemeye gerek yok.
 // Aynı şekilde tool-scenarios.ts'ye eklenen her yeni senaryo da (aracı
 // available olduğu sürece) otomatik olarak sitemap'e girer.
+//
+// lastModified kasıtlı olarak yok: gerçek içerik değişikliği tarihini
+// takip eden bir mekanizmamız yok, bu yüzden new Date() (her istekte
+// "bugün") ya da sabit bir tarih (ilk yayın tarihi, içerik değiştikten
+// sonra da hep aynı kalır) ikisi de aynı derecede yanlış/yanıltıcı
+// olurdu. Google'ın kendi rehberliği, güvenilir bir lastmod'un yoksa
+// alanı tamamen atlamayı öneriyor - yanlış bir lastmod, arama motorunun
+// sitenin GENELİNDE bu alanı görmezden gelmesine yol açabiliyor.
 export default function sitemap(): MetadataRoute.Sitemap {
   const toolEntries: MetadataRoute.Sitemap = tools
     .filter((tool) => tool.available)
     .map((tool) => ({
       url: `${SITE_URL}${tool.href}`,
-      lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.8,
     }));
@@ -23,7 +30,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     .filter((category) => category.hasAvailableTools)
     .map((category) => ({
       url: `${SITE_URL}/${category.slug}`,
-      lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.6,
     }));
@@ -32,7 +38,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     .filter((scenario) => tools.find((t) => t.href === scenario.toolHref)?.available)
     .map((scenario) => ({
       url: `${SITE_URL}${scenario.toolHref}/${scenario.slug}`,
-      lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.7,
     }));
@@ -40,7 +45,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
       url: SITE_URL,
-      lastModified: new Date(),
       changeFrequency: "daily",
       priority: 1,
     },

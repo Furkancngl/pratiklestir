@@ -1089,7 +1089,8 @@ export const tools: Tool[] = [
   {
     name: "Görsel Dönüştür",
     href: "/gorsel-donustur",
-    description: "Görselleri PNG, JPG ve WebP gibi formatlar arasında dönüştürür.",
+    description:
+      "Görselleri PNG, JPG ve WebP'ye dönüştürür; HEIC (iPhone fotoğrafı) girdisini de destekler.",
     available: true,
     accentClassName: "bg-fuchsia-500",
     icon: ImageIcon,
@@ -1123,7 +1124,12 @@ export const tools: Tool[] = [
         {
           question: "Hangi formatlar destekleniyor?",
           answer:
-            "Çıktı formatı olarak PNG, JPG ve WebP arasından seçim yapabilirsiniz. Girdi olarak PNG, JPG, WebP, GIF ve BMP gibi tarayıcınızın açabildiği neredeyse tüm yaygın görsel formatlarını yükleyebilirsiniz.",
+            "Çıktı formatı olarak PNG, JPG ve WebP arasından seçim yapabilirsiniz. Girdi olarak PNG, JPG, WebP, GIF, BMP ve HEIC/HEIF (iPhone fotoğrafları) gibi yaygın görsel formatlarının hemen hepsini yükleyebilirsiniz.",
+        },
+        {
+          question: "iPhone'da çektiğim HEIC fotoğrafları JPG'ye çevirebilir miyim?",
+          answer:
+            "Evet. HEIC/HEIF dosyalarını doğrudan yükleyebilirsiniz, araç bunları otomatik olarak algılayıp seçtiğiniz hedef formata (JPG, PNG veya WebP) dönüştürür - ayrı bir adım gerekmez.",
         },
         {
           question: "PNG'yi JPG'ye çevirince saydam alanlara ne olur?",

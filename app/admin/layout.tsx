@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { auth } from "@/auth";
@@ -11,7 +12,23 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default async function AdminLayout({
+// Login+admin gerektiren, tamamen dinamik bir subtree - statik kabuk
+// hedeflenmiyor. auth() (cookies() okur) yine de Cache Components altında
+// <Suspense> ile sarılı olmak zorunda, aksi halde build hata verir;
+// davranış aynı kalıyor.
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <Suspense fallback={null}>
+      <AdminLayoutContent>{children}</AdminLayoutContent>
+    </Suspense>
+  );
+}
+
+async function AdminLayoutContent({
   children,
 }: {
   children: React.ReactNode;

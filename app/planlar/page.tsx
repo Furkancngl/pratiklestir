@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import PlanCards from "./plan-cards";
@@ -12,7 +13,18 @@ function buildProCheckoutUrl(email: string | null | undefined): string | null {
   return url.toString();
 }
 
-export default async function PlanlarPage() {
+// Login gerektiren, tamamen dinamik bir sayfa - statik kabuk hedeflenmiyor.
+// auth() (cookies() okur) yine de Cache Components altında <Suspense> ile
+// sarılı olmak zorunda, aksi halde build hata verir; davranış aynı kalıyor.
+export default function PlanlarPage() {
+  return (
+    <Suspense fallback={<div className="flex flex-1 bg-zinc-50 dark:bg-[#0a0a0f]" />}>
+      <PlanlarContent />
+    </Suspense>
+  );
+}
+
+async function PlanlarContent() {
   const session = await auth();
   if (!session?.user) {
     redirect("/giris");

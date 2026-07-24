@@ -20,9 +20,12 @@ const PLAN_LABELS: Record<string, string> = {
 export default function UserMenu({ name, email, plan }: UserMenuProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handleLogout = async () => {
+    if (loggingOut) return;
+    setLoggingOut(true);
     await signOut({ redirect: false });
     router.push("/");
     router.refresh();
@@ -89,10 +92,15 @@ export default function UserMenu({ name, email, plan }: UserMenuProps) {
           <button
             type="button"
             onClick={handleLogout}
-            className="flex w-full items-center gap-2.5 px-3.5 py-2.5 text-left text-sm font-medium text-zinc-700 transition-colors hover:bg-black/[.04] dark:text-zinc-300 dark:hover:bg-zinc-800"
+            disabled={loggingOut}
+            className="flex w-full items-center gap-2.5 px-3.5 py-2.5 text-left text-sm font-medium text-zinc-700 transition-colors hover:bg-black/[.04] disabled:cursor-not-allowed disabled:opacity-60 dark:text-zinc-300 dark:hover:bg-zinc-800"
           >
-            <LogoutIcon className="h-4 w-4 shrink-0" />
-            Çıkış Yap
+            {loggingOut ? (
+              <span className="h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-current/30 border-t-current" />
+            ) : (
+              <LogoutIcon className="h-4 w-4 shrink-0" />
+            )}
+            {loggingOut ? "Çıkış yapılıyor..." : "Çıkış Yap"}
           </button>
         </div>
       )}
